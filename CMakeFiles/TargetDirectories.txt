@@ -1,6 +1,0 @@
-/home/tommaso3/mp5_handout/CMakeFiles/intrinsics_gen.dir
-/home/tommaso3/mp5_handout/CMakeFiles/omp_gen.dir
-/home/tommaso3/mp5_handout/CMakeFiles/acc_gen.dir
-/home/tommaso3/mp5_handout/CMakeFiles/UnitProject.dir
-/home/tommaso3/mp5_handout/CMakeFiles/edit_cache.dir
-/home/tommaso3/mp5_handout/CMakeFiles/rebuild_cache.dir
