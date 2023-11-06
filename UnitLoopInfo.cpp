@@ -2,7 +2,6 @@
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Passes/PassPlugin.h"
 #include "llvm/Support/raw_ostream.h"
-#include "llvm/IR/BasicBlock.h"
 
 #include "UnitLoopInfo.h"
 
@@ -39,35 +38,44 @@ UnitLoopInfo UnitLoopAnalysis::run(Function &F, FunctionAnalysisManager &FAM) {
       if (DT.dominates(child, block)) {
         SingleLoopInfo current_loop = SingleLoopInfo();
         current_loop.loopHeader = child;
-        // current_loop.loopBlocks.push_back(child);
+        current_loop.loopBlocks.push_back(child);
 
-        std::unordered_set<BasicBlock *> reachable;
+        std::unordered_set<BasicBlock *> reachable_set;
         std::queue<BasicBlock *> worklist;
         worklist.push(current_loop.loopHeader);
         while (!worklist.empty()) {
           BasicBlock *front = worklist.front();
           worklist.pop();
           for (BasicBlock *succ : successors(front)) {
-            if (reachable.count(succ) == 0) {
+            if (reachable_set.count(succ) == 0) {
               /// We need the check here to ensure that we don't run 
               /// infinitely if the CFG has a loop in it
               /// i.e. the BB reaches itself directly or indirectly
               worklist.push(succ);
-              reachable.insert(succ);
+              reachable_set.insert(succ);
             }
           }
-          if (reachable(front,current_loop.loopHeader)){
+          if (isReachable(front,current_loop.loopHeader) && front!=current_loop.loopHeader){
             current_loop.loopBlocks.push_back(front);
           }
         }
-        std::cout << "Back edge detected!\n";
+        // std::cout << "Back edge detected!\n";
         Loops.program_loops.push_back(current_loop);
+        // std::cout << "################## of current loop:" << current_loop.loopBlocks.size()<<std::endl;
+        for (auto *it : current_loop.loopBlocks ){
+          if (it == current_loop.loopHeader){}
+        //   std::cout << "TTTTTTTTTTRUE" << std::endl;
+        //   std::cout << "CCCCCCCCCCCCC" << std::endl;
+        // it->print(dbgs());
+
+        }
+        
       }
     }
-    if (F.getName() == "Main.main") {
-      std::cout << "\n\n\nDetected basic block at\n";
-      block->print(dbgs());
-    }
+    // if (F.getName() == "Main.main") {
+    //   std::cout << "\n\n\nDetected basic block at\n";
+    //   block->print(dbgs());
+    // }
   }
   
   // Fill in appropriate information
@@ -78,20 +86,20 @@ UnitLoopInfo UnitLoopAnalysis::run(Function &F, FunctionAnalysisManager &FAM) {
 }
 
 // https://stackoverflow.com/questions/69010453/how-to-obtain-the-basic-blocks-that-are-reachable-from-basic-block-a
-bool UnitLoopAnalysis::reachable(BasicBlock *concern, BlockBlock *target){
-  std::unordered_set<BasicBlock *> reachable;
+bool UnitLoopAnalysis::isReachable(BasicBlock *concern, BasicBlock *target){
+  std::unordered_set<BasicBlock *> reachable_set;
   std::queue<BasicBlock *> worklist;
   worklist.push(concern);
   while (!worklist.empty()) {
     BasicBlock *front = worklist.front();
     worklist.pop();
     for (BasicBlock *succ : successors(front)) {
-      if (reachable.count(succ) == 0) {
+      if (reachable_set.count(succ) == 0) {
         /// We need the check here to ensure that we don't run 
         /// infinitely if the CFG has a loop in it
         /// i.e. the BB reaches itself directly or indirectly
         worklist.push(succ);
-        reachable.insert(succ);
+        reachable_set.insert(succ);
       }
     }
     if (front == target){

@@ -1,7 +1,6 @@
 #ifndef INCLUDE_UNIT_LOOP_INFO_H
 #define INCLUDE_UNIT_LOOP_INFO_H
 #include "llvm/IR/PassManager.h"
-#include "llvm/IR/BasicBlock.h"
 
 #include <vector>
 
@@ -37,7 +36,7 @@ public:
   typedef UnitLoopInfo Result;
 
   UnitLoopInfo run(Function &F, FunctionAnalysisManager &AM);
-  bool reachable(BasicBlock *concern, BlockBlock *target);
+  bool isReachable(BasicBlock *concern, BasicBlock *target);
 };
 } // namespace
 #endif // INCLUDE_UNIT_LOOP_INFO_H
