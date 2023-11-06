@@ -1,8 +1,11 @@
 #ifndef INCLUDE_UNIT_LOOP_INFO_H
 #define INCLUDE_UNIT_LOOP_INFO_H
 #include "llvm/IR/PassManager.h"
+#include "llvm/IR/Value.h"
+#include "llvm/IR/Instruction.h"
 
 #include <vector>
+#include <unordered_set>
 
 using namespace llvm;
 
@@ -14,6 +17,7 @@ class SingleLoopInfo {
   public:
   BasicBlock *loopHeader = NULL;
   std::vector<BasicBlock*> loopBlocks = {};
+  BasicBlock* loopPreheader = NULL;
 };
 
 class UnitLoopInfo {

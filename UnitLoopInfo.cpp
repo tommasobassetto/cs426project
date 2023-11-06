@@ -6,7 +6,6 @@
 #include "UnitLoopInfo.h"
 
 #include <iostream>
-#include <unordered_set>
 #include <queue>
 
 using namespace llvm;
@@ -29,7 +28,6 @@ UnitLoopInfo UnitLoopAnalysis::run(Function &F, FunctionAnalysisManager &FAM) {
     auto i = GraphTraits<DominatorTree*>::nodes_begin(&DT); 
     i != GraphTraits<DominatorTree*>::nodes_end(&DT); 
     ++i) {
-
     BasicBlock *block = i->getBlock();
     auto children = successors(block);
 
@@ -37,6 +35,7 @@ UnitLoopInfo UnitLoopAnalysis::run(Function &F, FunctionAnalysisManager &FAM) {
       // check if child dominates current block
       if (DT.dominates(child, block)) {
         SingleLoopInfo current_loop = SingleLoopInfo();
+        current_loop.loopPreheader = i->getIDom()->getBlock();
         current_loop.loopHeader = child;
         current_loop.loopBlocks.push_back(child);
 

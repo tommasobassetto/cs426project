@@ -18,7 +18,15 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
   UnitLoopInfo &Loops = FAM.getResult<UnitLoopAnalysis>(F);
 
   // Perform the optimization
-
+  for (auto loop:Loops.program_loops){
+    std::unordered_set<Value *> def_set;
+    for (auto bb:loop.loopBlocks){
+      for (Instruction &inst: bb){
+        def_set.insert(inst);
+        // FIXME: inst is unique
+      }
+    }
+  }
   // Set proper preserved analyses
   return PreservedAnalyses::all();
 }
