@@ -33,15 +33,21 @@ UnitLoopInfo UnitLoopAnalysis::run(Function &F, FunctionAnalysisManager &FAM) {
 
     for (auto child: children) {
       // check if child dominates current block
+      // if so, this means there's a back edge
       if (DT.dominates(child, block)) {
+        // setup header and preheader information
         SingleLoopInfo current_loop = SingleLoopInfo();
         current_loop.loopPreheader = i->getIDom()->getBlock();
         current_loop.loopHeader = child;
         current_loop.loopBlocks.push_back(child);
 
+        // get the list of all basic blocks in the loop
+        // by using reachability analysis
         std::unordered_set<BasicBlock *> reachable_set;
         std::queue<BasicBlock *> worklist;
         worklist.push(current_loop.loopHeader);
+
+        // all basic blocks reachable from loop header
         while (!worklist.empty()) {
           BasicBlock *front = worklist.front();
           worklist.pop();
@@ -54,32 +60,17 @@ UnitLoopInfo UnitLoopAnalysis::run(Function &F, FunctionAnalysisManager &FAM) {
               reachable_set.insert(succ);
             }
           }
+
+          // for each block, check if it can reach the loop header
           if (isReachable(front,current_loop.loopHeader) && front!=current_loop.loopHeader){
             current_loop.loopBlocks.push_back(front);
           }
         }
-        // std::cout << "Back edge detected!\n";
-        Loops.program_loops.push_back(current_loop);
-        // std::cout << "################## of current loop:" << current_loop.loopBlocks.size()<<std::endl;
-        for (auto *it : current_loop.loopBlocks ){
-          if (it == current_loop.loopHeader){}
-        //   std::cout << "TTTTTTTTTTRUE" << std::endl;
-        //   std::cout << "CCCCCCCCCCCCC" << std::endl;
-        // it->print(dbgs());
-
-        }
         
+        Loops.program_loops.push_back(current_loop);        
       }
     }
-    // if (F.getName() == "Main.main") {
-    //   std::cout << "\n\n\nDetected basic block at\n";
-    //   block->print(dbgs());
-    // }
   }
-  
-  // Fill in appropriate information
-
-  // For every  
 
   return Loops;
 }
