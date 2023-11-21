@@ -39,6 +39,7 @@ UnitLoopInfo UnitLoopAnalysis::run(Function &F, FunctionAnalysisManager &FAM) {
         SingleLoopInfo current_loop = SingleLoopInfo();
         current_loop.loopPreheader = i->getIDom()->getBlock();
         current_loop.loopHeader = child;
+        current_loop.back_edge_start = block;
         current_loop.loopBlocks.push_back(child);
 
         // get the list of all basic blocks in the loop

@@ -1,6 +1,7 @@
 #ifndef INCLUDE_UNIT_LICM_H
 #define INCLUDE_UNIT_LICM_H
 #include "llvm/IR/PassManager.h"
+#include "llvm/IR/Instructions.h"
 
 using namespace llvm;
 

@@ -18,6 +18,7 @@ class SingleLoopInfo {
   BasicBlock *loopHeader = NULL;
   std::vector<BasicBlock*> loopBlocks = {};
   BasicBlock* loopPreheader = NULL;
+  BasicBlock* back_edge_start = NULL;
 };
 
 class UnitLoopInfo {
