@@ -138,7 +138,13 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
     }
   }
 
-  // FIXME - add a second pass to replace the uses with constants
+  // add a second pass to replace the uses with constants
+  for (auto i: latCell) {
+    if (i.second.type == CONSTANT) {
+      // generate the LLVM value, and replace all uses of the instruction
+      i.first->replaceAllUsesWith(genLLVMValue(i.second));
+    }
+  }
 
   // Set proper preserved analyses
   return PreservedAnalyses::all();
@@ -180,10 +186,6 @@ void visitInst(Instruction *inst) {
 
 }
 
-Value_ evaluate(Instruction *inst) {
-  // FIXME
-}
-
 void visitPhi(Instruction *inst) {
   // FIXME - convert inst to a phi
   PHINode *phi = isa<PHINode*> inst;
@@ -192,6 +194,14 @@ void visitPhi(Instruction *inst) {
   for (unsigned i = 0; i < numOperands; ++i) {
     Value *incomingValue = phi->getIncomingValue(i);
   }
+}
+
+Value_ evaluate(Instruction *inst) {
+  // FIXME
+}
+
+Value *genLLVMValue(Value_ latticeValue) {
+  // FIXME
 }
 
 std::set<Instruction*> successors_(Instruction *inst) {
