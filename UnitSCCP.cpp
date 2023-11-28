@@ -64,6 +64,75 @@ std::map<Instruction*, Value_> latCell;
 std::vector<Edge> flowWL;
 std::vector<Edge> ssaWL;
 
+Value_ evaluate(Instruction *inst) {
+  // FIXME
+}
+
+Value *genLLVMValue(Value_ latticeValue) {
+  // FIXME
+}
+
+std::set<Instruction*> successors_(Instruction *inst) {
+  std::set<Instruction*> next_instrs = std::set<Instruction*>();
+
+  // if there's a branch we need both sides of the branch
+  if (isa<BranchInst>(inst)) {
+    BasicBlock *BB = inst->getParent();
+    for (auto successor: successors(BB)) {
+      next_instrs.insert(&successor->front());
+    }
+  } else {
+    next_instrs.insert(inst->getNextNode());
+  }
+
+  return next_instrs;
+}
+
+void visitInst(Instruction *inst) {
+  Value_ val = evaluate(inst);
+  Value_ valPrev;
+
+  try {
+    valPrev = latCell.at(inst);
+  } catch (const std::out_of_range& e) {
+    valPrev = Value_();
+    valPrev.type = TOP;
+  };
+
+  latCell[inst] = val;
+
+  if (val != valPrev) {
+    // check if it's an assignment by checking if the return type is non-void
+    if (!inst->getType()->isVoidTy()) {
+      // add SSAOutEdges(S) to SSAWL
+      for (User *user: inst->users()) {
+        ssaWL.push_back(
+          Edge(inst, dyn_cast<Instruction>(user))
+        );
+      }
+    } else { // S is a branch instruction
+      if (val.type == CONSTANT) {
+        // FIXME - add constant outgoing edge to flowWL
+      } else {
+        for (Instruction *successor: successors_(inst)) {
+          flowWL.push_back(Edge(inst, successor));
+        }
+      }
+    }
+
+  }
+
+}
+
+void visitPhi(Instruction *inst) {
+  // FIXME - convert inst to a phi
+  PHINode *phi = dyn_cast<PHINode>(inst);
+  unsigned numOperands = phi->getNumIncomingValues();
+
+  for (unsigned i = 0; i < numOperands; ++i) {
+    Value *incomingValue = phi->getIncomingValue(i);
+  }
+}
 
 /// Main function for running the SCCP optimization
 PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
@@ -148,74 +217,4 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
 
   // Set proper preserved analyses
   return PreservedAnalyses::all();
-}
-
-void visitInst(Instruction *inst) {
-  Value_ val = evaluate(inst);
-  Value_ valPrev;
-
-  try {
-    valPrev = latCell.at(inst);
-  } catch (const std::out_of_range& e) {
-    valPrev = Value_();
-    valPrev.type = TOP;
-  };
-
-  latCell[inst] = val;
-
-  if (val != valPrev) {
-    // check if it's an assignment by checking if the return type is non-void
-    if (!inst->getType()->isVoidTy()) {
-      // add SSAOutEdges(S) to SSAWL
-      for (User *user: inst->users()) {
-        ssaWL.push_back(
-          Edge(inst, dyn_cast<Instruction>(user))
-        );
-      }
-    } else { // S is a branch instruction
-      if (val.type == CONSTANT) {
-        // FIXME - add constant outgoing edge to flowWL
-      } else {
-        for (Instruction *successor: successors_(inst)) {
-          flowWL.push_back(Edge(inst, successor));
-        }
-      }
-    }
-
-  }
-
-}
-
-void visitPhi(Instruction *inst) {
-  // FIXME - convert inst to a phi
-  PHINode *phi = isa<PHINode*> inst;
-  unsigned numOperands = phi->getNumIncomingValues();
-
-  for (unsigned i = 0; i < numOperands; ++i) {
-    Value *incomingValue = phi->getIncomingValue(i);
-  }
-}
-
-Value_ evaluate(Instruction *inst) {
-  // FIXME
-}
-
-Value *genLLVMValue(Value_ latticeValue) {
-  // FIXME
-}
-
-std::set<Instruction*> successors_(Instruction *inst) {
-  std::set<Instruction*> next_instrs = std::set<Instruction*>();
-
-  // if there's a branch we need both sides of the branch
-  if (isa<BranchInst>(inst)) {
-    BasicBlock *BB = inst->getParent();
-    for (auto successor: successors(BB)) {
-      next_instrs.insert(&successor->front());
-    }
-  } else {
-    next_instrs.insert(inst->getNextNode());
-  }
-
-  return next_instrs;
 }
