@@ -13,38 +13,40 @@ using namespace llvm;
 using namespace cs426;
 
 /// Main function for running the LICM optimization
+// Note that the input must explicitly NOT be in SSA form
 PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
   dbgs() << "UnitLICM running on " << F.getName() << "\n";
+  unsigned numHoistedLoads = 0;
+  unsigned numHoistedStores = 0;
+  unsigned numHoistedOther = 0;
+
   // Acquires the UnitLoopInfo object constructed by your Loop Identification
   // (LoopAnalysis) pass
   UnitLoopInfo &Loops = FAM.getResult<UnitLoopAnalysis>(F);
 
   // Perform the optimization
   // FIXME - handle nested loops by recomputing loop analysis at every iteration
-  for (auto loop:Loops.program_loops){
+  for (auto loop: Loops.program_loops) {
     // map from defs to uses
     std::map<StringRef, std::set<StringRef>> def_set = std::map<StringRef, std::set<StringRef>>();
+    std::map<StringRef, Instruction*> def_to_inst = std::map<StringRef, Instruction*>();
     std::set<StringRef> loop_fixed_defs = std::set<StringRef>();
 
     // Get all defs in the loop
-    for (auto bb:loop.loopBlocks){
+    for (auto bb: loop.loopBlocks) {
       for (Instruction &inst: *bb) {
         Value *operand = &cast<Value>(inst);
 
         // Check if the instruction is a def. If so, add it to the def set
         // Stores do not count as they are assumed to never be loop invariant
         if (operand != nullptr && !operand->getName().empty()) {
-          // If it's a load or store, don't process the loop
-          if (
-            inst.getOpcode() == Instruction::Store
-          ) {
-            dbgs() << "Load/store instruction detected. Stopping processing for this loop.\n";
+          // If it's a load or store, don't process it
+          if (inst.getOpcode() == Instruction::Store) {
+            loop_fixed_defs.insert(operand->getName());
             continue;
           }
 
-          if (
-            inst.getOpcode() == Instruction::Load
-          ) {
+          if (inst.getOpcode() == Instruction::Load) {
             loop_fixed_defs.insert(operand->getName());
             continue;
           }
@@ -58,11 +60,12 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
           }
 
           def_set[operand->getName()] = uses_in_inst;
+          def_to_inst[operand->getName()] = &inst;
         }
       }
     }
 
-    std::set<StringRef> loop_invariant_defs = std::set<StringRef>();
+    std::set<Instruction*> loop_invariant_defs = std::set<Instruction*>();
     
     // Compute which defs are loop invariant, and can be moved outside of the loop
     // Loop invariant defs are ones where the right hand side variables are not modified in the loop
@@ -81,52 +84,32 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
       }
 
       if (is_loop_invariant) {
-        loop_invariant_defs.insert(i.first);
+        loop_invariant_defs.insert(def_to_inst[i.first]);
         // FIXME - remove this from the set
         // FIXME - iterate until we reach a steady state
       }
     }
 
     // Move loop invariant variables into a block right before the loop header
-    // Create a basic block that will always come right before the loop header
-    // move all edges that are not the back edge to it
-    BasicBlock *loop_def_stash = BasicBlock::Create(
-      loop.loopHeader->getContext(),
-      "loop_def_stash",
-      loop.loopHeader->getParent()
-    );
-
+    // FIXME - is moving into the loop preheader correct?
     for (auto i: loop_invariant_defs) {
       dbgs() << "detected loop invariant def:" << i << "\n";
     }
 
-    for (BasicBlock *pred : predecessors(loop.loopHeader)) {
-        Instruction *terminator = pred->getTerminator();
-        dbgs() << "terminator = " << *terminator << "\n";
-        dbgs() << "of basic block" << *pred << "\n";
-        if (pred != loop.back_edge_start) {
-          dbgs() << "processing successor...\n";
-          // Move all predecessors to the stash block
-          // except the loop back edge
-          for (unsigned i = 0; i < terminator->getNumSuccessors(); ++i) {
-              if (terminator->getSuccessor(i) == loop.loopHeader) {
-                  terminator->setSuccessor(i, loop_def_stash);
-              }
-          }
-        }
+    for (auto inst: loop_invariant_defs) {
+      dbgs() << inst << " " << *inst << " is a loop invariant def\n";
+
+      inst->removeFromParent();
+      loop.loopPreheader->getInstList().push_front(inst);
+      numHoistedOther += 1;
     }
 
-    // FIXME - Move loop invariant instructions into loop_def_stash
-
-    if (!loop_def_stash->empty()) {
-      Instruction *terminator = loop_def_stash->getTerminator();
-      terminator->setSuccessor(0, loop.loopHeader);
-    } else {
-      dbgs() << "loop def stash was empty\n";
-    }
-
-    
   }
+
+  dbgs() << "LICM pass finished running.\n";
+  dbgs() << "Stats: " << numHoistedLoads << " loads hoisted, " 
+    << numHoistedStores << " stores hoisted, "
+    << numHoistedOther << " other instructions hoisted.\n";
   // Set proper preserved analyses
   return PreservedAnalyses::all();
 }
