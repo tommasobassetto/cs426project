@@ -112,17 +112,19 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
 Value *UnitSCCPInfo::genLLVMValue(Value_ latticeValue) {
   // FIXME
   outs()<< "RUN HERE!\n";
-    LLVMContext context;
-    Module module("EvalModule", context);
+  std::string value_string = latticeValue.value;
+  LLVMContext context;
+  Value *value = ConstantInt::get(Type::getInt32Ty(context), 0);
+  // Module module("EvalModule", context);
 
-    // Create a function with the add instruction
-    FunctionType *FT = FunctionType::get(Type::getInt32Ty(context), {Type::getInt32Ty(context), Type::getInt32Ty(context)}, false);
-    Function *F = Function::Create(FT, Function::ExternalLinkage, "add_func", module);
-    BasicBlock *BB = BasicBlock::Create(context, "entry", F);
-    IRBuilder<> builder(BB);
+  // // Create a function with the add instruction
+  // FunctionType *FT = FunctionType::get(Type::getInt32Ty(context), {Type::getInt32Ty(context), Type::getInt32Ty(context)}, false);
+  // Function *F = Function::Create(FT, Function::ExternalLinkage, "add_func", module);
+  // BasicBlock *BB = BasicBlock::Create(context, "entry", F);
+  // IRBuilder<> builder(BB);
 
-    Value *Add = builder.CreateAdd(ConstantInt::get(Type::getInt32Ty(context), 1), ConstantInt::get(Type::getInt32Ty(context), 2));
-    return Add;
+  // Value *Add = builder.CreateAdd(ConstantInt::get(Type::getInt32Ty(context), 1), ConstantInt::get(Type::getInt32Ty(context), 2));
+  return value;
 }
 
 std::set<Instruction*> UnitSCCPInfo::successors_(Instruction *inst) {
