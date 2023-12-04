@@ -1,6 +1,7 @@
 define i32 @test1(i32 inreg %a) nounwind {
 entry:
-    %b = add i32 %a, 128
+    %c = add i32 1, 2
+    %b = add i32 %a, %c
     ret i32 %b
 }
 

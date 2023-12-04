@@ -4,7 +4,8 @@ source_filename = "test/add.ll"
 ; Function Attrs: nounwind
 define i32 @test1(i32 inreg %a) #0 {
 entry:
-  %b = add i32 %a, 128
+  %c = add i32 1, 2
+  %b = add i32 %a, 3
   ret i32 %b
 }
 
