@@ -106,6 +106,30 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     outs() << "!!!result is constant:" << *ret_value_.value << "\n";
     return ret_value_;
   }
+  if (binaryOp->getOpcode() == Instruction::Sub) {
+    int64_t result = ValueArg1 - ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_;
+    ret_value_.type  = CONSTANT;
+    ret_value_.varname = inst->getName().str();
+    ret_value_.value = ret;
+    constant_map.insert({inst,ret_value_});
+    outs() << "!!!result name:" << ret_value_.varname << "\n";
+    outs() << "!!!result is constant:" << *ret_value_.value << "\n";
+    return ret_value_;
+  }
+  if (binaryOp->getOpcode() == Instruction::Mul) {
+    int64_t result = ValueArg1 * ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_;
+    ret_value_.type  = CONSTANT;
+    ret_value_.varname = inst->getName().str();
+    ret_value_.value = ret;
+    constant_map.insert({inst,ret_value_});
+    outs() << "!!!result name:" << ret_value_.varname << "\n";
+    outs() << "!!!result is constant:" << *ret_value_.value << "\n";
+    return ret_value_;
+  }
  }
 }
 /*or binary operator?
