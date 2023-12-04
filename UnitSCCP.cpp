@@ -47,6 +47,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
   // note: visit instruction is built in
   // interpret.evaluate?
   // execution engine?
+  // todo: delete the instrution with const
   LLVMContext context;
   if (BinaryOperator *binaryOp = dyn_cast<BinaryOperator>(inst)){
         Value *op1 = binaryOp->getOperand(0);
@@ -60,8 +61,8 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
   }
   else {
     // check values in the map
-    auto const_value_ = constants.find(op1);
-    if (const_value_ != constants.end() && const_value_->second.type == CONSTANT){
+    auto const_value_ = constant_map.find(op1);
+    if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
       // in our map
       const1 = const_value_->second.value;
     }
@@ -72,8 +73,8 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
   }
   else {
     // check values in the map
-    auto const_value_ = constants.find(op2);
-    if (const_value_ != constants.end() && const_value_->second.type == CONSTANT){
+    auto const_value_ = constant_map.find(op2);
+    if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
       // in our map
       const2 = const_value_->second.value;
     }
@@ -100,6 +101,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     ret_value_.type  = CONSTANT;
     ret_value_.varname = inst->getName().str();
     ret_value_.value = ret;
+    constant_map.insert({inst,ret_value_});
     outs() << "!!!result name:" << ret_value_.varname << "\n";
     outs() << "!!!result is constant:" << *ret_value_.value << "\n";
     return ret_value_;

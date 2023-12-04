@@ -36,7 +36,7 @@ class UnitSCCPInfo {
 
   ValueType meet(Value_ first, Value_ second);
   typedef std::pair<Instruction*, Instruction*> Edge;
-  std::map<Value *, Value_> constants={};
+  std::map<Value *, Value_> constant_map={};
 
   // Globals used in analysis
   std::map<Edge, bool> execFlags;
