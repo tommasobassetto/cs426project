@@ -3,6 +3,7 @@
 #include "llvm/Support/raw_ostream.h"
 
 #include "UnitLICM.h"
+#include "UnitLICMMultiple.h"
 #include "UnitLoopInfo.h"
 #include "UnitSCCP.h"
 
@@ -21,6 +22,16 @@ llvm::PassPluginLibraryInfo getUnitProjectPluginInfo() {
                  ArrayRef<PassBuilder::PipelineElement>) {
                 if (Name == "unit-licm") {
                   FPM.addPass(cs426::UnitLICM());
+                  return true;
+                }
+                return false;
+              });
+            // Register LICMMultiple
+            PB.registerPipelineParsingCallback(
+              [](StringRef Name, FunctionPassManager& FPM,
+                 ArrayRef<PassBuilder::PipelineElement>) {
+                if (Name == "unit-licm-multiple") {
+                  FPM.addPass(cs426::UnitLICMMultiple());
                   return true;
                 }
                 return false;
