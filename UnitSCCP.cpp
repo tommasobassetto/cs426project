@@ -47,6 +47,91 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
   // note: visit instruction is built in
   // interpret.evaluate?
   // execution engine?
+  // todo: delete the instrution with const
+  LLVMContext context;
+  if (BinaryOperator *binaryOp = dyn_cast<BinaryOperator>(inst)){
+        Value *op1 = binaryOp->getOperand(0);
+        Value *op2 = binaryOp->getOperand(1);
+        Value *const1 = nullptr;
+        Value *const2 = nullptr;
+
+  outs() << "in binary\n";
+  if (isa<Constant>(op1)){
+    const1 = op1;
+  }
+  else {
+    // check values in the map
+    auto const_value_ = constant_map.find(op1);
+    if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+      // in our map
+      const1 = const_value_->second.value;
+    }
+  }
+  if(const1) outs() << "!!!op1 is constant:" << *const1 << "\n";
+  if (isa<Constant>(op2)){
+    const2 = op2;
+  }
+  else {
+    // check values in the map
+    auto const_value_ = constant_map.find(op2);
+    if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+      // in our map
+      const2 = const_value_->second.value;
+    }
+  }
+  if(const2)  outs() << "!!!op2 is constant:" << *const2 << "\n";
+    // return BinaryOperator::CreateAdd(op1, op2, "add_result", inst);
+  if(const1 && const2){
+    int64_t ValueArg1;
+    int64_t ValueArg2;
+  if (ConstantInt *ConstantArg1 = dyn_cast<ConstantInt>(const1)) {
+      if (ConstantInt *ConstantArg2 = dyn_cast<ConstantInt>(const2)) {
+          ValueArg1 = ConstantArg1->getSExtValue();
+          ValueArg2 = ConstantArg2->getSExtValue();
+      }
+  }
+  // both are constants, add the result to the map
+  // perform real operation
+  if (binaryOp->getOpcode() == Instruction::Add) {
+    // Value* result = BinaryOperator::CreateAdd(op1, op2, "add_result", inst);
+    int64_t result = ValueArg1 + ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    // Value * ret = ConstantInt::get(Type::getInt64Ty(context), result);
+    Value_ ret_value_;
+    ret_value_.type  = CONSTANT;
+    ret_value_.varname = inst->getName().str();
+    ret_value_.value = ret;
+    constant_map.insert({inst,ret_value_});
+    outs() << "!!!result name:" << ret_value_.varname << "\n";
+    outs() << "!!!result is constant:" << *ret_value_.value << "\n";
+    return ret_value_;
+  }
+  if (binaryOp->getOpcode() == Instruction::Sub) {
+    int64_t result = ValueArg1 - ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_;
+    ret_value_.type  = CONSTANT;
+    ret_value_.varname = inst->getName().str();
+    ret_value_.value = ret;
+    constant_map.insert({inst,ret_value_});
+    outs() << "!!!result name:" << ret_value_.varname << "\n";
+    outs() << "!!!result is constant:" << *ret_value_.value << "\n";
+    return ret_value_;
+  }
+  if (binaryOp->getOpcode() == Instruction::Mul) {
+    int64_t result = ValueArg1 * ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_;
+    ret_value_.type  = CONSTANT;
+    ret_value_.varname = inst->getName().str();
+    ret_value_.value = ret;
+    constant_map.insert({inst,ret_value_});
+    outs() << "!!!result name:" << ret_value_.varname << "\n";
+    outs() << "!!!result is constant:" << *ret_value_.value << "\n";
+    return ret_value_;
+  }
+ }
+}
 /*or binary operator?
     // Handle binary operations
     if (BinaryOperator *binaryOp = dyn_cast<BinaryOperator>(inst)) {
@@ -104,26 +189,11 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     // Unhandled instruction
     return nullptr;
     */
+  // if(const1){
+
+  // }
   auto value = UnitSCCPInfo::Value_();
   value.type = UnitSCCPInfo::BOTTOM;
-  return value;
-}
-
-Value *UnitSCCPInfo::genLLVMValue(Value_ latticeValue) {
-  // FIXME
-  outs()<< "RUN HERE!\n";
-  std::string value_string = latticeValue.value;
-  LLVMContext context;
-  Value *value = ConstantInt::get(Type::getInt32Ty(context), 0);
-  // Module module("EvalModule", context);
-
-  // // Create a function with the add instruction
-  // FunctionType *FT = FunctionType::get(Type::getInt32Ty(context), {Type::getInt32Ty(context), Type::getInt32Ty(context)}, false);
-  // Function *F = Function::Create(FT, Function::ExternalLinkage, "add_func", module);
-  // BasicBlock *BB = BasicBlock::Create(context, "entry", F);
-  // IRBuilder<> builder(BB);
-
-  // Value *Add = builder.CreateAdd(ConstantInt::get(Type::getInt32Ty(context), 1), ConstantInt::get(Type::getInt32Ty(context), 2));
   return value;
 }
 
@@ -160,7 +230,7 @@ void UnitSCCPInfo::visitInst(Instruction *inst) {
     if (!inst->getType()->isVoidTy()) {
       // add SSAOutEdges(S) to SSAWL
       for (User *user: inst->users()) {
-        outs()<< "--dyn cast here!  \n";
+        // outs()<< "--dyn cast here!  \n";
         outs()<<  isa<PHINode>(user) << "\n";
         ssaWL.push_back(
           
@@ -204,9 +274,9 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
 
   // visit the first instruction
   Instruction *first = &F.front().front();
-  outs() << "visit first inst\n";
+  // outs() << "visit first inst\n";
   Sccp.visitInst(first);
-  outs() << "first inst passed\n";
+  // outs() << "first inst passed\n";
 
   // find the successors of the inst
   // add the edges to flowWL
@@ -287,7 +357,7 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
   for (auto i: Sccp.latCell) {
     if (i.second.type == UnitSCCPInfo::CONSTANT) {
       // generate the LLVM value, and replace all uses of the instruction
-      i.first->replaceAllUsesWith(Sccp.genLLVMValue(i.second));
+      i.first->replaceAllUsesWith(i.second.value);
     }
   }
 
