@@ -50,156 +50,238 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
   // todo: delete the instrution with const
   LLVMContext context;
   if (BinaryOperator *binaryOp = dyn_cast<BinaryOperator>(inst)){
-        Value *op1 = binaryOp->getOperand(0);
-        Value *op2 = binaryOp->getOperand(1);
-        Value *const1 = nullptr;
-        Value *const2 = nullptr;
-
-  outs() << "in binary\n";
-  if (isa<Constant>(op1)){
-    const1 = op1;
-  }
-  else {
-    // check values in the map
-    auto const_value_ = constant_map.find(op1);
-    if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
-      // in our map
-      const1 = const_value_->second.value;
+    Value *op1 = binaryOp->getOperand(0);
+    Value *op2 = binaryOp->getOperand(1);
+    Value *const1 = nullptr;
+    Value *const2 = nullptr;
+    outs() << "in binary\n";
+    if (isa<Constant>(op1)){
+      const1 = op1;
     }
-  }
-  if(const1) outs() << "!!!op1 is constant:" << *const1 << "\n";
-  if (isa<Constant>(op2)){
-    const2 = op2;
-  }
-  else {
-    // check values in the map
-    auto const_value_ = constant_map.find(op2);
-    if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
-      // in our map
-      const2 = const_value_->second.value;
-    }
-  }
-  if(const2)  outs() << "!!!op2 is constant:" << *const2 << "\n";
-    // return BinaryOperator::CreateAdd(op1, op2, "add_result", inst);
-  if(const1 && const2){
-    int64_t ValueArg1;
-    int64_t ValueArg2;
-  if (ConstantInt *ConstantArg1 = dyn_cast<ConstantInt>(const1)) {
-      if (ConstantInt *ConstantArg2 = dyn_cast<ConstantInt>(const2)) {
-          ValueArg1 = ConstantArg1->getSExtValue();
-          ValueArg2 = ConstantArg2->getSExtValue();
+    else {
+      // check values in the map
+      auto const_value_ = constant_map.find(op1);
+      if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+        // in our map
+        const1 = const_value_->second.value;
       }
+    }
+    if (isa<Constant>(op2)){
+      const2 = op2;
+    }
+    else {
+      // check values in the map
+      auto const_value_ = constant_map.find(op2);
+      if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+        // in our map
+        const2 = const_value_->second.value;
+      }
+    }
+    if(const1 && const2){
+      if(inst->getType()->isIntegerTy()){
+        // integer
+
+        // if (ConstantInt *ConstantArg1 = dyn_cast<ConstantInt>(const1)) {
+        //   if (ConstantInt *ConstantArg2 = dyn_cast<ConstantInt>(const2)) {
+        int64_t ValueArg1 = dyn_cast<ConstantInt>(const1)->getSExtValue();
+        int64_t ValueArg2 = dyn_cast<ConstantInt>(const2)->getSExtValue();
+        //   }
+        // }
+        // both are constants, add the result to the map
+        // perform real operation
+        // binary comes from https://llvm.org/docs/LangRef.html#binary-operations
+        // first, integer
+        if (binaryOp->getOpcode() == Instruction::Add) {
+          // Value* result = BinaryOperator::CreateAdd(op1, op2, "add_result", inst);
+          int64_t result = ValueArg1 + ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          // Value * ret = ConstantInt::get(Type::getInt64Ty(context), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          outs() << "!add detected\n";
+          outs() << "!!!result name:" << ret_value_.varname << "\n";
+          outs() << "!!!result is constant:" << *ret_value_.value << "\n";
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::Sub) {
+          int64_t result = ValueArg1 - ValueArg2;
+          Value *ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::Mul) {
+          int64_t result = ValueArg1 * ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::UDiv) {
+          int64_t result = ValueArg1 / ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        // TODO: can't understand what happens to results
+        else if (binaryOp->getOpcode() == Instruction::UDiv) {
+          int64_t result = (uint64_t)ValueArg1 / (uint64_t)ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::SDiv) {
+          int64_t result = ValueArg1 / ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::URem) {
+          uint64_t result = (uint64_t)ValueArg1 % (uint64_t)ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::SRem) {
+          int64_t result = ValueArg1 % ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::Shl) {
+          int64_t result = ValueArg1 << ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::LShr) {
+          int64_t result = (uint64_t)ValueArg1 >> ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::AShr) {
+          int64_t result = ValueArg1 >> ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::And) {
+          int64_t result = ValueArg1 & ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::Or) {
+          int64_t result = ValueArg1 | ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::Xor) {
+          int64_t result = ValueArg1 ^ ValueArg2;
+          Value * ret = ConstantInt::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else {
+          outs() << "unsupported op " << binaryOp->getOpcode() << "\n";
+          exit(-1);
+        }
+      }
+      else if(inst->getType()->isFloatTy()){
+        float ValueArg1 = dyn_cast<ConstantFP>(const1)->getValueAPF().convertToFloat();
+        float ValueArg2 = dyn_cast<ConstantFP>(const2)->getValueAPF().convertToFloat();
+        if (binaryOp->getOpcode() == Instruction::FAdd) {
+          float result = ValueArg1 + ValueArg2;
+          Value * ret = ConstantFP::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          outs() << "!fadd detected\n";
+          outs() << "!!!result name:" << ret_value_.varname << "\n";
+          outs() << "!!!result is constant:" << *ret_value_.value << "\n";
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::FSub) {
+          float result = ValueArg1 - ValueArg2;
+          Value * ret = ConstantFP::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::FMul) {
+          float result = ValueArg1 * ValueArg2;
+          Value * ret = ConstantFP::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::FDiv) {
+          float result = ValueArg1 / ValueArg2;
+          Value * ret = ConstantFP::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        // FRem library not support
+        // else if (binaryOp->getOpcode() == Instruction::FRem) {
+        //   float result = ValueArg1 / ValueArg2;
+        //   Value * ret = ConstantFP::get(inst->getType(), result);
+        //   Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+        //   constant_map.insert({inst,ret_value_});
+        //   return ret_value_;
+        // }
+        else {
+          outs() << "unsupported op " << binaryOp->getOpcode() << "\n";
+          exit(-1);
+        }
+      }
+      // todo: support double?
+    }
   }
-  // both are constants, add the result to the map
-  // perform real operation
-  // binary comes from https://llvm.org/docs/LangRef.html#binary-operations
-  // first, integer
-  if (binaryOp->getOpcode() == Instruction::Add) {
-    // Value* result = BinaryOperator::CreateAdd(op1, op2, "add_result", inst);
-    int64_t result = ValueArg1 + ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    // Value * ret = ConstantInt::get(Type::getInt64Ty(context), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    outs() << "!add detected\n";
-    outs() << "!!!result name:" << ret_value_.varname << "\n";
-    outs() << "!!!result is constant:" << *ret_value_.value << "\n";
-    return ret_value_;
+  else if (UnaryOperator *unaryOp = dyn_cast<UnaryOperator>(inst)){
+    outs() << "I am here unart!!\n";
+    Value *op1 = unaryOp->getOperand(0);
+    Value *const1 = nullptr;
+    outs() << "in unary\n";
+    if (isa<Constant>(op1)){
+      const1 = op1;
+    }
+    else {
+      // check values in the map
+      auto const_value_ = constant_map.find(op1);
+      if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+        // in our map
+        const1 = const_value_->second.value;
+      }
+    }
+    if(const1){
+      outs() << "!!!op1 is constant:" << *const1 << "\n";
+      float ValueArg1 = dyn_cast<ConstantFP>(const1)->getValueAPF().convertToFloat();
+      if (unaryOp->getOpcode() == Instruction::FNeg) {
+        float result = - ValueArg1;
+        Value * ret = ConstantFP::get(inst->getType(), result);
+        Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+        constant_map.insert({inst,ret_value_});
+        return ret_value_;
+      }
+      else {
+        outs() << "unsupported op " << unaryOp->getOpcode() << "\n";
+        exit(-1);
+      }
+    }
   }
-  else if (binaryOp->getOpcode() == Instruction::Sub) {
-    int64_t result = ValueArg1 - ValueArg2;
-    Value *ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
-  else if (binaryOp->getOpcode() == Instruction::Mul) {
-    int64_t result = ValueArg1 * ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
-  else if (binaryOp->getOpcode() == Instruction::UDiv) {
-    int64_t result = ValueArg1 / ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
-  // TODO: can't understand what happens to results
-  else if (binaryOp->getOpcode() == Instruction::UDiv) {
-    int64_t result = (uint64_t)ValueArg1 / (uint64_t)ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
-  else if (binaryOp->getOpcode() == Instruction::SDiv) {
-    int64_t result = ValueArg1 / ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
-  else if (binaryOp->getOpcode() == Instruction::URem) {
-    uint64_t result = (uint64_t)ValueArg1 % (uint64_t)ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
-  else if (binaryOp->getOpcode() == Instruction::SRem) {
-    int64_t result = ValueArg1 % ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
-  else if (binaryOp->getOpcode() == Instruction::Shl) {
-    int64_t result = ValueArg1 << ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
-  else if (binaryOp->getOpcode() == Instruction::LShr) {
-    int64_t result = (uint64_t)ValueArg1 >> ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
-  else if (binaryOp->getOpcode() == Instruction::AShr) {
-    int64_t result = ValueArg1 >> ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
-  else if (binaryOp->getOpcode() == Instruction::And) {
-    int64_t result = ValueArg1 & ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
-  else if (binaryOp->getOpcode() == Instruction::Or) {
-    int64_t result = ValueArg1 | ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
-  else if (binaryOp->getOpcode() == Instruction::Xor) {
-    int64_t result = ValueArg1 ^ ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-    constant_map.insert({inst,ret_value_});
-    return ret_value_;
-  }
- }
-}
 /*or binary operator?
     // Handle binary operations
     if (BinaryOperator *binaryOp = dyn_cast<BinaryOperator>(inst)) {
