@@ -7,7 +7,6 @@ define dso_local void @generateRandomArray(i32 noundef %0, ptr noundef %1) {
   %3 = alloca i32, align 4
   %4 = alloca ptr, align 8
   %5 = alloca i32, align 4
-  %"reg2mem alloca point" = bitcast i32 0 to i32
   store i32 %0, ptr %3, align 4
   store ptr %1, ptr %4, align 8
   call void @srand(i32 noundef 0)
@@ -50,7 +49,6 @@ define dso_local i32 @main() {
   %3 = alloca i32, align 4
   %4 = alloca i32, align 4
   %5 = alloca i32, align 4
-  %"reg2mem alloca point" = bitcast i32 0 to i32
   store i32 0, ptr %1, align 4
   %6 = call noalias ptr @malloc(i64 noundef 80)
   store ptr %6, ptr %2, align 8
