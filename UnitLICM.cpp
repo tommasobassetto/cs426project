@@ -40,8 +40,14 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
         // Stores do not count as they are assumed to never be loop invariant
         if (operand != nullptr && !operand->getName().empty()) {
           // If it's a load or store, don't process it
+          // FIXME - add alias analysis
           if (inst.getOpcode() == Instruction::Store) {
             dbgs() << "Store detected:" << inst << "\n";
+            loop_fixed_defs.insert(operand->getName());
+            continue;
+          }
+
+          if (inst.getOpcode() == Instruction::Load) {
             loop_fixed_defs.insert(operand->getName());
             continue;
           }
