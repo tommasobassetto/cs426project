@@ -92,44 +92,71 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
   }
   // both are constants, add the result to the map
   // perform real operation
+  // binary comes from https://llvm.org/docs/LangRef.html#binary-operations
+  // first, integer
   if (binaryOp->getOpcode() == Instruction::Add) {
     // Value* result = BinaryOperator::CreateAdd(op1, op2, "add_result", inst);
     int64_t result = ValueArg1 + ValueArg2;
     Value * ret = ConstantInt::get(inst->getType(), result);
     // Value * ret = ConstantInt::get(Type::getInt64Ty(context), result);
-    Value_ ret_value_;
-    ret_value_.type  = CONSTANT;
-    ret_value_.varname = inst->getName().str();
-    ret_value_.value = ret;
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
     constant_map.insert({inst,ret_value_});
+    outs() << "!add detected\n";
     outs() << "!!!result name:" << ret_value_.varname << "\n";
     outs() << "!!!result is constant:" << *ret_value_.value << "\n";
     return ret_value_;
   }
-  if (binaryOp->getOpcode() == Instruction::Sub) {
+  else if (binaryOp->getOpcode() == Instruction::Sub) {
     int64_t result = ValueArg1 - ValueArg2;
-    Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_;
-    ret_value_.type  = CONSTANT;
-    ret_value_.varname = inst->getName().str();
-    ret_value_.value = ret;
+    Value *ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
     constant_map.insert({inst,ret_value_});
-    outs() << "!!!result name:" << ret_value_.varname << "\n";
-    outs() << "!!!result is constant:" << *ret_value_.value << "\n";
     return ret_value_;
   }
-  if (binaryOp->getOpcode() == Instruction::Mul) {
+  else if (binaryOp->getOpcode() == Instruction::Mul) {
     int64_t result = ValueArg1 * ValueArg2;
     Value * ret = ConstantInt::get(inst->getType(), result);
-    Value_ ret_value_;
-    ret_value_.type  = CONSTANT;
-    ret_value_.varname = inst->getName().str();
-    ret_value_.value = ret;
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
     constant_map.insert({inst,ret_value_});
-    outs() << "!!!result name:" << ret_value_.varname << "\n";
-    outs() << "!!!result is constant:" << *ret_value_.value << "\n";
     return ret_value_;
   }
+  else if (binaryOp->getOpcode() == Instruction::UDiv) {
+    int64_t result = ValueArg1 / ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+    constant_map.insert({inst,ret_value_});
+    return ret_value_;
+  }
+  // TODO: can't understand what happens to results
+  else if (binaryOp->getOpcode() == Instruction::UDiv) {
+    int64_t result = (uint64_t)ValueArg1 / (uint64_t)ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+    constant_map.insert({inst,ret_value_});
+    return ret_value_;
+  }
+  else if (binaryOp->getOpcode() == Instruction::SDiv) {
+    int64_t result = ValueArg1 / ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+    constant_map.insert({inst,ret_value_});
+    return ret_value_;
+  }
+  else if (binaryOp->getOpcode() == Instruction::URem) {
+    uint64_t result = (uint64_t)ValueArg1 % (uint64_t)ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+    constant_map.insert({inst,ret_value_});
+    return ret_value_;
+  }
+  else if (binaryOp->getOpcode() == Instruction::SRem) {
+    int64_t result = ValueArg1 % ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+    constant_map.insert({inst,ret_value_});
+    return ret_value_;
+  }
+
  }
 }
 /*or binary operator?
