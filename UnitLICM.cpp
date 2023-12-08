@@ -33,25 +33,15 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
 
     // Get all defs in the loop
     for (auto bb: loop.loopBlocks) {
-      dbgs() << "BLOCK\n";
       for (Instruction &inst: *bb) {
         Value *operand = &cast<Value>(inst);
-        dbgs() << inst << "\n";
-
-        dbgs() << "OPNAME: " << inst.getName() << "\n";
 
         // Check if the instruction is a def. If so, add it to the def set
         // Stores do not count as they are assumed to never be loop invariant
         if (operand != nullptr && !operand->getName().empty()) {
           // If it's a load or store, don't process it
-          dbgs() << "PROCESSING INSTRUCTION...\n";
           if (inst.getOpcode() == Instruction::Store) {
             dbgs() << "Store detected:" << inst << "\n";
-            loop_fixed_defs.insert(operand->getName());
-            continue;
-          }
-
-          if (inst.getOpcode() == Instruction::Load) {
             loop_fixed_defs.insert(operand->getName());
             continue;
           }
@@ -101,6 +91,9 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
     for (auto inst: loop_invariant_defs) {
       dbgs() << inst << " " << *inst << " is a loop invariant def\n";
 
+      if (inst->getOpcode() == Instruction::Load) numHoistedLoads += 1;
+      if (inst->getOpcode() == Instruction::Store) numHoistedStores += 1;
+
       inst->removeFromParent();
       loop.loopPreheader->getInstList().push_front(inst);
       numHoistedOther += 1;
@@ -111,7 +104,7 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
   dbgs() << "LICM pass finished running.\n";
   dbgs() << "Stats: " << numHoistedLoads << " loads hoisted, " 
     << numHoistedStores << " stores hoisted, "
-    << numHoistedOther << " other instructions hoisted.\n";
+    << numHoistedOther << " total instructions hoisted.\n";
   // Set proper preserved analyses
   return PreservedAnalyses::all();
 }

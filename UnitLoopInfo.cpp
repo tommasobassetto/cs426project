@@ -37,7 +37,7 @@ UnitLoopInfo UnitLoopAnalysis::run(Function &F, FunctionAnalysisManager &FAM) {
       if (DT.dominates(child, block)) {
         // setup header and preheader information
         SingleLoopInfo current_loop = SingleLoopInfo();
-        current_loop.loopPreheader = i->getIDom()->getIDom()->getBlock();
+        current_loop.loopPreheader = DT[child]->getIDom()->getBlock();
         current_loop.loopHeader = child;
         current_loop.back_edge_start = block;
         current_loop.loopBlocks.push_back(child);
