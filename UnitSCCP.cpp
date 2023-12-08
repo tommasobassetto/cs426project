@@ -156,7 +156,48 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     constant_map.insert({inst,ret_value_});
     return ret_value_;
   }
-
+  else if (binaryOp->getOpcode() == Instruction::Shl) {
+    int64_t result = ValueArg1 << ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+    constant_map.insert({inst,ret_value_});
+    return ret_value_;
+  }
+  else if (binaryOp->getOpcode() == Instruction::LShr) {
+    int64_t result = (uint64_t)ValueArg1 >> ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+    constant_map.insert({inst,ret_value_});
+    return ret_value_;
+  }
+  else if (binaryOp->getOpcode() == Instruction::AShr) {
+    int64_t result = ValueArg1 >> ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+    constant_map.insert({inst,ret_value_});
+    return ret_value_;
+  }
+  else if (binaryOp->getOpcode() == Instruction::And) {
+    int64_t result = ValueArg1 & ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+    constant_map.insert({inst,ret_value_});
+    return ret_value_;
+  }
+  else if (binaryOp->getOpcode() == Instruction::Or) {
+    int64_t result = ValueArg1 | ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+    constant_map.insert({inst,ret_value_});
+    return ret_value_;
+  }
+  else if (binaryOp->getOpcode() == Instruction::Xor) {
+    int64_t result = ValueArg1 ^ ValueArg2;
+    Value * ret = ConstantInt::get(inst->getType(), result);
+    Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+    constant_map.insert({inst,ret_value_});
+    return ret_value_;
+  }
  }
 }
 /*or binary operator?
