@@ -49,6 +49,8 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
   // execution engine?
   // todo: delete the instrution with const
   LLVMContext context;
+  // todo: stats
+  // handle binary ops
   if (BinaryOperator *binaryOp = dyn_cast<BinaryOperator>(inst)){
     Value *op1 = binaryOp->getOperand(0);
     Value *op2 = binaryOp->getOperand(1);
@@ -79,17 +81,11 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     }
     if(const1 && const2){
       if(inst->getType()->isIntegerTy()){
-        // integer
-
-        // if (ConstantInt *ConstantArg1 = dyn_cast<ConstantInt>(const1)) {
-        //   if (ConstantInt *ConstantArg2 = dyn_cast<ConstantInt>(const2)) {
-        int64_t ValueArg1 = dyn_cast<ConstantInt>(const1)->getSExtValue();
-        int64_t ValueArg2 = dyn_cast<ConstantInt>(const2)->getSExtValue();
-        //   }
-        // }
         // both are constants, add the result to the map
         // perform real operation
         // binary comes from https://llvm.org/docs/LangRef.html#binary-operations
+        int64_t ValueArg1 = dyn_cast<ConstantInt>(const1)->getSExtValue();
+        int64_t ValueArg2 = dyn_cast<ConstantInt>(const2)->getSExtValue();
         // first, integer
         if (binaryOp->getOpcode() == Instruction::Add) {
           // Value* result = BinaryOperator::CreateAdd(op1, op2, "add_result", inst);
@@ -117,14 +113,6 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
           constant_map.insert({inst,ret_value_});
           return ret_value_;
         }
-        else if (binaryOp->getOpcode() == Instruction::UDiv) {
-          int64_t result = ValueArg1 / ValueArg2;
-          Value * ret = ConstantInt::get(inst->getType(), result);
-          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-          constant_map.insert({inst,ret_value_});
-          return ret_value_;
-        }
-        // TODO: can't understand what happens to results
         else if (binaryOp->getOpcode() == Instruction::UDiv) {
           int64_t result = (uint64_t)ValueArg1 / (uint64_t)ValueArg2;
           Value * ret = ConstantInt::get(inst->getType(), result);
@@ -199,7 +187,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
           outs() << "unsupported op " << binaryOp->getOpcode() << "\n";
           exit(-1);
         }
-      }
+      } // todo: frem
       else if(inst->getType()->isFloatTy()){
         float ValueArg1 = dyn_cast<ConstantFP>(const1)->getValueAPF().convertToFloat();
         float ValueArg2 = dyn_cast<ConstantFP>(const2)->getValueAPF().convertToFloat();
@@ -248,8 +236,11 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         }
       }
       // todo: support double?
+      // todo: bitcast instruction could not be generated
+      // bitcast i8 255 to i8  
     }
   }
+  // handle unary ops
   else if (UnaryOperator *unaryOp = dyn_cast<UnaryOperator>(inst)){
     outs() << "I am here unart!!\n";
     Value *op1 = unaryOp->getOperand(0);
@@ -281,6 +272,21 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         exit(-1);
       }
     }
+  }
+  // handle inst
+  else if (ICmpInst *icmpInst = dyn_cast<ICmpInst>(inst)){
+    ICmpInst::Predicate condition = icmpInst->getPredicate();
+
+    // Accessing the type
+    Type *instructionType = icmpInst->getType();
+
+    // Accessing operands (op1 and op2)
+    Value *operand1 = icmpInst->getOperand(0);
+    Value *operand2 = icmpInst->getOperand(1);
+    outs() << "Condition code: " << condition << "\n";
+    outs() << "Type of instruction: " << *instructionType << "\n";
+    outs() << "Operand 1: " << *operand1 << "\n";
+    outs() << "Operand 2: " << *operand2 << "\n";
   }
 /*or binary operator?
     // Handle binary operations
@@ -438,7 +444,7 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
 
   // main loop of SCCP
   while (!Sccp.flowWL.empty() || !Sccp.ssaWL.empty()) {
-    outs() << "+++++loop starts \n";
+    // outs() << "+++++loop starts \n";
     if (!Sccp.flowWL.empty()) {
       UnitSCCPInfo::Edge edge = Sccp.flowWL.back();
       // possible that edge.second == nullptr for
@@ -458,15 +464,15 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
       Sccp.execFlags[edge] = true;
     // crash here edge.second
       if (isa<PHINode>(edge.second)) {
-        outs() << "visit phi 1 \n";
+        // outs() << "visit phi 1 \n";
         Sccp.visitPhi(edge.second);
       }
       // FIXME - is this supposed to be else if?
       if (!visited.contains(edge.second)) {
-        outs() << "visit inst in the main loop\n";
-        outs() << "inst: " << *edge.second << "\n";
+        // outs() << "visit inst in the main loop\n";
+        // outs() << "inst: " << *edge.second << "\n";
         Sccp.visitInst(edge.second);
-        outs() << "inst passed once in the main loop\n";
+        // outs() << "inst passed once in the main loop\n";
 
       }
       // if only one outgoing edge, add to flowWL
@@ -479,7 +485,7 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
 
       // This needs to be at the end so it doesn't interfere with the other checks
       visited.insert(edge.second);
-      outs() << "successfully here1\n";
+      // outs() << "successfully here1\n";
 
     }
 
@@ -489,18 +495,18 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
       Sccp.ssaWL.pop_back();
 
       if (isa<PHINode>(edge.second)) {
-        outs() << "visit phi 2 \n";
+        // outs() << "visit phi 2 \n";
 
         Sccp.visitPhi(edge.second);
       } else if (Sccp.execFlags[edge]) { // if (E->sink has 1 or more executable in-edges)
-        outs() << "visit inst when execflag = 1\n";
-        outs() << "inst: " << *edge.second << "\n";
+        // outs() << "visit inst when execflag = 1\n";
+        // outs() << "inst: " << *edge.second << "\n";
         Sccp.visitInst(edge.second);
-        outs() << "inst passed when execflag = 1\n";
+        // outs() << "inst passed when execflag = 1\n";
 
       }
     }
-    outs() << "successfully here2\n";
+    // outs() << "successfully here2\n";
   }
 
   // add a second pass to replace the uses with constants
