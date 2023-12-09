@@ -25,7 +25,6 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
   UnitLoopInfo &Loops = FAM.getResult<UnitLoopAnalysis>(F);
 
   // Perform the optimization
-  // FIXME - handle nested loops by recomputing loop analysis at every iteration
   for (auto loop: Loops.program_loops) {
     // map from defs to uses
     std::map<StringRef, std::set<StringRef>> def_set = std::map<StringRef, std::set<StringRef>>();
@@ -34,20 +33,14 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
 
     // Get all defs in the loop
     for (auto bb: loop.loopBlocks) {
-      dbgs() << "BLOCK\n";
       for (Instruction &inst: *bb) {
         Value *operand = &cast<Value>(inst);
-        dbgs() << inst << "\n";
-
-        // FIXME - operand name is sometimes empty
-        dbgs() << "OPNAME: " << inst.getName() << "\n";
 
         // Check if the instruction is a def. If so, add it to the def set
         // Stores do not count as they are assumed to never be loop invariant
         if (operand != nullptr && !operand->getName().empty()) {
           // If it's a load or store, don't process it
-          // FIXME
-          dbgs() << "PROCESSING INSTRUCTION...\n";
+          // FIXME - add alias analysis
           if (inst.getOpcode() == Instruction::Store) {
             dbgs() << "Store detected:" << inst << "\n";
             loop_fixed_defs.insert(operand->getName());
@@ -93,19 +86,19 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
 
       if (is_loop_invariant) {
         loop_invariant_defs.insert(def_to_inst[i.first]);
-        // FIXME - remove this from the set
-        // FIXME - iterate until we reach a steady state
       }
     }
 
     // Move loop invariant variables into a block right before the loop header
-    // FIXME - is moving into the loop preheader correct?
     for (auto i: loop_invariant_defs) {
       dbgs() << "detected loop invariant def:" << i << "\n";
     }
 
     for (auto inst: loop_invariant_defs) {
       dbgs() << inst << " " << *inst << " is a loop invariant def\n";
+
+      if (inst->getOpcode() == Instruction::Load) numHoistedLoads += 1;
+      if (inst->getOpcode() == Instruction::Store) numHoistedStores += 1;
 
       inst->removeFromParent();
       loop.loopPreheader->getInstList().push_front(inst);
@@ -117,7 +110,7 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
   dbgs() << "LICM pass finished running.\n";
   dbgs() << "Stats: " << numHoistedLoads << " loads hoisted, " 
     << numHoistedStores << " stores hoisted, "
-    << numHoistedOther << " other instructions hoisted.\n";
+    << numHoistedOther << " total instructions hoisted.\n";
   // Set proper preserved analyses
   return PreservedAnalyses::all();
 }

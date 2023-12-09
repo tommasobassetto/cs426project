@@ -82,37 +82,30 @@ entry:
 
 define i32 @Main.main(%Main* %self) {
 entry:
-  %tmp.0 = alloca %Main*, align 8
-  store %Main* %self, %Main** %tmp.0, align 8
+  %tmp.20 = getelementptr %Main, %Main* %self, i32 0, i32 1
+  %tmp.16 = getelementptr %Main, %Main* %self, i32 0, i32 1
+  %tmp.10 = getelementptr %Main, %Main* %self, i32 0, i32 0
+  %tmp.9 = icmp eq %Main* %self, null
+  %tmp.6 = getelementptr %Main, %Main* %self, i32 0, i32 1
+  %tmp.2 = getelementptr %Main, %Main* %self, i32 0, i32 1
   br label %loop.0
 
 loop.0:                                           ; preds = %ok.0, %entry
-  %tmp.1 = load %Main*, %Main** %tmp.0, align 8
-  %tmp.2 = getelementptr %Main, %Main* %tmp.1, i32 0, i32 1
   %tmp.3 = load i32, i32* %tmp.2, align 4
   %tmp.4 = icmp sle i32 %tmp.3, 100
   br i1 %tmp.4, label %true.0, label %false.0
 
 true.0:                                           ; preds = %loop.0
-  %tmp.5 = load %Main*, %Main** %tmp.0, align 8
-  %tmp.6 = getelementptr %Main, %Main* %tmp.5, i32 0, i32 1
   %tmp.7 = load i32, i32* %tmp.6, align 4
-  %tmp.8 = load %Main*, %Main** %tmp.0, align 8
-  %tmp.9 = icmp eq %Main* %tmp.8, null
   br i1 %tmp.9, label %abort, label %ok.0
 
 ok.0:                                             ; preds = %true.0
-  %tmp.10 = getelementptr %Main, %Main* %tmp.8, i32 0, i32 0
   %tmp.11 = load %_Main_vtable*, %_Main_vtable** %tmp.10, align 8
   %tmp.12 = getelementptr %_Main_vtable, %_Main_vtable* %tmp.11, i32 0, i32 8
   %tmp.13 = load %Main* (%Main*, i32)*, %Main* (%Main*, i32)** %tmp.12, align 8
-  %tmp.14 = call %Main* %tmp.13(%Main* %tmp.8, i32 %tmp.7)
-  %tmp.15 = load %Main*, %Main** %tmp.0, align 8
-  %tmp.16 = getelementptr %Main, %Main* %tmp.15, i32 0, i32 1
+  %tmp.14 = call %Main* %tmp.13(%Main* %self, i32 %tmp.7)
   %tmp.17 = load i32, i32* %tmp.16, align 4
   %tmp.18 = add i32 %tmp.17, 1
-  %tmp.19 = load %Main*, %Main** %tmp.0, align 8
-  %tmp.20 = getelementptr %Main, %Main* %tmp.19, i32 0, i32 1
   store i32 %tmp.18, i32* %tmp.20, align 4
   br label %loop.0
 
@@ -126,7 +119,6 @@ abort:                                            ; preds = %true.0
 
 define %Main* @Main_new() {
 entry:
-  %tmp.21 = alloca %Main*, align 8
   %tmp.22 = getelementptr %_Main_vtable, %_Main_vtable* @_Main_vtable_prototype, i32 0, i32 1
   %tmp.23 = load i32, i32* %tmp.22, align 4
   %tmp.24 = call i8* @malloc(i32 %tmp.23)
@@ -137,7 +129,6 @@ entry:
 okay:                                             ; preds = %entry
   %tmp.26 = getelementptr %Main, %Main* %tmp.25, i32 0, i32 0
   store %_Main_vtable* @_Main_vtable_prototype, %_Main_vtable** %tmp.26, align 8
-  store %Main* %tmp.25, %Main** %tmp.21, align 8
   %tmp.27 = getelementptr %Main, %Main* %tmp.25, i32 0, i32 1
   store i32 0, i32* %tmp.27, align 4
   %tmp.28 = getelementptr %Main, %Main* %tmp.25, i32 0, i32 1
