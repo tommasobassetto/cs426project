@@ -1,11 +1,11 @@
-define i32 @test1(i32 inreg %a) nounwind {
+define i32 @test1(i32 inreg %0) nounwind {
 entry:
-    %c = add i32 1, 2
-    %b = add i32 %a, %c
-    ret i32 %b
+    %1 = add i32 1, 2
+    %2 = add i32 %0, %1
+    ret i32 %2
 }
 
 define i32 @main() {
-    %a = call i32 @test1(i32 123)
-    ret i32 %a
+    %1 = call i32 @test1(i32 123)
+    ret i32 %1
 }
