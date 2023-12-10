@@ -82,7 +82,6 @@ entry:
 
 define %Main* @Main_new() {
 entry:
-  %tmp.2 = alloca %Main*, align 8
   %tmp.3 = getelementptr %_Main_vtable, %_Main_vtable* @_Main_vtable_prototype, i32 0, i32 1
   %tmp.4 = load i32, i32* %tmp.3, align 4
   %tmp.5 = call i8* @malloc(i32 %tmp.4)
@@ -93,7 +92,6 @@ entry:
 okay:                                             ; preds = %entry
   %tmp.7 = getelementptr %Main, %Main* %tmp.6, i32 0, i32 0
   store %_Main_vtable* @_Main_vtable_prototype, %_Main_vtable** %tmp.7, align 8
-  store %Main* %tmp.6, %Main** %tmp.2, align 8
   %tmp.8 = add i32 0, 0
   %tmp.9 = getelementptr %Main, %Main* %tmp.6, i32 0, i32 1
   store i32 %tmp.8, i32* %tmp.9, align 4
@@ -109,10 +107,7 @@ abort:                                            ; preds = %entry
 
 define i32 @Main.main(%Main* %self) {
 entry:
-  %tmp.12 = alloca %Main*, align 8
-  store %Main* %self, %Main** %tmp.12, align 8
-  %tmp.13 = load %Main*, %Main** %tmp.12, align 8
-  %tmp.14 = icmp eq %Main* %tmp.13, null
+  %tmp.14 = icmp eq %Main* %self, null
   br i1 %tmp.14, label %abort, label %ok.2
 
 ok.2:                                             ; preds = %entry

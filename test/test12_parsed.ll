@@ -4,38 +4,27 @@ source_filename = "test/test12.ll"
 @.str = private unnamed_addr constant [40 x i8] c"sum of all array elements plus 2 was %d\00", align 1
 
 define dso_local void @generateRandomArray(i32 noundef %0, ptr noundef %1) {
-  %3 = alloca i32, align 4
-  %4 = alloca ptr, align 8
-  %5 = alloca i32, align 4
-  store i32 %0, ptr %3, align 4
-  store ptr %1, ptr %4, align 8
   call void @srand(i32 noundef 0)
-  store i32 0, ptr %5, align 4
-  br label %6
+  br label %3
 
-6:                                                ; preds = %17, %2
-  %7 = load i32, ptr %5, align 4
-  %8 = load i32, ptr %3, align 4
-  %9 = icmp slt i32 %7, %8
-  br i1 %9, label %10, label %20
+3:                                                ; preds = %10, %2
+  %.0 = phi i32 [ 0, %2 ], [ %11, %10 ]
+  %4 = icmp slt i32 %.0, %0
+  br i1 %4, label %5, label %12
 
-10:                                               ; preds = %6
-  %11 = call i32 @rand()
-  %12 = srem i32 %11, 10
-  %13 = load ptr, ptr %4, align 8
-  %14 = load i32, ptr %5, align 4
-  %15 = sext i32 %14 to i64
-  %16 = getelementptr inbounds i32, ptr %13, i64 %15
-  store i32 %12, ptr %16, align 4
-  br label %17
+5:                                                ; preds = %3
+  %6 = call i32 @rand()
+  %7 = srem i32 %6, 10
+  %8 = sext i32 %.0 to i64
+  %9 = getelementptr inbounds i32, ptr %1, i64 %8
+  store i32 %7, ptr %9, align 4
+  br label %10
 
-17:                                               ; preds = %10
-  %18 = load i32, ptr %5, align 4
-  %19 = add nsw i32 %18, 1
-  store i32 %19, ptr %5, align 4
-  br label %6, !llvm.loop !6
+10:                                               ; preds = %5
+  %11 = add nsw i32 %.0, 1
+  br label %3, !llvm.loop !6
 
-20:                                               ; preds = %6
+12:                                               ; preds = %3
   ret void
 }
 
@@ -44,46 +33,28 @@ declare void @srand(i32 noundef)
 declare i32 @rand()
 
 define dso_local i32 @main() {
-  %1 = alloca i32, align 4
-  %2 = alloca ptr, align 8
-  %3 = alloca i32, align 4
-  %4 = alloca i32, align 4
-  %5 = alloca i32, align 4
-  store i32 0, ptr %1, align 4
-  %6 = call noalias ptr @malloc(i64 noundef 80)
-  store ptr %6, ptr %2, align 8
-  %7 = load ptr, ptr %2, align 8
-  call void @generateRandomArray(i32 noundef 20, ptr noundef %7)
-  store i32 0, ptr %3, align 4
-  store i32 0, ptr %4, align 4
-  br label %8
+  %1 = call noalias ptr @malloc(i64 noundef 80)
+  call void @generateRandomArray(i32 noundef 20, ptr noundef %1)
+  br label %2
 
-8:                                                ; preds = %17, %0
-  %9 = load i32, ptr %4, align 4
-  %10 = icmp slt i32 %9, 20
-  br i1 %10, label %11, label %20
+2:                                                ; preds = %7, %0
+  %.01 = phi i32 [ 0, %0 ], [ %6, %7 ]
+  %.0 = phi i32 [ 0, %0 ], [ %8, %7 ]
+  %3 = icmp slt i32 %.0, 20
+  br i1 %3, label %4, label %9
 
-11:                                               ; preds = %8
-  store i32 2, ptr %5, align 4
-  %12 = load i32, ptr %4, align 4
-  %13 = load i32, ptr %5, align 4
-  %14 = add nsw i32 %12, %13
-  %15 = load i32, ptr %3, align 4
-  %16 = add nsw i32 %15, %14
-  store i32 %16, ptr %3, align 4
-  br label %17
+4:                                                ; preds = %2
+  %5 = add nsw i32 %.0, 2
+  %6 = add nsw i32 %.01, %5
+  br label %7
 
-17:                                               ; preds = %11
-  %18 = load i32, ptr %4, align 4
-  %19 = add nsw i32 %18, 1
-  store i32 %19, ptr %4, align 4
-  br label %8, !llvm.loop !8
+7:                                                ; preds = %4
+  %8 = add nsw i32 %.0, 1
+  br label %2, !llvm.loop !8
 
-20:                                               ; preds = %8
-  %21 = load i32, ptr %3, align 4
-  %22 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %21)
-  %23 = load i32, ptr %1, align 4
-  ret i32 %23
+9:                                                ; preds = %2
+  %10 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %.01)
+  ret i32 0
 }
 
 declare noalias ptr @malloc(i64 noundef)

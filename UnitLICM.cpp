@@ -12,6 +12,18 @@
 using namespace llvm;
 using namespace cs426;
 
+std::set<Value*> getAllOperands(Instruction &inst) {
+  std::set<Value*> uses_in_inst = std::set<Value*>();
+
+  for (Value *V : inst.operands()) {
+    if (V != nullptr) {
+      uses_in_inst.insert(V);
+    }
+  }
+
+  return uses_in_inst;
+}
+
 /// Main function for running the LICM optimization
 // Note that the input must explicitly NOT be in SSA form
 PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
@@ -27,9 +39,9 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
   // Perform the optimization
   for (auto loop: Loops.program_loops) {
     // map from defs to uses
-    std::map<StringRef, std::set<StringRef>> def_set = std::map<StringRef, std::set<StringRef>>();
-    std::map<StringRef, Instruction*> def_to_inst = std::map<StringRef, Instruction*>();
-    std::set<StringRef> loop_fixed_defs = std::set<StringRef>();
+    std::map<Value*, std::set<Value*>> def_set = std::map<Value*, std::set<Value*>>();
+    std::map<Value*, Instruction*> def_to_inst = std::map<Value*, Instruction*>();
+    std::set<Value*> loop_fixed_defs = std::set<Value*>();
 
     // Get all defs in the loop
     for (auto bb: loop.loopBlocks) {
@@ -38,30 +50,18 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
 
         // Check if the instruction is a def. If so, add it to the def set
         // Stores do not count as they are assumed to never be loop invariant
-        if (operand != nullptr && !operand->getName().empty()) {
-          // If it's a load or store, don't process it
+        if (operand != nullptr) {
+          // Any branch or jump should NEVER be loop invariant
+          // Same with functions like rand() that generate inconsistent output
           // FIXME - add alias analysis
-          if (inst.getOpcode() == Instruction::Store) {
-            dbgs() << "Store detected:" << inst << "\n";
-            loop_fixed_defs.insert(operand->getName());
+          if (inst.isTerminator() || inst.mayHaveSideEffects()) {
+            def_set[operand] = getAllOperands(inst);
+            loop_fixed_defs.insert(operand);
             continue;
           }
 
-          if (inst.getOpcode() == Instruction::Load) {
-            loop_fixed_defs.insert(operand->getName());
-            continue;
-          }
-
-          std::set<StringRef> uses_in_inst = std::set<StringRef>();
-
-          for (Value *V : inst.operands()) {
-            if (V != nullptr && !V->getName().empty()) {
-              uses_in_inst.insert(V->getName());
-            }
-          }
-
-          def_set[operand->getName()] = uses_in_inst;
-          def_to_inst[operand->getName()] = &inst;
+          def_set[operand] = getAllOperands(inst);
+          def_to_inst[operand] = &inst;
         }
       }
     }
@@ -74,7 +74,7 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
     for (auto i: def_set) {
       // for all uses that lead to this def
       bool is_loop_invariant = true;
-      for (StringRef j: i.second) {
+      for (Value *j: i.second) {
         // if this is in the map keys, it's edited in the loop
         // and it's not loop invariant
 
@@ -84,7 +84,7 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
         }
       }
 
-      if (is_loop_invariant) {
+      if (is_loop_invariant && def_to_inst[i.first] != nullptr) {
         loop_invariant_defs.insert(def_to_inst[i.first]);
       }
     }
