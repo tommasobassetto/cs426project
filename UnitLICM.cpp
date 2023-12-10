@@ -1,4 +1,5 @@
 // Usage: opt -load-pass-plugin=libUnitProject.so -passes="unit-licm"
+#include "llvm/ADT/Statistic.h"
 #include "llvm/Support/raw_ostream.h"
 
 #include "UnitLICM.h"
@@ -8,6 +9,10 @@
 
 #define DEBUG_TYPE UnitLICM
 // Define any statistics here
+// These are not working
+// STATISTIC(numHoistedLoads, "Number of loads hoisted");
+// STATISTIC(numHoistedStores, "Number of stores hoisted");
+// STATISTIC(numHoistedTotal, "Number of instructions hoisted");
 
 using namespace llvm;
 using namespace cs426;
@@ -27,10 +32,11 @@ std::set<Value*> getAllOperands(Instruction &inst) {
 /// Main function for running the LICM optimization
 // Note that the input must explicitly NOT be in SSA form
 PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
+  int numHoistedLoads = 0;
+  int numHoistedStores = 0;
+  int numHoistedTotal = 0;
+
   dbgs() << "UnitLICM running on " << F.getName() << "\n";
-  unsigned numHoistedLoads = 0;
-  unsigned numHoistedStores = 0;
-  unsigned numHoistedOther = 0;
 
   // Acquires the UnitLoopInfo object constructed by your Loop Identification
   // (LoopAnalysis) pass
@@ -43,18 +49,25 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
     std::map<Value*, Instruction*> def_to_inst = std::map<Value*, Instruction*>();
     std::set<Value*> loop_fixed_defs = std::set<Value*>();
 
+    std::set<Instruction*> loop_invariant_defs = std::set<Instruction*>();
+
     // Get all defs in the loop
     for (auto bb: loop.loopBlocks) {
       for (Instruction &inst: *bb) {
         Value *operand = &cast<Value>(inst);
 
         // Check if the instruction is a def. If so, add it to the def set
-        // Stores do not count as they are assumed to never be loop invariant
         if (operand != nullptr) {
+          // alloca is always hoistable
+          // since read from uninitialized memory is undefined behavior
+          if (inst.getOpcode() == Instruction::Alloca) {
+            loop_invariant_defs.insert(&inst);
+            continue;
+          }
+
           // Any branch or jump should NEVER be loop invariant
           // Same with functions like rand() that generate inconsistent output
-          // FIXME - add alias analysis
-          if (inst.isTerminator() || inst.mayHaveSideEffects()) {
+          if (inst.isTerminator()/*|| inst.mayHaveSideEffects()*/) {
             def_set[operand] = getAllOperands(inst);
             loop_fixed_defs.insert(operand);
             continue;
@@ -65,8 +78,6 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
         }
       }
     }
-
-    std::set<Instruction*> loop_invariant_defs = std::set<Instruction*>();
     
     // Compute which defs are loop invariant, and can be moved outside of the loop
     // Loop invariant defs are ones where the right hand side variables are not modified in the loop
@@ -74,6 +85,7 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
     for (auto i: def_set) {
       // for all uses that lead to this def
       bool is_loop_invariant = true;
+      // FIXME - rework this using aliases
       for (Value *j: i.second) {
         // if this is in the map keys, it's edited in the loop
         // and it's not loop invariant
@@ -89,11 +101,8 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
       }
     }
 
-    // Move loop invariant variables into a block right before the loop header
-    for (auto i: loop_invariant_defs) {
-      dbgs() << "detected loop invariant def:" << i << "\n";
-    }
-
+    // Move loop invariant variables into the loop preheader
+    auto terminator = loop.loopPreheader->getTerminator()->getIterator();
     for (auto inst: loop_invariant_defs) {
       dbgs() << inst << " " << *inst << " is a loop invariant def\n";
 
@@ -101,8 +110,8 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
       if (inst->getOpcode() == Instruction::Store) numHoistedStores += 1;
 
       inst->removeFromParent();
-      loop.loopPreheader->getInstList().push_front(inst);
-      numHoistedOther += 1;
+      loop.loopPreheader->getInstList().insert(terminator, inst);
+      numHoistedTotal += 1;
     }
 
   }
@@ -110,7 +119,8 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
   dbgs() << "LICM pass finished running.\n";
   dbgs() << "Stats: " << numHoistedLoads << " loads hoisted, " 
     << numHoistedStores << " stores hoisted, "
-    << numHoistedOther << " total instructions hoisted.\n";
+    << numHoistedTotal << " total instructions hoisted.\n";
+
   // Set proper preserved analyses
   return PreservedAnalyses::all();
 }

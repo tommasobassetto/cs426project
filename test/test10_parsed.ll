@@ -111,31 +111,31 @@ entry:
   br i1 %tmp.14, label %abort, label %ok.2
 
 ok.2:                                             ; preds = %entry
-  %tmp.27 = alloca %Main*, align 8
-  %tmp.25 = add i32 0, 1
-  %tmp.21 = alloca %Main*, align 8
-  %tmp.19 = add i32 0, 100
   %tmp.15 = alloca %Main*, align 8
+  store %Main* %self, %Main** %tmp.15, align 8
+  %tmp.16 = load %Main*, %Main** %tmp.15, align 8
+  %tmp.19 = add i32 0, 100
+  %tmp.21 = alloca %Main*, align 8
+  store %Main* %self, %Main** %tmp.21, align 8
+  %tmp.22 = load %Main*, %Main** %tmp.21, align 8
+  %tmp.25 = add i32 0, 1
+  %tmp.27 = alloca %Main*, align 8
+  store %Main* %self, %Main** %tmp.27, align 8
+  %tmp.28 = load %Main*, %Main** %tmp.27, align 8
+  %tmp.17 = getelementptr %Main, %Main* %tmp.16, i32 0, i32 1
+  %tmp.23 = getelementptr %Main, %Main* %tmp.22, i32 0, i32 1
+  %tmp.29 = getelementptr %Main, %Main* %tmp.28, i32 0, i32 1
+  %tmp.18 = load i32, i32* %tmp.17, align 4
+  %tmp.24 = load i32, i32* %tmp.23, align 4
+  %tmp.20 = icmp sle i32 %tmp.18, %tmp.19
+  %tmp.26 = add i32 %tmp.24, %tmp.25
+  store i32 %tmp.26, i32* %tmp.29, align 4
   br label %cond.3
 
 cond.3:                                           ; preds = %loop.3, %ok.2
-  store %Main* %self, %Main** %tmp.15, align 8
-  %tmp.16 = load %Main*, %Main** %tmp.15, align 8
-  %tmp.17 = getelementptr %Main, %Main* %tmp.16, i32 0, i32 1
-  %tmp.18 = load i32, i32* %tmp.17, align 4
-  %tmp.20 = icmp sle i32 %tmp.18, %tmp.19
   br i1 %tmp.20, label %loop.3, label %break.3
 
 loop.3:                                           ; preds = %cond.3
-  store %Main* %self, %Main** %tmp.21, align 8
-  %tmp.22 = load %Main*, %Main** %tmp.21, align 8
-  %tmp.23 = getelementptr %Main, %Main* %tmp.22, i32 0, i32 1
-  %tmp.24 = load i32, i32* %tmp.23, align 4
-  %tmp.26 = add i32 %tmp.24, %tmp.25
-  store %Main* %self, %Main** %tmp.27, align 8
-  %tmp.28 = load %Main*, %Main** %tmp.27, align 8
-  %tmp.29 = getelementptr %Main, %Main* %tmp.28, i32 0, i32 1
-  store i32 %tmp.26, i32* %tmp.29, align 4
   br label %cond.3
 
 break.3:                                          ; preds = %cond.3
