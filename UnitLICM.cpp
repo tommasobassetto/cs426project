@@ -1,4 +1,5 @@
 // Usage: opt -load-pass-plugin=libUnitProject.so -passes="unit-licm"
+#include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/Support/raw_ostream.h"
 
@@ -67,32 +68,48 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
 
           // Any branch or jump should NEVER be loop invariant
           // Same with functions like rand() that generate inconsistent output
-          if (inst.isTerminator()/*|| inst.mayHaveSideEffects()*/) {
+          if (inst.isTerminator() || inst.mayHaveSideEffects() 
+          || inst.getOpcode() == Instruction::Load || inst.getOpcode() == Instruction::Store) {
             def_set[operand] = getAllOperands(inst);
             loop_fixed_defs.insert(operand);
             continue;
           }
+          
+          if (def_set.find(operand) == def_set.end()) def_set[operand] = std::set<Value*>();
 
           def_set[operand] = getAllOperands(inst);
           def_to_inst[operand] = &inst;
         }
       }
     }
+
+    AAResults &AA = FAM.getResult<AAManager>(F);
     
     // Compute which defs are loop invariant, and can be moved outside of the loop
     // Loop invariant defs are ones where the right hand side variables are not modified in the loop
-    // These should be right before the start of the loop (which may not be in the preheader)
+    // These should be moved right before the start of the loop (which may not be in the preheader)
     for (auto i: def_set) {
+      //dbgs() << *i.first << " IS A DEF IN LOOP\n";
       // for all uses that lead to this def
       bool is_loop_invariant = true;
-      // FIXME - rework this using aliases
       for (Value *j: i.second) {
-        // if this is in the map keys, it's edited in the loop
-        // and it's not loop invariant
+        // if this is not in map keys, it may be loop invariant
+        if (def_set.count(j) == 0) {
+          continue;
+        }
 
-        // Also check that it's not an explicitly non-loop-invariant variable
-        if (def_set.count(j) != 0 || loop_fixed_defs.find(j) != loop_fixed_defs.end()) {
-          is_loop_invariant = false;
+        for (auto item: def_set) {
+          if (item.first == j || !AA.isNoAlias(item.first, j)) {
+            //dbgs() << *item.first << " aliases " << *j << " " << item.first << j << "\n";
+            //dbgs() << "at inst " << *i.first << "\n";
+            is_loop_invariant = false;
+          }
+        }
+
+        for (auto item: loop_fixed_defs) {
+          if (item == j || !AA.isNoAlias(item, j)) {
+            is_loop_invariant = false;
+          }
         }
       }
 

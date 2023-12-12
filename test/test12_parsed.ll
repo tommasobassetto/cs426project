@@ -4,27 +4,27 @@ source_filename = "test/test12.ll"
 @.str = private unnamed_addr constant [40 x i8] c"sum of all array elements plus 2 was %d\00", align 1
 
 define dso_local void @generateRandomArray(i32 noundef %0, ptr noundef %1) {
-  %3 = call i32 @rand()
   call void @srand(i32 noundef 0)
-  br label %4
+  %3 = call i32 @rand()
+  %4 = srem i32 %3, 10
+  br label %5
 
-4:                                                ; preds = %10, %2
+5:                                                ; preds = %10, %2
   %.0 = phi i32 [ 0, %2 ], [ %11, %10 ]
-  %5 = icmp slt i32 %.0, %0
-  br i1 %5, label %6, label %12
+  %6 = icmp slt i32 %.0, %0
+  br i1 %6, label %7, label %12
 
-6:                                                ; preds = %4
-  %7 = srem i32 %3, 10
+7:                                                ; preds = %5
   %8 = sext i32 %.0 to i64
   %9 = getelementptr inbounds i32, ptr %1, i64 %8
-  store i32 %7, ptr %9, align 4
+  store i32 %4, ptr %9, align 4
   br label %10
 
-10:                                               ; preds = %6
+10:                                               ; preds = %7
   %11 = add nsw i32 %.0, 1
-  br label %4, !llvm.loop !6
+  br label %5, !llvm.loop !6
 
-12:                                               ; preds = %4
+12:                                               ; preds = %5
   ret void
 }
 
