@@ -82,7 +82,6 @@ entry:
 
 define %Main* @Main_new() {
 entry:
-  %tmp.2 = alloca %Main*, align 8
   %tmp.3 = getelementptr %_Main_vtable, %_Main_vtable* @_Main_vtable_prototype, i32 0, i32 1
   %tmp.4 = load i32, i32* %tmp.3, align 4
   %tmp.5 = call i8* @malloc(i32 %tmp.4)
@@ -93,7 +92,6 @@ entry:
 okay:                                             ; preds = %entry
   %tmp.7 = getelementptr %Main, %Main* %tmp.6, i32 0, i32 0
   store %_Main_vtable* @_Main_vtable_prototype, %_Main_vtable** %tmp.7, align 8
-  store %Main* %tmp.6, %Main** %tmp.2, align 8
   %tmp.8 = add i32 0, 0
   %tmp.9 = getelementptr %Main, %Main* %tmp.6, i32 0, i32 1
   store i32 %tmp.8, i32* %tmp.9, align 4
@@ -109,37 +107,34 @@ abort:                                            ; preds = %entry
 
 define i32 @Main.main(%Main* %self) {
 entry:
-  %tmp.12 = alloca %Main*, align 8
-  store %Main* %self, %Main** %tmp.12, align 8
-  %tmp.13 = load %Main*, %Main** %tmp.12, align 8
-  %tmp.14 = icmp eq %Main* %tmp.13, null
+  %tmp.14 = icmp eq %Main* %self, null
   br i1 %tmp.14, label %abort, label %ok.2
 
 ok.2:                                             ; preds = %entry
-  %tmp.27 = alloca %Main*, align 8
-  %tmp.25 = add i32 0, 1
-  %tmp.21 = alloca %Main*, align 8
-  %tmp.19 = add i32 0, 100
   %tmp.15 = alloca %Main*, align 8
+  %tmp.16 = load %Main*, %Main** %tmp.15, align 8
+  %tmp.19 = add i32 0, 100
+  %tmp.21 = alloca %Main*, align 8
+  %tmp.22 = load %Main*, %Main** %tmp.21, align 8
+  %tmp.25 = add i32 0, 1
+  %tmp.27 = alloca %Main*, align 8
+  %tmp.28 = load %Main*, %Main** %tmp.27, align 8
+  %tmp.17 = getelementptr %Main, %Main* %tmp.16, i32 0, i32 1
+  %tmp.23 = getelementptr %Main, %Main* %tmp.22, i32 0, i32 1
+  %tmp.29 = getelementptr %Main, %Main* %tmp.28, i32 0, i32 1
+  %tmp.18 = load i32, i32* %tmp.17, align 4
+  %tmp.24 = load i32, i32* %tmp.23, align 4
+  %tmp.20 = icmp sle i32 %tmp.18, %tmp.19
+  %tmp.26 = add i32 %tmp.24, %tmp.25
   br label %cond.3
 
 cond.3:                                           ; preds = %loop.3, %ok.2
   store %Main* %self, %Main** %tmp.15, align 8
-  %tmp.16 = load %Main*, %Main** %tmp.15, align 8
-  %tmp.17 = getelementptr %Main, %Main* %tmp.16, i32 0, i32 1
-  %tmp.18 = load i32, i32* %tmp.17, align 4
-  %tmp.20 = icmp sle i32 %tmp.18, %tmp.19
   br i1 %tmp.20, label %loop.3, label %break.3
 
 loop.3:                                           ; preds = %cond.3
   store %Main* %self, %Main** %tmp.21, align 8
-  %tmp.22 = load %Main*, %Main** %tmp.21, align 8
-  %tmp.23 = getelementptr %Main, %Main* %tmp.22, i32 0, i32 1
-  %tmp.24 = load i32, i32* %tmp.23, align 4
-  %tmp.26 = add i32 %tmp.24, %tmp.25
   store %Main* %self, %Main** %tmp.27, align 8
-  %tmp.28 = load %Main*, %Main** %tmp.27, align 8
-  %tmp.29 = getelementptr %Main, %Main* %tmp.28, i32 0, i32 1
   store i32 %tmp.26, i32* %tmp.29, align 4
   br label %cond.3
 
