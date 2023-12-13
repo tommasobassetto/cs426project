@@ -47,9 +47,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
   // note: visit instruction is built in
   // interpret.evaluate?
   // execution engine?
-  // todo: delete the instrution with const
-  LLVMContext context;
-  // todo: stats
+
   // handle binary ops
   if (BinaryOperator *binaryOp = dyn_cast<BinaryOperator>(inst)){
     Value *op1 = binaryOp->getOperand(0);
@@ -237,7 +235,12 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
       }
       // todo: support double?
       // todo: bitcast instruction could not be generated
-      // bitcast i8 255 to i8  
+      // bitcast i8 255 to i8
+      else{
+          outs() << "unsupported inst with binary ops " << *inst << "\n";
+          exit(-1);
+      }
+      numInstrRemoved++;
     }
   }
   // handle unary ops
@@ -273,81 +276,204 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
       }
     }
   }
-  // handle inst
+  // handle icmp
   else if (ICmpInst *icmpInst = dyn_cast<ICmpInst>(inst)){
-    ICmpInst::Predicate condition = icmpInst->getPredicate();
-
-    // Accessing the type
+    ICmpInst::Predicate pred = icmpInst->getPredicate();
     Type *instructionType = icmpInst->getType();
-
-    // Accessing operands (op1 and op2)
-    Value *operand1 = icmpInst->getOperand(0);
-    Value *operand2 = icmpInst->getOperand(1);
-    outs() << "Condition code: " << condition << "\n";
+    Value *op1 = icmpInst->getOperand(0);
+    Value *op2 = icmpInst->getOperand(1);
+    Value *const1 = nullptr;
+    Value *const2 = nullptr;
+    outs() << "in icmp\n";
+    if (isa<Constant>(op1)){
+      const1 = op1;
+    }
+    else {
+      // check values in the map
+      auto const_value_ = constant_map.find(op1);
+      if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+        // in our map
+        const1 = const_value_->second.value;
+      }
+    }
+    if (isa<Constant>(op2)){
+      const2 = op2;
+    }
+    else {
+      // check values in the map
+      auto const_value_ = constant_map.find(op2);
+      if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+        // in our map
+        const2 = const_value_->second.value;
+      }
+    }
+    if(const1 && const2){
+      outs() << "!!!!!BOTH CONST IN ICMP!!\n";
+      bool result;
+      result = ICmpInst::compare(dyn_cast<ConstantInt>(const1)->getValue(), dyn_cast<ConstantInt>(const2)->getValue(), pred);
+      Value * ret = ConstantInt::get(inst->getType(), result);
+      Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+      constant_map.insert({inst,ret_value_});
+      numInstrRemoved++;
+      return ret_value_;
+    }
+    outs() << "Condition code: " << pred << "\n";
     outs() << "Type of instruction: " << *instructionType << "\n";
-    outs() << "Operand 1: " << *operand1 << "\n";
-    outs() << "Operand 2: " << *operand2 << "\n";
+    outs() << "Operand 1: " << *op1 << "\n";
+    outs() << "Operand 2: " << *op2 << "\n";
   }
-/*or binary operator?
-    // Handle binary operations
-    if (BinaryOperator *binaryOp = dyn_cast<BinaryOperator>(inst)) {
-        Value *op1 = binaryOp->getOperand(0);
-        Value *op2 = binaryOp->getOperand(1);
-        
-        if (binaryOp->getOpcode() == Instruction::Add) {
-            return BinaryOperator::CreateAdd(op1, op2, "add_result", inst);
-        } else if (binaryOp->getOpcode() == Instruction::Sub) {
-            return BinaryOperator::CreateSub(op1, op2, "sub_result", inst);
-        } else if (binaryOp->getOpcode() == Instruction::Mul) {
-            return BinaryOperator::CreateMul(op1, op2, "mul_result", inst);
-        } else if (binaryOp->getOpcode() == Instruction::SDiv) {
-            return BinaryOperator::CreateSDiv(op1, op2, "sdiv_result", inst);
-        } else if (binaryOp->getOpcode() == Instruction::SRem) {
-            return BinaryOperator::CreateSRem(op1, op2, "srem_result", inst);
-        } else {
-            // Unsupported operation
-            return nullptr;
+  else if (FCmpInst *fcmpInst = dyn_cast<FCmpInst>(inst)){
+    FCmpInst::Predicate pred = fcmpInst->getPredicate();
+    Type *instructionType = fcmpInst->getType();
+    Value *op1 = fcmpInst->getOperand(0);
+    Value *op2 = fcmpInst->getOperand(1);
+    Value *const1 = nullptr;
+    Value *const2 = nullptr;
+    outs() << "in fcmp\n";
+    if (isa<Constant>(op1)){
+      const1 = op1;
+    }
+    else {
+      // check values in the map
+      auto const_value_ = constant_map.find(op1);
+      if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+        // in our map
+        const1 = const_value_->second.value;
+      }
+    }
+    if (isa<Constant>(op2)){
+      const2 = op2;
+    }
+    else {
+      // check values in the map
+      auto const_value_ = constant_map.find(op2);
+      if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+        // in our map
+        const2 = const_value_->second.value;
+      }
+    }
+    if(const1 && const2){
+      outs() << "!!!!!BOTH CONST IN FCMP!!\n";
+      bool result;
+      result = FCmpInst::compare(dyn_cast<ConstantFP>(const1)->getValueAPF(), dyn_cast<ConstantFP>(const2)->getValueAPF(), pred);
+      outs() << "comparison done!\n";
+      Value * ret = ConstantInt::get(inst->getType(), result);
+      outs() << "about to return!\n";
+      Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+      constant_map.insert({inst,ret_value_});
+      numInstrRemoved++;
+      return ret_value_;
+    }
+  }
+  // Handle branch instructions
+  else if (BranchInst *branchInst = dyn_cast<BranchInst>(inst)) {
+    Value *const_pred = nullptr;
+    outs() << "inst:: " << *branchInst << "\n";
+    if (branchInst->isConditional()) {
+      Value *pred = branchInst->getCondition();    
+      if (isa<Constant>(pred)){
+        const_pred = pred;
+      }
+      else {
+        // check values in the map
+        auto const_value_ = constant_map.find(pred);
+        if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+          // in our map
+          const_pred = const_value_->second.value;
         }
+      }
     }
 
-    // Handle branch instructions (icmp followed by br)
-    if (BranchInst *branchInst = dyn_cast<BranchInst>(inst)) {
-        if (branchInst->isConditional()) {
-            ICmpInst *icmpInst = dyn_cast<ICmpInst>(branchInst->getCondition());
-            if (!icmpInst) {
-                // Not an icmp instruction
-                return nullptr;
-            }
-
-            Value *op1 = icmpInst->getOperand(0);
-            Value *op2 = icmpInst->getOperand(1);
-            ICmpInst::Predicate pred = icmpInst->getPredicate();
-
-            if (pred == ICmpInst::ICMP_EQ) {
-                return new ICmpInst(*branchInst, CmpInst::ICMP_EQ, op1, op2, "icmp_eq_result");
-            } else if (pred == ICmpInst::ICMP_NE) {
-                return new ICmpInst(*branchInst, CmpInst::ICMP_NE, op1, op2, "icmp_ne_result");
-            } else if (pred == ICmpInst::ICMP_SLT) {
-                return new ICmpInst(*branchInst, CmpInst::ICMP_SLT, op1, op2, "icmp_slt_result");
-            } else if (pred == ICmpInst::ICMP_SLE) {
-                return new ICmpInst(*branchInst, CmpInst::ICMP_SLE, op1, op2, "icmp_sle_result");
-            } else if (pred == ICmpInst::ICMP_SGT) {
-                return new ICmpInst(*branchInst, CmpInst::ICMP_SGT, op1, op2, "icmp_sgt_result");
-            } else if (pred == ICmpInst::ICMP_SGE) {
-                return new ICmpInst(*branchInst, CmpInst::ICMP_SGE, op1, op2, "icmp_sge_result");
-            } else {
-                // Unsupported predicate
-                return nullptr;
-            }
-        }
+    if (const_pred){
+      // branchInst->setCondition(const_pred); // Remove the condition
+      bool pred_value = dyn_cast<ConstantInt>(const_pred)->getSExtValue();
+      outs() << "const_pred_val is " << pred_value << "\n"; 
+      if (pred_value == true){
+        branchInst->setSuccessor(1, branchInst->getSuccessor(0));
+      }
+      else{
+        // false
+        branchInst->setSuccessor(0, branchInst->getSuccessor(1));
+      }
+      numBBUnreachable++;
+    }
+  }
+  else if (SelectInst *selectInst = dyn_cast<SelectInst>(inst)){
+    Value *op1 = selectInst->getTrueValue();
+    Value *op2 = selectInst->getFalseValue();
+    Value *const1 = nullptr;
+    Value *const2 = nullptr;
+    outs() << "in select\n";
+    if (isa<Constant>(op1)){
+      const1 = op1;
+    }
+    else {
+      // check values in the map
+      auto const_value_ = constant_map.find(op1);
+      if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+        // in our map
+        const1 = const_value_->second.value;
+      }
+    }
+    if (isa<Constant>(op2)){
+      const2 = op2;
+    }
+    else {
+      // check values in the map
+      auto const_value_ = constant_map.find(op2);
+      if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+        // in our map
+        const2 = const_value_->second.value;
+      }
+    }
+    // until now const1 and const2 can still be variable
+    if(const1){
+      selectInst->setTrueValue(const1);
+    }
+    if(const2){
+      selectInst->setFalseValue(const2);
     }
 
-    // Unhandled instruction
-    return nullptr;
-    */
-  // if(const1){
+    Value *const_pred = nullptr;
+    outs() << "inst:: " << *selectInst << "\n";
+    Value *pred = selectInst->getCondition();    
+    if (isa<Constant>(pred)){
+      const_pred = pred;
+    }
+    else {
+      // check values in the map
+      auto const_value_ = constant_map.find(pred);
+      if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
+        // in our map
+        const_pred = const_value_->second.value;
+      }
+    }
 
-  // }
+    if (const_pred){
+      numInstrRemoved++;
+      // branchInst->setCondition(const_pred); // Remove the condition
+      bool pred_value = dyn_cast<ConstantInt>(const_pred)->getSExtValue();
+      outs() << "const_pred_val is " << pred_value << "\n"; 
+      if (pred_value == true){
+        outs() << "I am true " << pred_value << "\n";
+        Value * ret = selectInst->getTrueValue();
+        Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+        constant_map.insert({inst,ret_value_});
+        return ret_value_;
+        // selectInst->setSuccessor(1, selectInst->getSuccessor(0));
+      }
+      else{
+        // false
+        outs() << "------I am false " << pred_value << "\n";
+        Value * ret = selectInst->getFalseValue();
+        Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+        constant_map.insert({inst,ret_value_});
+        return ret_value_;
+      }
+    }
+  }
+
+  // default return value, NECESSARY!!
   auto value = UnitSCCPInfo::Value_();
   value.type = UnitSCCPInfo::BOTTOM;
   return value;
@@ -387,7 +513,7 @@ void UnitSCCPInfo::visitInst(Instruction *inst) {
       // add SSAOutEdges(S) to SSAWL
       for (User *user: inst->users()) {
         // outs()<< "--dyn cast here!  \n";
-        outs()<<  isa<PHINode>(user) << "\n";
+        // outs()<<  isa<PHINode>(user) << "\n";
         ssaWL.push_back(
           
           Edge(inst, dyn_cast<Instruction>(user))

@@ -8,14 +8,15 @@ clang-15 mp5_testcases/$1.c -c -O0 -S -Xclang -disable-O0-optnone -emit-llvm -o 
 opt-15 -load-pass-plugin=build/libUnitProject.so -passes="mem2reg,loop-simplify,unit-licm-multiple" test/$1.ll -S -o test/$1_parsed.ll
 clang-15 test/$1_parsed.ll -lm -o test/a.out
 
-# opt-15 -load-pass-plugin=build/libUnitProject.so -passes="unit-sccp,adce" test/$1_c.ll -S -o test/$1_parsed.ll &&
-# clang-15 test/$1_parsed.ll coolrt.o -Wl,--unresolved-symbols=ignore-in-object-files -o test/a.out &&
 # opt-15 -load-pass-plugin=build/libUnitProject.so -passes="mem2reg,unit-licm-multiple" test/$1.ll -S -o test/$1_parsed.ll
 # clang-15 test/$1_parsed.ll coolrt.o -Wl,--unresolved-symbols=ignore-in-object-files -o test/a.out
 
 # echo "printed value:"
 # test/a.out
 # echo "\n"
+opt-15 -passes="mem2reg" test/$1_c.ll -S -o test/$1_c.ll &&
+opt-15 -load-pass-plugin=build/libUnitProject.so -passes="mem2reg,unit-sccp,adce,simplifycfg" test/$1_c.ll -S -o test/$1_parsed.ll &&
+clang-15 test/$1_parsed.ll coolrt.o -Wl,--unresolved-symbols=ignore-in-object-files -o test/a.out &&
 
 # opt-15 -load-pass-plugin=build/libUnitProject.so -passes="unit-sccp,adce" test/$1.ll -S -o test/$1_parsed.ll &&
 # clang-15 test/$1_parsed.ll coolrt.o -Wl,--unresolved-symbols=ignore-in-object-files -o test/a.out &&
