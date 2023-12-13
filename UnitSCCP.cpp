@@ -54,7 +54,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     Value *op2 = binaryOp->getOperand(1);
     Value *const1 = nullptr;
     Value *const2 = nullptr;
-    outs() << "in binary\n";
+    // outs() << "in binary\n";
     if (isa<Constant>(op1)){
       const1 = op1;
     }
@@ -92,9 +92,9 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
           // Value * ret = ConstantInt::get(Type::getInt64Ty(context), result);
           Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
           constant_map.insert({inst,ret_value_});
-          outs() << "!add detected\n";
-          outs() << "!!!result name:" << ret_value_.varname << "\n";
-          outs() << "!!!result is constant:" << *ret_value_.value << "\n";
+          // outs() << "!add detected\n";
+          // outs() << "!!!result name:" << ret_value_.varname << "\n";
+          // outs() << "!!!result is constant:" << *ret_value_.value << "\n";
           return ret_value_;
         }
         else if (binaryOp->getOpcode() == Instruction::Sub) {
@@ -245,10 +245,10 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
   }
   // handle unary ops
   else if (UnaryOperator *unaryOp = dyn_cast<UnaryOperator>(inst)){
-    outs() << "I am here unart!!\n";
+    // outs() << "I am here unart!!\n";
     Value *op1 = unaryOp->getOperand(0);
     Value *const1 = nullptr;
-    outs() << "in unary\n";
+    // outs() << "in unary\n";
     if (isa<Constant>(op1)){
       const1 = op1;
     }
@@ -261,7 +261,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
       }
     }
     if(const1){
-      outs() << "!!!op1 is constant:" << *const1 << "\n";
+      // outs() << "!!!op1 is constant:" << *const1 << "\n";
       float ValueArg1 = dyn_cast<ConstantFP>(const1)->getValueAPF().convertToFloat();
       if (unaryOp->getOpcode() == Instruction::FNeg) {
         float result = - ValueArg1;
@@ -284,7 +284,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     Value *op2 = icmpInst->getOperand(1);
     Value *const1 = nullptr;
     Value *const2 = nullptr;
-    outs() << "in icmp\n";
+    // outs() << "in icmp\n";
     if (isa<Constant>(op1)){
       const1 = op1;
     }
@@ -308,7 +308,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
       }
     }
     if(const1 && const2){
-      outs() << "!!!!!BOTH CONST IN ICMP!!\n";
+      // outs() << "!!!!!BOTH CONST IN ICMP!!\n";
       bool result;
       result = ICmpInst::compare(dyn_cast<ConstantInt>(const1)->getValue(), dyn_cast<ConstantInt>(const2)->getValue(), pred);
       Value * ret = ConstantInt::get(inst->getType(), result);
@@ -317,10 +317,10 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
       numInstrRemoved++;
       return ret_value_;
     }
-    outs() << "Condition code: " << pred << "\n";
-    outs() << "Type of instruction: " << *instructionType << "\n";
-    outs() << "Operand 1: " << *op1 << "\n";
-    outs() << "Operand 2: " << *op2 << "\n";
+    // outs() << "Condition code: " << pred << "\n";
+    // outs() << "Type of instruction: " << *instructionType << "\n";
+    // outs() << "Operand 1: " << *op1 << "\n";
+    // outs() << "Operand 2: " << *op2 << "\n";
   }
   else if (FCmpInst *fcmpInst = dyn_cast<FCmpInst>(inst)){
     FCmpInst::Predicate pred = fcmpInst->getPredicate();
@@ -329,7 +329,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     Value *op2 = fcmpInst->getOperand(1);
     Value *const1 = nullptr;
     Value *const2 = nullptr;
-    outs() << "in fcmp\n";
+    // outs() << "in fcmp\n";
     if (isa<Constant>(op1)){
       const1 = op1;
     }
@@ -353,12 +353,12 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
       }
     }
     if(const1 && const2){
-      outs() << "!!!!!BOTH CONST IN FCMP!!\n";
+      // outs() << "!!!!!BOTH CONST IN FCMP!!\n";
       bool result;
       result = FCmpInst::compare(dyn_cast<ConstantFP>(const1)->getValueAPF(), dyn_cast<ConstantFP>(const2)->getValueAPF(), pred);
-      outs() << "comparison done!\n";
+      // outs() << "comparison done!\n";
       Value * ret = ConstantInt::get(inst->getType(), result);
-      outs() << "about to return!\n";
+      // outs() << "about to return!\n";
       Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
       constant_map.insert({inst,ret_value_});
       numInstrRemoved++;
@@ -368,7 +368,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
   // Handle branch instructions
   else if (BranchInst *branchInst = dyn_cast<BranchInst>(inst)) {
     Value *const_pred = nullptr;
-    outs() << "inst:: " << *branchInst << "\n";
+    // outs() << "inst:: " << *branchInst << "\n";
     if (branchInst->isConditional()) {
       Value *pred = branchInst->getCondition();    
       if (isa<Constant>(pred)){
@@ -387,7 +387,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     if (const_pred){
       // branchInst->setCondition(const_pred); // Remove the condition
       bool pred_value = dyn_cast<ConstantInt>(const_pred)->getSExtValue();
-      outs() << "const_pred_val is " << pred_value << "\n"; 
+      // outs() << "const_pred_val is " << pred_value << "\n"; 
       if (pred_value == true){
         branchInst->setSuccessor(1, branchInst->getSuccessor(0));
       }
@@ -403,7 +403,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     Value *op2 = selectInst->getFalseValue();
     Value *const1 = nullptr;
     Value *const2 = nullptr;
-    outs() << "in select\n";
+    // outs() << "in select\n";
     if (isa<Constant>(op1)){
       const1 = op1;
     }
@@ -435,7 +435,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     }
 
     Value *const_pred = nullptr;
-    outs() << "inst:: " << *selectInst << "\n";
+    // outs() << "inst:: " << *selectInst << "\n";
     Value *pred = selectInst->getCondition();    
     if (isa<Constant>(pred)){
       const_pred = pred;
@@ -453,9 +453,9 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
       numInstrRemoved++;
       // branchInst->setCondition(const_pred); // Remove the condition
       bool pred_value = dyn_cast<ConstantInt>(const_pred)->getSExtValue();
-      outs() << "const_pred_val is " << pred_value << "\n"; 
+      // outs() << "const_pred_val is " << pred_value << "\n"; 
       if (pred_value == true){
-        outs() << "I am true " << pred_value << "\n";
+        // outs() << "I am true " << pred_value << "\n";
         Value * ret = selectInst->getTrueValue();
         Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
         constant_map.insert({inst,ret_value_});
@@ -464,7 +464,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
       }
       else{
         // false
-        outs() << "------I am false " << pred_value << "\n";
+        // outs() << "------I am false " << pred_value << "\n";
         Value * ret = selectInst->getFalseValue();
         Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
         constant_map.insert({inst,ret_value_});
