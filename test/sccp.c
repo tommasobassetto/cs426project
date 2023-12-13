@@ -1,26 +1,48 @@
 #include <stdio.h>
-int add(int n) {
-    int a = 1+2;
-    int b = a+n;
-    return b;
-}
+// int add(int n) {
+//     int a = 1+2;
+//     int b = a+n;
+//     return b;
+// }
 
-int bitcast(signed char n){
-    return (int)n;
-}
+// int bitcast(signed char n){
+//     return (int)n;
+// }
 
-int icmp(int a, int b){
-    int c;
-    if (a<b) c=0;
-    else c=1;
-    return c;
-}
+// int icmp(int n){
+//     int c;
+//     int a=0+1;
+//     int b=1+1;
+//     // if (a<b) c=n;
+//     // else c=1+n;
+//     c=a+b;
+//     return a+b;
+//     // return c;
+// }
+
 int main() {
-    int ret;
-    // int ret = add(123);
+    float ret;
+    float a=3+1;
+    float b=1+1;
+    // if(a<b){
+    //     ret=1;
+    // }
+    // else{
+    //     ret=2;
+    // }
+    float c=1;
+    ret = a<b?a:c;
+
+
+
+
+
+
+    // ret = add(123);
+
     // ret = bitcast(-3);
-    ret = icmp(3,4);
-    printf("ret = %d\n", ret);
-    return ret;
+    // ret = icmp(3);
+    printf("in c, ret = %f\n", ret);
+    return 3;
     // printf("sum of all array elements plus 2 was %d", sum);
 }
