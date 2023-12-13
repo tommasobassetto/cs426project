@@ -6,6 +6,7 @@
 #include "UnitLICMMultiple.h"
 #include "UnitLoopInfo.h"
 #include "UnitSCCP.h"
+#include "UnitCSE.h"
 
 /// Registers the three passes for this project with LLVM's pass mananger
 llvm::PassPluginLibraryInfo getUnitProjectPluginInfo() {
@@ -42,6 +43,16 @@ llvm::PassPluginLibraryInfo getUnitProjectPluginInfo() {
                  ArrayRef<PassBuilder::PipelineElement>) {
                 if (Name == "unit-sccp") {
                   FPM.addPass(cs426::UnitSCCP());
+                  return true;
+                }
+                return false;
+              });
+            // Register CSE
+            PB.registerPipelineParsingCallback(
+              [](StringRef Name, FunctionPassManager& FPM,
+                 ArrayRef<PassBuilder::PipelineElement>) {
+                if (Name == "unit-cse") {
+                  FPM.addPass(cs426::UnitCSE());
                   return true;
                 }
                 return false;
