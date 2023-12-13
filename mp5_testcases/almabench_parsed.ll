@@ -142,62 +142,62 @@ define dso_local void @planetpv(ptr noundef %0, i32 noundef %1, ptr noundef %2) 
   %103 = fmul double %102, 0x3ED455A5B2FF8F9D
   %104 = call double @anpm(double noundef %103)
   %105 = fmul double 0x3FD702A41F2E9970, %10
-  br label %106
-
-106:                                              ; preds = %108, %3
-  %.03 = phi i32 [ 0, %3 ], [ %151, %108 ]
-  %.02 = phi double [ %24, %3 ], [ %135, %108 ]
-  %.01 = phi double [ %40, %3 ], [ %150, %108 ]
-  %107 = icmp slt i32 %.03, 8
-  br i1 %107, label %108, label %152
-
-108:                                              ; preds = %106
+  %106 = sext i32 %1 to i64
+  %107 = sext i32 %1 to i64
+  %108 = sext i32 %1 to i64
   %109 = sext i32 %1 to i64
-  %110 = getelementptr inbounds [8 x [9 x double]], ptr @kp, i64 0, i64 %109
-  %111 = sext i32 %.03 to i64
-  %112 = getelementptr inbounds [9 x double], ptr %110, i64 0, i64 %111
-  %113 = load double, ptr %112, align 8
-  %114 = fmul double %113, %105
-  %115 = sext i32 %1 to i64
-  %116 = getelementptr inbounds [8 x [10 x double]], ptr @kq, i64 0, i64 %115
-  %117 = sext i32 %.03 to i64
-  %118 = getelementptr inbounds [10 x double], ptr %116, i64 0, i64 %117
-  %119 = load double, ptr %118, align 8
-  %120 = fmul double %119, %105
-  %121 = sext i32 %1 to i64
-  %122 = getelementptr inbounds [8 x [9 x double]], ptr @ca, i64 0, i64 %121
-  %123 = sext i32 %.03 to i64
-  %124 = getelementptr inbounds [9 x double], ptr %122, i64 0, i64 %123
-  %125 = load double, ptr %124, align 8
-  %126 = call double @cos(double noundef %114) #5
-  %127 = sext i32 %1 to i64
-  %128 = getelementptr inbounds [8 x [9 x double]], ptr @sa, i64 0, i64 %127
-  %129 = sext i32 %.03 to i64
-  %130 = getelementptr inbounds [9 x double], ptr %128, i64 0, i64 %129
-  %131 = load double, ptr %130, align 8
-  %132 = call double @sin(double noundef %114) #5
-  %133 = fmul double %131, %132
-  %134 = call double @llvm.fmuladd.f64(double %125, double %126, double %133)
-  %135 = call double @llvm.fmuladd.f64(double %134, double 0x3E7AD7F29ABCAF48, double %.02)
-  %136 = sext i32 %1 to i64
-  %137 = getelementptr inbounds [8 x [10 x double]], ptr @cl, i64 0, i64 %136
-  %138 = sext i32 %.03 to i64
-  %139 = getelementptr inbounds [10 x double], ptr %137, i64 0, i64 %138
-  %140 = load double, ptr %139, align 8
-  %141 = call double @cos(double noundef %120) #5
-  %142 = sext i32 %1 to i64
-  %143 = getelementptr inbounds [8 x [10 x double]], ptr @sl, i64 0, i64 %142
+  %110 = sext i32 %1 to i64
+  %111 = sext i32 %1 to i64
+  br label %112
+
+112:                                              ; preds = %114, %3
+  %.03 = phi i32 [ 0, %3 ], [ %151, %114 ]
+  %.02 = phi double [ %24, %3 ], [ %137, %114 ]
+  %.01 = phi double [ %40, %3 ], [ %150, %114 ]
+  %113 = icmp slt i32 %.03, 8
+  br i1 %113, label %114, label %152
+
+114:                                              ; preds = %112
+  %115 = getelementptr inbounds [8 x [9 x double]], ptr @kp, i64 0, i64 %106
+  %116 = sext i32 %.03 to i64
+  %117 = getelementptr inbounds [9 x double], ptr %115, i64 0, i64 %116
+  %118 = load double, ptr %117, align 8
+  %119 = fmul double %118, %105
+  %120 = getelementptr inbounds [8 x [10 x double]], ptr @kq, i64 0, i64 %107
+  %121 = sext i32 %.03 to i64
+  %122 = getelementptr inbounds [10 x double], ptr %120, i64 0, i64 %121
+  %123 = load double, ptr %122, align 8
+  %124 = fmul double %123, %105
+  %125 = getelementptr inbounds [8 x [9 x double]], ptr @ca, i64 0, i64 %108
+  %126 = sext i32 %.03 to i64
+  %127 = getelementptr inbounds [9 x double], ptr %125, i64 0, i64 %126
+  %128 = load double, ptr %127, align 8
+  %129 = call double @cos(double noundef %119) #5
+  %130 = getelementptr inbounds [8 x [9 x double]], ptr @sa, i64 0, i64 %109
+  %131 = sext i32 %.03 to i64
+  %132 = getelementptr inbounds [9 x double], ptr %130, i64 0, i64 %131
+  %133 = load double, ptr %132, align 8
+  %134 = call double @sin(double noundef %119) #5
+  %135 = fmul double %133, %134
+  %136 = call double @llvm.fmuladd.f64(double %128, double %129, double %135)
+  %137 = call double @llvm.fmuladd.f64(double %136, double 0x3E7AD7F29ABCAF48, double %.02)
+  %138 = getelementptr inbounds [8 x [10 x double]], ptr @cl, i64 0, i64 %110
+  %139 = sext i32 %.03 to i64
+  %140 = getelementptr inbounds [10 x double], ptr %138, i64 0, i64 %139
+  %141 = load double, ptr %140, align 8
+  %142 = call double @cos(double noundef %124) #5
+  %143 = getelementptr inbounds [8 x [10 x double]], ptr @sl, i64 0, i64 %111
   %144 = sext i32 %.03 to i64
   %145 = getelementptr inbounds [10 x double], ptr %143, i64 0, i64 %144
   %146 = load double, ptr %145, align 8
-  %147 = call double @sin(double noundef %120) #5
+  %147 = call double @sin(double noundef %124) #5
   %148 = fmul double %146, %147
-  %149 = call double @llvm.fmuladd.f64(double %140, double %141, double %148)
+  %149 = call double @llvm.fmuladd.f64(double %141, double %142, double %148)
   %150 = call double @llvm.fmuladd.f64(double %149, double 0x3E7AD7F29ABCAF48, double %.01)
   %151 = add nsw i32 %.03, 1
-  br label %106, !llvm.loop !6
+  br label %112, !llvm.loop !6
 
-152:                                              ; preds = %106
+152:                                              ; preds = %112
   %153 = sext i32 %1 to i64
   %154 = getelementptr inbounds [8 x [9 x double]], ptr @kp, i64 0, i64 %153
   %155 = getelementptr inbounds [9 x double], ptr %154, i64 0, i64 8
@@ -217,66 +217,66 @@ define dso_local void @planetpv(ptr noundef %0, i32 noundef %1, ptr noundef %2) 
   %169 = call double @llvm.fmuladd.f64(double %161, double %162, double %168)
   %170 = fmul double %10, %169
   %171 = call double @llvm.fmuladd.f64(double %170, double 0x3E7AD7F29ABCAF48, double %.02)
-  br label %172
+  %172 = sext i32 %1 to i64
+  %173 = sext i32 %1 to i64
+  %174 = sext i32 %1 to i64
+  br label %175
 
-172:                                              ; preds = %174, %152
-  %.14 = phi i32 [ 8, %152 ], [ %197, %174 ]
-  %.1 = phi double [ %.01, %152 ], [ %196, %174 ]
-  %173 = icmp sle i32 %.14, 9
-  br i1 %173, label %174, label %198
+175:                                              ; preds = %177, %152
+  %.14 = phi i32 [ 8, %152 ], [ %197, %177 ]
+  %.1 = phi double [ %.01, %152 ], [ %196, %177 ]
+  %176 = icmp sle i32 %.14, 9
+  br i1 %176, label %177, label %198
 
-174:                                              ; preds = %172
-  %175 = sext i32 %1 to i64
-  %176 = getelementptr inbounds [8 x [10 x double]], ptr @kq, i64 0, i64 %175
-  %177 = sext i32 %.14 to i64
-  %178 = getelementptr inbounds [10 x double], ptr %176, i64 0, i64 %177
-  %179 = load double, ptr %178, align 8
-  %180 = fmul double %179, %105
-  %181 = sext i32 %1 to i64
-  %182 = getelementptr inbounds [8 x [10 x double]], ptr @cl, i64 0, i64 %181
-  %183 = sext i32 %.14 to i64
-  %184 = getelementptr inbounds [10 x double], ptr %182, i64 0, i64 %183
-  %185 = load double, ptr %184, align 8
-  %186 = call double @cos(double noundef %180) #5
-  %187 = sext i32 %1 to i64
-  %188 = getelementptr inbounds [8 x [10 x double]], ptr @sl, i64 0, i64 %187
+177:                                              ; preds = %175
+  %178 = getelementptr inbounds [8 x [10 x double]], ptr @kq, i64 0, i64 %172
+  %179 = sext i32 %.14 to i64
+  %180 = getelementptr inbounds [10 x double], ptr %178, i64 0, i64 %179
+  %181 = load double, ptr %180, align 8
+  %182 = fmul double %181, %105
+  %183 = getelementptr inbounds [8 x [10 x double]], ptr @cl, i64 0, i64 %173
+  %184 = sext i32 %.14 to i64
+  %185 = getelementptr inbounds [10 x double], ptr %183, i64 0, i64 %184
+  %186 = load double, ptr %185, align 8
+  %187 = call double @cos(double noundef %182) #5
+  %188 = getelementptr inbounds [8 x [10 x double]], ptr @sl, i64 0, i64 %174
   %189 = sext i32 %.14 to i64
   %190 = getelementptr inbounds [10 x double], ptr %188, i64 0, i64 %189
   %191 = load double, ptr %190, align 8
-  %192 = call double @sin(double noundef %180) #5
+  %192 = call double @sin(double noundef %182) #5
   %193 = fmul double %191, %192
-  %194 = call double @llvm.fmuladd.f64(double %185, double %186, double %193)
+  %194 = call double @llvm.fmuladd.f64(double %186, double %187, double %193)
   %195 = fmul double %10, %194
   %196 = call double @llvm.fmuladd.f64(double %195, double 0x3E7AD7F29ABCAF48, double %.1)
   %197 = add nsw i32 %.14, 1
-  br label %172, !llvm.loop !8
+  br label %175, !llvm.loop !8
 
-198:                                              ; preds = %172
+198:                                              ; preds = %175
   %199 = call double @fmod(double noundef %.1, double noundef 0x401921FB54442D18) #5
   %200 = fsub double %199, %71
   %201 = call double @sin(double noundef %200) #5
   %202 = call double @llvm.fmuladd.f64(double %54, double %201, double %200)
-  br label %203
+  %203 = fneg double %54
+  br label %204
 
-203:                                              ; preds = %203, %198
-  %.2 = phi i32 [ 0, %198 ], [ %212, %203 ]
-  %.0 = phi double [ %202, %198 ], [ %211, %203 ]
-  %204 = fsub double %200, %.0
-  %205 = call double @sin(double noundef %.0) #5
-  %206 = call double @llvm.fmuladd.f64(double %54, double %205, double %204)
-  %207 = call double @cos(double noundef %.0) #5
-  %208 = fneg double %54
-  %209 = call double @llvm.fmuladd.f64(double %208, double %207, double 1.000000e+00)
-  %210 = fdiv double %206, %209
+204:                                              ; preds = %204, %198
+  %.2 = phi i32 [ 0, %198 ], [ %212, %204 ]
+  %.0 = phi double [ %202, %198 ], [ %211, %204 ]
+  %205 = fsub double %200, %.0
+  %206 = call double @sin(double noundef %.0) #5
+  %207 = call double @llvm.fmuladd.f64(double %54, double %206, double %205)
+  %208 = call double @cos(double noundef %.0) #5
+  %209 = call double @llvm.fmuladd.f64(double %203, double %208, double 1.000000e+00)
+  %210 = fdiv double %207, %209
   %211 = fadd double %.0, %210
   %212 = add nsw i32 %.2, 1
   %213 = icmp sge i32 %212, 10
   %214 = call double @llvm.fabs.f64(double %210)
   %215 = fcmp olt double %214, 0x3D719799812DEA11
   %or.cond = select i1 %213, i1 true, i1 %215
-  br i1 %or.cond, label %216, label %203
+  br i1 %or.cond, label %216, label %204
 
-216:                                              ; preds = %203
+216:                                              ; preds = %204
   %217 = fdiv double %211, 2.000000e+00
   %218 = fadd double 1.000000e+00, %54
   %219 = fsub double 1.000000e+00, %54
@@ -470,78 +470,81 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
   %4 = alloca [2 x [3 x double]], align 16
   %5 = alloca [8 x [3 x double]], align 16
   %6 = icmp sgt i32 %0, 1
-  br i1 %6, label %7, label %16
+  br i1 %6, label %7, label %.loopexit
 
-7:                                                ; preds = %2, %14
-  %.02 = phi i32 [ %15, %14 ], [ 1, %2 ]
-  %8 = icmp slt i32 %.02, %0
-  br i1 %8, label %9, label %16
+7:                                                ; preds = %2
+  %8 = getelementptr inbounds ptr, ptr %1, i64 1
+  br label %9
 
-9:                                                ; preds = %7
-  %10 = getelementptr inbounds ptr, ptr %1, i64 1
-  %11 = load ptr, ptr %10, align 8
-  %12 = call i32 @strcmp(ptr noundef %11, ptr noundef @.str) #6
-  %13 = icmp ne i32 %12, 0
-  br i1 %13, label %14, label %16
+9:                                                ; preds = %15, %7
+  %.02 = phi i32 [ 1, %7 ], [ %16, %15 ]
+  %10 = icmp slt i32 %.02, %0
+  br i1 %10, label %11, label %.loopexit
 
-14:                                               ; preds = %9
-  %15 = add nsw i32 %.02, 1
-  br label %7, !llvm.loop !9
+11:                                               ; preds = %9
+  %12 = load ptr, ptr %8, align 8
+  %13 = call i32 @strcmp(ptr noundef %12, ptr noundef @.str) #6
+  %14 = icmp ne i32 %13, 0
+  br i1 %14, label %15, label %.loopexit
 
-16:                                               ; preds = %7, %9, %2
-  br label %17
+15:                                               ; preds = %11
+  %16 = add nsw i32 %.02, 1
+  br label %9, !llvm.loop !9
 
-17:                                               ; preds = %40, %16
-  %.13 = phi i32 [ 0, %16 ], [ %41, %40 ]
-  %18 = icmp slt i32 %.13, 20
-  br i1 %18, label %19, label %42
-
-19:                                               ; preds = %17
+.loopexit:                                        ; preds = %11, %9, %2
+  %17 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 0
+  %18 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 1
+  %19 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 0
   %20 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 0
-  store double 0x4142B42C80000000, ptr %20, align 16
-  %21 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 1
-  store double 0.000000e+00, ptr %21, align 8
-  br label %22
+  %21 = getelementptr inbounds [2 x [3 x double]], ptr %4, i64 0, i64 0
+  %22 = getelementptr inbounds [2 x [3 x double]], ptr %4, i64 0, i64 0
+  br label %23
 
-22:                                               ; preds = %38, %19
-  %.01 = phi i32 [ 0, %19 ], [ %39, %38 ]
-  %23 = icmp slt i32 %.01, 36525
-  br i1 %23, label %24, label %40
+23:                                               ; preds = %40, %.loopexit
+  %.13 = phi i32 [ 0, %.loopexit ], [ %41, %40 ]
+  %24 = icmp slt i32 %.13, 20
+  br i1 %24, label %25, label %42
 
-24:                                               ; preds = %22
-  %25 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 0
-  %26 = load double, ptr %25, align 16
-  %27 = fadd double %26, 1.000000e+00
-  store double %27, ptr %25, align 16
-  br label %28
+25:                                               ; preds = %23
+  store double 0x4142B42C80000000, ptr %17, align 16
+  store double 0.000000e+00, ptr %18, align 8
+  br label %26
 
-28:                                               ; preds = %30, %24
-  %.0 = phi i32 [ 0, %24 ], [ %37, %30 ]
-  %29 = icmp slt i32 %.0, 8
-  br i1 %29, label %30, label %38
+26:                                               ; preds = %38, %25
+  %.01 = phi i32 [ 0, %25 ], [ %39, %38 ]
+  %27 = icmp slt i32 %.01, 36525
+  br i1 %27, label %28, label %40
 
-30:                                               ; preds = %28
-  %31 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 0
-  %32 = getelementptr inbounds [2 x [3 x double]], ptr %4, i64 0, i64 0
-  call void @planetpv(ptr noundef %31, i32 noundef %.0, ptr noundef %32)
-  %33 = getelementptr inbounds [2 x [3 x double]], ptr %4, i64 0, i64 0
+28:                                               ; preds = %26
+  %29 = load double, ptr %19, align 16
+  %30 = fadd double %29, 1.000000e+00
+  store double %30, ptr %19, align 16
+  br label %31
+
+31:                                               ; preds = %33, %28
+  %.0 = phi i32 [ 0, %28 ], [ %37, %33 ]
+  %32 = icmp slt i32 %.0, 8
+  br i1 %32, label %33, label %38
+
+33:                                               ; preds = %31
+  call void @planetpv(ptr noundef %20, i32 noundef %.0, ptr noundef %21)
   %34 = sext i32 %.0 to i64
   %35 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %34
   %36 = getelementptr inbounds [3 x double], ptr %35, i64 0, i64 0
-  call void @radecdist(ptr noundef %33, ptr noundef %36)
+  call void @radecdist(ptr noundef %22, ptr noundef %36)
   %37 = add nsw i32 %.0, 1
-  br label %28, !llvm.loop !10
+  br label %31, !llvm.loop !10
 
-38:                                               ; preds = %28
+38:                                               ; preds = %31
   %39 = add nsw i32 %.01, 1
-  br label %22, !llvm.loop !11
+  br label %26, !llvm.loop !11
 
-40:                                               ; preds = %22
+40:                                               ; preds = %26
   %41 = add nsw i32 %.13, 1
-  br label %17, !llvm.loop !12
+  br label %23, !llvm.loop !12
 
-42:                                               ; preds = %17, %44
-  %.1 = phi i32 [ %58, %44 ], [ 0, %17 ]
+42:                                               ; preds = %23, %44
+  %.1 = phi i32 [ %58, %44 ], [ 0, %23 ]
   %43 = icmp slt i32 %.1, 8
   br i1 %43, label %44, label %59
 

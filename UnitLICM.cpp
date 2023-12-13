@@ -13,6 +13,7 @@
 STATISTIC(numHoistedLoads, "Number of loads hoisted");
 STATISTIC(numHoistedStores, "Number of stores hoisted");
 STATISTIC(numHoistedTotal, "Number of instructions hoisted");
+STATISTIC(numHoistedComputational, "Number of computational instructions hoisted");
 
 using namespace llvm;
 using namespace cs426;
@@ -119,19 +120,22 @@ PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
     for (auto inst: loop_invariant_defs) {
       dbgs() << inst << " " << *inst << " is a loop invariant def\n";
 
-      if (inst->getOpcode() == Instruction::Load) numHoistedLoads += 1;
-      if (inst->getOpcode() == Instruction::Store) numHoistedStores += 1;
+      if (inst->getOpcode() == Instruction::Load) numHoistedLoads ++;
+      if (inst->getOpcode() == Instruction::Store) numHoistedStores ++;
+      if (dyn_cast<UnaryInstruction>(inst) || 
+        inst->isBinaryOp(inst->getOpcode())) numHoistedComputational++;
 
       inst->removeFromParent();
       loop.loopPreheader->getInstList().insert(terminator, inst);
-      numHoistedTotal += 1;
+      numHoistedTotal ++;
     }
 
   }
 
   dbgs() << "LICM pass finished running.\n";
-  dbgs() << "Stats: " << numHoistedLoads << " loads hoisted, " 
+  dbgs() << "Cumulative stats: " << numHoistedLoads << " loads hoisted, " 
     << numHoistedStores << " stores hoisted, "
+    << numHoistedComputational << " computational instructions hoisted, "
     << numHoistedTotal << " total instructions hoisted.\n";
 
   // Set proper preserved analyses

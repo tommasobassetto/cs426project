@@ -44,19 +44,19 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
   %7 = call <2 x double> @make_vec(double noundef -1.000000e+00, double noundef -1.000000e+00)
   %8 = call <2 x double> @make_vec(double noundef 1.000000e+00, double noundef 2.000000e+00)
   %9 = call <2 x double> @make_vec(double noundef 1.000000e+00, double noundef -1.000000e+00)
-  br label %10
+  %10 = sitofp i32 2500000 to double
+  br label %11
 
-10:                                               ; preds = %13, %2
+11:                                               ; preds = %13, %2
   %.06 = phi double [ 0.000000e+00, %2 ], [ %31, %13 ]
   %.05 = phi double [ 0.000000e+00, %2 ], [ %27, %13 ]
   %.04 = phi double [ 0.000000e+00, %2 ], [ %19, %13 ]
   %.03 = phi double [ 0.000000e+00, %2 ], [ %16, %13 ]
   %.0 = phi double [ 1.000000e+00, %2 ], [ %32, %13 ]
-  %11 = sitofp i32 2500000 to double
-  %12 = fcmp ole double %.0, %11
+  %12 = fcmp ole double %.0, %10
   br i1 %12, label %13, label %33
 
-13:                                               ; preds = %10
+13:                                               ; preds = %11
   %14 = fsub double %.0, 1.000000e+00
   %15 = call double @pow(double noundef 0x3FE5555555555555, double noundef %14) #4
   %16 = fadd double %.03, %15
@@ -76,52 +76,52 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
   %30 = fdiv double 1.000000e+00, %29
   %31 = fadd double %.06, %30
   %32 = fadd double %.0, 1.000000e+00
-  br label %10, !llvm.loop !6
+  br label %11, !llvm.loop !6
 
-33:                                               ; preds = %10
+33:                                               ; preds = %11
   store <2 x double> %8, ptr %3, align 16
-  br label %34
+  %34 = sitofp i32 2500000 to double
+  %35 = fneg <2 x double> %5
+  br label %36
 
-34:                                               ; preds = %38, %33
-  %.09 = phi <2 x double> [ %4, %33 ], [ %44, %38 ]
-  %.08 = phi <2 x double> [ %4, %33 ], [ %52, %38 ]
-  %.07 = phi <2 x double> [ %4, %33 ], [ %47, %38 ]
-  %.02 = phi <2 x double> [ %4, %33 ], [ %55, %38 ]
-  %.01 = phi <2 x double> [ %4, %33 ], [ %60, %38 ]
-  %35 = load double, ptr %3, align 16
-  %36 = sitofp i32 2500000 to double
-  %37 = fcmp ole double %35, %36
-  br i1 %37, label %38, label %63
+36:                                               ; preds = %39, %33
+  %.09 = phi <2 x double> [ %4, %33 ], [ %45, %39 ]
+  %.08 = phi <2 x double> [ %4, %33 ], [ %53, %39 ]
+  %.07 = phi <2 x double> [ %4, %33 ], [ %48, %39 ]
+  %.02 = phi <2 x double> [ %4, %33 ], [ %56, %39 ]
+  %.01 = phi <2 x double> [ %4, %33 ], [ %60, %39 ]
+  %37 = load double, ptr %3, align 16
+  %38 = fcmp ole double %37, %34
+  br i1 %38, label %39, label %63
 
-38:                                               ; preds = %34
-  %39 = load <2 x double>, ptr %3, align 16
+39:                                               ; preds = %36
   %40 = load <2 x double>, ptr %3, align 16
-  %41 = fadd <2 x double> %40, %5
-  %42 = fmul <2 x double> %39, %41
-  %43 = fdiv <2 x double> %5, %42
-  %44 = fadd <2 x double> %.09, %43
-  %45 = load <2 x double>, ptr %3, align 16
-  %46 = fdiv <2 x double> %5, %45
-  %47 = fadd <2 x double> %.07, %46
-  %48 = load <2 x double>, ptr %3, align 16
+  %41 = load <2 x double>, ptr %3, align 16
+  %42 = fadd <2 x double> %41, %5
+  %43 = fmul <2 x double> %40, %42
+  %44 = fdiv <2 x double> %5, %43
+  %45 = fadd <2 x double> %.09, %44
+  %46 = load <2 x double>, ptr %3, align 16
+  %47 = fdiv <2 x double> %5, %46
+  %48 = fadd <2 x double> %.07, %47
   %49 = load <2 x double>, ptr %3, align 16
-  %50 = fmul <2 x double> %48, %49
-  %51 = fdiv <2 x double> %5, %50
-  %52 = fadd <2 x double> %.08, %51
-  %53 = load <2 x double>, ptr %3, align 16
-  %54 = fdiv <2 x double> %9, %53
-  %55 = fadd <2 x double> %.02, %54
-  %56 = load <2 x double>, ptr %3, align 16
-  %57 = fneg <2 x double> %5
-  %58 = call <2 x double> @llvm.fmuladd.v2f64(<2 x double> %6, <2 x double> %56, <2 x double> %57)
+  %50 = load <2 x double>, ptr %3, align 16
+  %51 = fmul <2 x double> %49, %50
+  %52 = fdiv <2 x double> %5, %51
+  %53 = fadd <2 x double> %.08, %52
+  %54 = load <2 x double>, ptr %3, align 16
+  %55 = fdiv <2 x double> %9, %54
+  %56 = fadd <2 x double> %.02, %55
+  %57 = load <2 x double>, ptr %3, align 16
+  %58 = call <2 x double> @llvm.fmuladd.v2f64(<2 x double> %6, <2 x double> %57, <2 x double> %35)
   %59 = fdiv <2 x double> %9, %58
   %60 = fadd <2 x double> %.01, %59
   %61 = load <2 x double>, ptr %3, align 16
   %62 = fadd <2 x double> %61, %6
   store <2 x double> %62, ptr %3, align 16
-  br label %34, !llvm.loop !8
+  br label %36, !llvm.loop !8
 
-63:                                               ; preds = %34
+63:                                               ; preds = %36
   %64 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %.03, ptr noundef @.str.1)
   %65 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %.04, ptr noundef @.str.2)
   %66 = call double @sum_vec(<2 x double> noundef %.09)
