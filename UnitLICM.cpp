@@ -8,12 +8,12 @@
 
 #include <map>
 
-#define DEBUG_TYPE UnitLICM
+#define DEBUG_TYPE "UnitLICM"
 // Define any statistics here
 // These are not working
-// STATISTIC(numHoistedLoads, "Number of loads hoisted");
-// STATISTIC(numHoistedStores, "Number of stores hoisted");
-// STATISTIC(numHoistedTotal, "Number of instructions hoisted");
+STATISTIC(numHoistedLoads, "Number of loads hoisted");
+STATISTIC(numHoistedStores, "Number of stores hoisted");
+STATISTIC(numHoistedTotal, "Number of instructions hoisted");
 
 using namespace llvm;
 using namespace cs426;
@@ -33,9 +33,9 @@ std::set<Value*> getAllOperands(Instruction &inst) {
 /// Main function for running the LICM optimization
 // Note that the input must explicitly NOT be in SSA form
 PreservedAnalyses UnitLICM::run(Function& F, FunctionAnalysisManager& FAM) {
-  int numHoistedLoads = 0;
+  /*int numHoistedLoads = 0;
   int numHoistedStores = 0;
-  int numHoistedTotal = 0;
+  int numHoistedTotal = 0;*/
 
   dbgs() << "UnitLICM running on " << F.getName() << "\n";
 
