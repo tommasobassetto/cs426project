@@ -6,6 +6,25 @@ target triple = "x86_64-pc-linux-gnu"
 @.str = private unnamed_addr constant [16 x i8] c"in c, ret = %f\0A\00", align 1
 
 ; Function Attrs: noinline nounwind uwtable
+define dso_local i32 @add(i32 noundef %0) #0 {
+  %2 = add nsw i32 3, %0
+  ret i32 %2
+}
+
+; Function Attrs: noinline nounwind uwtable
+define dso_local i32 @bitcast(i8 noundef signext %0) #0 {
+  %2 = sext i8 %0 to i32
+  ret i32 %2
+}
+
+; Function Attrs: noinline nounwind uwtable
+define dso_local i32 @icmp(i32 noundef %0) #0 {
+  %2 = add nsw i32 1, 2
+  %3 = add nsw i32 1, 2
+  ret i32 %3
+}
+
+; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @main() #0 {
   %1 = fcmp olt float 4.000000e+00, 2.000000e+00
   br i1 %1, label %2, label %3

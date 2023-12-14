@@ -1,24 +1,24 @@
 #include <stdio.h>
-// int add(int n) {
-//     int a = 1+2;
-//     int b = a+n;
-//     return b;
-// }
+int add(int n) {
+    int a = 1+2;
+    int b = a+n;
+    return b;
+}
 
-// int bitcast(signed char n){
-//     return (int)n;
-// }
+int bitcast(signed char n){
+    return (int)n;
+}
 
-// int icmp(int n){
-//     int c;
-//     int a=0+1;
-//     int b=1+1;
-//     // if (a<b) c=n;
-//     // else c=1+n;
-//     c=a+b;
-//     return a+b;
-//     // return c;
-// }
+int icmp(int n){
+    int c;
+    int a=0+1;
+    int b=1+1;
+    // if (a<b) c=n;
+    // else c=1+n;
+    c=a+b;
+    return a+b;
+    // return c;
+}
 
 int main() {
     float ret;
