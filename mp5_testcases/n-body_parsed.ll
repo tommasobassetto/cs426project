@@ -12,10 +12,10 @@ target triple = "x86_64-pc-linux-gnu"
 define dso_local void @advance(i32 noundef %0, ptr noundef %1, double noundef %2) #0 {
   br label %4
 
-4:                                                ; preds = %77, %3
-  %.01 = phi i32 [ 0, %3 ], [ %78, %77 ]
+4:                                                ; preds = %10, %3
+  %.01 = phi i32 [ 0, %3 ], [ %9, %10 ]
   %5 = icmp slt i32 %.01, %0
-  br i1 %5, label %6, label %79
+  br i1 %5, label %6, label %73
 
 6:                                                ; preds = %4
   %7 = sext i32 %.01 to i64
@@ -24,9 +24,9 @@ define dso_local void @advance(i32 noundef %0, ptr noundef %1, double noundef %2
   br label %10
 
 10:                                               ; preds = %12, %6
-  %.0 = phi i32 [ %9, %6 ], [ %76, %12 ]
+  %.0 = phi i32 [ %9, %6 ], [ %72, %12 ]
   %11 = icmp slt i32 %.0, %0
-  br i1 %11, label %12, label %77
+  br i1 %11, label %12, label %4, !llvm.loop !6
 
 12:                                               ; preds = %10
   %13 = sext i32 %.0 to i64
@@ -61,80 +61,72 @@ define dso_local void @advance(i32 noundef %0, ptr noundef %1, double noundef %2
   %42 = fneg double %39
   %43 = call double @llvm.fmuladd.f64(double %42, double %36, double %41)
   store double %43, ptr %40, align 8
-  %44 = getelementptr inbounds %struct.planet, ptr %14, i32 0, i32 6
-  %45 = load double, ptr %44, align 8
-  %46 = fmul double %24, %45
-  %47 = getelementptr inbounds %struct.planet, ptr %8, i32 0, i32 4
-  %48 = load double, ptr %47, align 8
-  %49 = fneg double %46
-  %50 = call double @llvm.fmuladd.f64(double %49, double %36, double %48)
-  store double %50, ptr %47, align 8
-  %51 = getelementptr inbounds %struct.planet, ptr %14, i32 0, i32 6
-  %52 = load double, ptr %51, align 8
-  %53 = fmul double %29, %52
-  %54 = getelementptr inbounds %struct.planet, ptr %8, i32 0, i32 5
-  %55 = load double, ptr %54, align 8
-  %56 = fneg double %53
-  %57 = call double @llvm.fmuladd.f64(double %56, double %36, double %55)
-  store double %57, ptr %54, align 8
-  %58 = getelementptr inbounds %struct.planet, ptr %8, i32 0, i32 6
-  %59 = load double, ptr %58, align 8
-  %60 = fmul double %19, %59
-  %61 = getelementptr inbounds %struct.planet, ptr %14, i32 0, i32 3
-  %62 = load double, ptr %61, align 8
-  %63 = call double @llvm.fmuladd.f64(double %60, double %36, double %62)
-  store double %63, ptr %61, align 8
-  %64 = getelementptr inbounds %struct.planet, ptr %8, i32 0, i32 6
+  %44 = load double, ptr %37, align 8
+  %45 = fmul double %24, %44
+  %46 = getelementptr inbounds %struct.planet, ptr %8, i32 0, i32 4
+  %47 = load double, ptr %46, align 8
+  %48 = fneg double %45
+  %49 = call double @llvm.fmuladd.f64(double %48, double %36, double %47)
+  store double %49, ptr %46, align 8
+  %50 = load double, ptr %37, align 8
+  %51 = fmul double %29, %50
+  %52 = getelementptr inbounds %struct.planet, ptr %8, i32 0, i32 5
+  %53 = load double, ptr %52, align 8
+  %54 = fneg double %51
+  %55 = call double @llvm.fmuladd.f64(double %54, double %36, double %53)
+  store double %55, ptr %52, align 8
+  %56 = getelementptr inbounds %struct.planet, ptr %8, i32 0, i32 6
+  %57 = load double, ptr %56, align 8
+  %58 = fmul double %19, %57
+  %59 = getelementptr inbounds %struct.planet, ptr %14, i32 0, i32 3
+  %60 = load double, ptr %59, align 8
+  %61 = call double @llvm.fmuladd.f64(double %58, double %36, double %60)
+  store double %61, ptr %59, align 8
+  %62 = load double, ptr %56, align 8
+  %63 = fmul double %24, %62
+  %64 = getelementptr inbounds %struct.planet, ptr %14, i32 0, i32 4
   %65 = load double, ptr %64, align 8
-  %66 = fmul double %24, %65
-  %67 = getelementptr inbounds %struct.planet, ptr %14, i32 0, i32 4
-  %68 = load double, ptr %67, align 8
-  %69 = call double @llvm.fmuladd.f64(double %66, double %36, double %68)
-  store double %69, ptr %67, align 8
-  %70 = getelementptr inbounds %struct.planet, ptr %8, i32 0, i32 6
-  %71 = load double, ptr %70, align 8
-  %72 = fmul double %29, %71
-  %73 = getelementptr inbounds %struct.planet, ptr %14, i32 0, i32 5
-  %74 = load double, ptr %73, align 8
-  %75 = call double @llvm.fmuladd.f64(double %72, double %36, double %74)
-  store double %75, ptr %73, align 8
-  %76 = add nsw i32 %.0, 1
-  br label %10, !llvm.loop !6
+  %66 = call double @llvm.fmuladd.f64(double %63, double %36, double %65)
+  store double %66, ptr %64, align 8
+  %67 = load double, ptr %56, align 8
+  %68 = fmul double %29, %67
+  %69 = getelementptr inbounds %struct.planet, ptr %14, i32 0, i32 5
+  %70 = load double, ptr %69, align 8
+  %71 = call double @llvm.fmuladd.f64(double %68, double %36, double %70)
+  store double %71, ptr %69, align 8
+  %72 = add nsw i32 %.0, 1
+  br label %10, !llvm.loop !8
 
-77:                                               ; preds = %10
-  %78 = add nsw i32 %.01, 1
-  br label %4, !llvm.loop !8
+73:                                               ; preds = %4, %75
+  %.1 = phi i32 [ %93, %75 ], [ 0, %4 ]
+  %74 = icmp slt i32 %.1, %0
+  br i1 %74, label %75, label %94
 
-79:                                               ; preds = %4, %81
-  %.1 = phi i32 [ %99, %81 ], [ 0, %4 ]
-  %80 = icmp slt i32 %.1, %0
-  br i1 %80, label %81, label %100
+75:                                               ; preds = %73
+  %76 = sext i32 %.1 to i64
+  %77 = getelementptr inbounds %struct.planet, ptr %1, i64 %76
+  %78 = getelementptr inbounds %struct.planet, ptr %77, i32 0, i32 3
+  %79 = load double, ptr %78, align 8
+  %80 = getelementptr inbounds %struct.planet, ptr %77, i32 0, i32 0
+  %81 = load double, ptr %80, align 8
+  %82 = call double @llvm.fmuladd.f64(double %2, double %79, double %81)
+  store double %82, ptr %80, align 8
+  %83 = getelementptr inbounds %struct.planet, ptr %77, i32 0, i32 4
+  %84 = load double, ptr %83, align 8
+  %85 = getelementptr inbounds %struct.planet, ptr %77, i32 0, i32 1
+  %86 = load double, ptr %85, align 8
+  %87 = call double @llvm.fmuladd.f64(double %2, double %84, double %86)
+  store double %87, ptr %85, align 8
+  %88 = getelementptr inbounds %struct.planet, ptr %77, i32 0, i32 5
+  %89 = load double, ptr %88, align 8
+  %90 = getelementptr inbounds %struct.planet, ptr %77, i32 0, i32 2
+  %91 = load double, ptr %90, align 8
+  %92 = call double @llvm.fmuladd.f64(double %2, double %89, double %91)
+  store double %92, ptr %90, align 8
+  %93 = add nsw i32 %.1, 1
+  br label %73, !llvm.loop !9
 
-81:                                               ; preds = %79
-  %82 = sext i32 %.1 to i64
-  %83 = getelementptr inbounds %struct.planet, ptr %1, i64 %82
-  %84 = getelementptr inbounds %struct.planet, ptr %83, i32 0, i32 3
-  %85 = load double, ptr %84, align 8
-  %86 = getelementptr inbounds %struct.planet, ptr %83, i32 0, i32 0
-  %87 = load double, ptr %86, align 8
-  %88 = call double @llvm.fmuladd.f64(double %2, double %85, double %87)
-  store double %88, ptr %86, align 8
-  %89 = getelementptr inbounds %struct.planet, ptr %83, i32 0, i32 4
-  %90 = load double, ptr %89, align 8
-  %91 = getelementptr inbounds %struct.planet, ptr %83, i32 0, i32 1
-  %92 = load double, ptr %91, align 8
-  %93 = call double @llvm.fmuladd.f64(double %2, double %90, double %92)
-  store double %93, ptr %91, align 8
-  %94 = getelementptr inbounds %struct.planet, ptr %83, i32 0, i32 5
-  %95 = load double, ptr %94, align 8
-  %96 = getelementptr inbounds %struct.planet, ptr %83, i32 0, i32 2
-  %97 = load double, ptr %96, align 8
-  %98 = call double @llvm.fmuladd.f64(double %2, double %95, double %97)
-  store double %98, ptr %96, align 8
-  %99 = add nsw i32 %.1, 1
-  br label %79, !llvm.loop !9
-
-100:                                              ; preds = %79
+94:                                               ; preds = %73
   ret void
 }
 
@@ -148,11 +140,11 @@ declare double @llvm.fmuladd.f64(double, double, double) #2
 define dso_local double @energy(i32 noundef %0, ptr noundef %1) #0 {
   br label %3
 
-3:                                                ; preds = %60, %2
-  %.02 = phi double [ 0.000000e+00, %2 ], [ %.1, %60 ]
-  %.01 = phi i32 [ 0, %2 ], [ %61, %60 ]
+3:                                                ; preds = %25, %2
+  %.02 = phi double [ 0.000000e+00, %2 ], [ %.1, %25 ]
+  %.01 = phi i32 [ 0, %2 ], [ %24, %25 ]
   %4 = icmp slt i32 %.01, %0
-  br i1 %4, label %5, label %62
+  br i1 %4, label %5, label %56
 
 5:                                                ; preds = %3
   %6 = sext i32 %.01 to i64
@@ -162,66 +154,58 @@ define dso_local double @energy(i32 noundef %0, ptr noundef %1) #0 {
   %10 = fmul double 5.000000e-01, %9
   %11 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 3
   %12 = load double, ptr %11, align 8
-  %13 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 3
-  %14 = load double, ptr %13, align 8
-  %15 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 4
-  %16 = load double, ptr %15, align 8
-  %17 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 4
-  %18 = load double, ptr %17, align 8
-  %19 = fmul double %16, %18
-  %20 = call double @llvm.fmuladd.f64(double %12, double %14, double %19)
-  %21 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 5
-  %22 = load double, ptr %21, align 8
-  %23 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 5
-  %24 = load double, ptr %23, align 8
-  %25 = call double @llvm.fmuladd.f64(double %22, double %24, double %20)
-  %26 = call double @llvm.fmuladd.f64(double %10, double %25, double %.02)
-  %27 = add nsw i32 %.01, 1
-  br label %28
+  %13 = load double, ptr %11, align 8
+  %14 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 4
+  %15 = load double, ptr %14, align 8
+  %16 = load double, ptr %14, align 8
+  %17 = fmul double %15, %16
+  %18 = call double @llvm.fmuladd.f64(double %12, double %13, double %17)
+  %19 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 5
+  %20 = load double, ptr %19, align 8
+  %21 = load double, ptr %19, align 8
+  %22 = call double @llvm.fmuladd.f64(double %20, double %21, double %18)
+  %23 = call double @llvm.fmuladd.f64(double %10, double %22, double %.02)
+  %24 = add nsw i32 %.01, 1
+  br label %25
 
-28:                                               ; preds = %30, %5
-  %.1 = phi double [ %26, %5 ], [ %58, %30 ]
-  %.0 = phi i32 [ %27, %5 ], [ %59, %30 ]
-  %29 = icmp slt i32 %.0, %0
-  br i1 %29, label %30, label %60
+25:                                               ; preds = %27, %5
+  %.1 = phi double [ %23, %5 ], [ %54, %27 ]
+  %.0 = phi i32 [ %24, %5 ], [ %55, %27 ]
+  %26 = icmp slt i32 %.0, %0
+  br i1 %26, label %27, label %3, !llvm.loop !10
 
-30:                                               ; preds = %28
-  %31 = sext i32 %.0 to i64
-  %32 = getelementptr inbounds %struct.planet, ptr %1, i64 %31
-  %33 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 0
-  %34 = load double, ptr %33, align 8
-  %35 = getelementptr inbounds %struct.planet, ptr %32, i32 0, i32 0
+27:                                               ; preds = %25
+  %28 = sext i32 %.0 to i64
+  %29 = getelementptr inbounds %struct.planet, ptr %1, i64 %28
+  %30 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 0
+  %31 = load double, ptr %30, align 8
+  %32 = getelementptr inbounds %struct.planet, ptr %29, i32 0, i32 0
+  %33 = load double, ptr %32, align 8
+  %34 = fsub double %31, %33
+  %35 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 1
   %36 = load double, ptr %35, align 8
-  %37 = fsub double %34, %36
-  %38 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 1
-  %39 = load double, ptr %38, align 8
-  %40 = getelementptr inbounds %struct.planet, ptr %32, i32 0, i32 1
+  %37 = getelementptr inbounds %struct.planet, ptr %29, i32 0, i32 1
+  %38 = load double, ptr %37, align 8
+  %39 = fsub double %36, %38
+  %40 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 2
   %41 = load double, ptr %40, align 8
-  %42 = fsub double %39, %41
-  %43 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 2
-  %44 = load double, ptr %43, align 8
-  %45 = getelementptr inbounds %struct.planet, ptr %32, i32 0, i32 2
-  %46 = load double, ptr %45, align 8
-  %47 = fsub double %44, %46
-  %48 = fmul double %42, %42
-  %49 = call double @llvm.fmuladd.f64(double %37, double %37, double %48)
-  %50 = call double @llvm.fmuladd.f64(double %47, double %47, double %49)
-  %51 = call double @sqrt(double noundef %50) #4
-  %52 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 6
-  %53 = load double, ptr %52, align 8
-  %54 = getelementptr inbounds %struct.planet, ptr %32, i32 0, i32 6
-  %55 = load double, ptr %54, align 8
-  %56 = fmul double %53, %55
-  %57 = fdiv double %56, %51
-  %58 = fsub double %.1, %57
-  %59 = add nsw i32 %.0, 1
-  br label %28, !llvm.loop !10
+  %42 = getelementptr inbounds %struct.planet, ptr %29, i32 0, i32 2
+  %43 = load double, ptr %42, align 8
+  %44 = fsub double %41, %43
+  %45 = fmul double %39, %39
+  %46 = call double @llvm.fmuladd.f64(double %34, double %34, double %45)
+  %47 = call double @llvm.fmuladd.f64(double %44, double %44, double %46)
+  %48 = call double @sqrt(double noundef %47) #4
+  %49 = load double, ptr %8, align 8
+  %50 = getelementptr inbounds %struct.planet, ptr %29, i32 0, i32 6
+  %51 = load double, ptr %50, align 8
+  %52 = fmul double %49, %51
+  %53 = fdiv double %52, %48
+  %54 = fsub double %.1, %53
+  %55 = add nsw i32 %.0, 1
+  br label %25, !llvm.loop !11
 
-60:                                               ; preds = %28
-  %61 = add nsw i32 %.01, 1
-  br label %3, !llvm.loop !11
-
-62:                                               ; preds = %3
+56:                                               ; preds = %3
   ret double %.02
 }
 
@@ -230,60 +214,46 @@ define dso_local void @offset_momentum(i32 noundef %0, ptr noundef %1) #0 {
   br label %3
 
 3:                                                ; preds = %5, %2
-  %.03 = phi double [ 0.000000e+00, %2 ], [ %23, %5 ]
-  %.02 = phi double [ 0.000000e+00, %2 ], [ %14, %5 ]
-  %.01 = phi double [ 0.000000e+00, %2 ], [ %32, %5 ]
-  %.0 = phi i32 [ 0, %2 ], [ %33, %5 ]
+  %.03 = phi double [ 0.000000e+00, %2 ], [ %16, %5 ]
+  %.02 = phi double [ 0.000000e+00, %2 ], [ %12, %5 ]
+  %.01 = phi double [ 0.000000e+00, %2 ], [ %20, %5 ]
+  %.0 = phi i32 [ 0, %2 ], [ %21, %5 ]
   %4 = icmp slt i32 %.0, %0
-  br i1 %4, label %5, label %34
+  br i1 %4, label %5, label %22
 
 5:                                                ; preds = %3
   %6 = sext i32 %.0 to i64
   %7 = getelementptr inbounds %struct.planet, ptr %1, i64 %6
   %8 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 3
   %9 = load double, ptr %8, align 8
-  %10 = sext i32 %.0 to i64
-  %11 = getelementptr inbounds %struct.planet, ptr %1, i64 %10
-  %12 = getelementptr inbounds %struct.planet, ptr %11, i32 0, i32 6
-  %13 = load double, ptr %12, align 8
-  %14 = call double @llvm.fmuladd.f64(double %9, double %13, double %.02)
-  %15 = sext i32 %.0 to i64
-  %16 = getelementptr inbounds %struct.planet, ptr %1, i64 %15
-  %17 = getelementptr inbounds %struct.planet, ptr %16, i32 0, i32 4
+  %10 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 6
+  %11 = load double, ptr %10, align 8
+  %12 = call double @llvm.fmuladd.f64(double %9, double %11, double %.02)
+  %13 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 4
+  %14 = load double, ptr %13, align 8
+  %15 = load double, ptr %10, align 8
+  %16 = call double @llvm.fmuladd.f64(double %14, double %15, double %.03)
+  %17 = getelementptr inbounds %struct.planet, ptr %7, i32 0, i32 5
   %18 = load double, ptr %17, align 8
-  %19 = sext i32 %.0 to i64
-  %20 = getelementptr inbounds %struct.planet, ptr %1, i64 %19
-  %21 = getelementptr inbounds %struct.planet, ptr %20, i32 0, i32 6
-  %22 = load double, ptr %21, align 8
-  %23 = call double @llvm.fmuladd.f64(double %18, double %22, double %.03)
-  %24 = sext i32 %.0 to i64
-  %25 = getelementptr inbounds %struct.planet, ptr %1, i64 %24
-  %26 = getelementptr inbounds %struct.planet, ptr %25, i32 0, i32 5
-  %27 = load double, ptr %26, align 8
-  %28 = sext i32 %.0 to i64
-  %29 = getelementptr inbounds %struct.planet, ptr %1, i64 %28
-  %30 = getelementptr inbounds %struct.planet, ptr %29, i32 0, i32 6
-  %31 = load double, ptr %30, align 8
-  %32 = call double @llvm.fmuladd.f64(double %27, double %31, double %.01)
-  %33 = add nsw i32 %.0, 1
+  %19 = load double, ptr %10, align 8
+  %20 = call double @llvm.fmuladd.f64(double %18, double %19, double %.01)
+  %21 = add nsw i32 %.0, 1
   br label %3, !llvm.loop !12
 
-34:                                               ; preds = %3
-  %35 = fneg double %.02
-  %36 = fdiv double %35, 0x4043BD3CC9BE45DE
-  %37 = getelementptr inbounds %struct.planet, ptr %1, i64 0
-  %38 = getelementptr inbounds %struct.planet, ptr %37, i32 0, i32 3
-  store double %36, ptr %38, align 8
-  %39 = fneg double %.03
-  %40 = fdiv double %39, 0x4043BD3CC9BE45DE
-  %41 = getelementptr inbounds %struct.planet, ptr %1, i64 0
-  %42 = getelementptr inbounds %struct.planet, ptr %41, i32 0, i32 4
-  store double %40, ptr %42, align 8
-  %43 = fneg double %.01
-  %44 = fdiv double %43, 0x4043BD3CC9BE45DE
-  %45 = getelementptr inbounds %struct.planet, ptr %1, i64 0
-  %46 = getelementptr inbounds %struct.planet, ptr %45, i32 0, i32 5
-  store double %44, ptr %46, align 8
+22:                                               ; preds = %3
+  %23 = fneg double %.02
+  %24 = fdiv double %23, 0x4043BD3CC9BE45DE
+  %25 = getelementptr inbounds %struct.planet, ptr %1, i64 0
+  %26 = getelementptr inbounds %struct.planet, ptr %25, i32 0, i32 3
+  store double %24, ptr %26, align 8
+  %27 = fneg double %.03
+  %28 = fdiv double %27, 0x4043BD3CC9BE45DE
+  %29 = getelementptr inbounds %struct.planet, ptr %25, i32 0, i32 4
+  store double %28, ptr %29, align 8
+  %30 = fneg double %.01
+  %31 = fdiv double %30, 0x4043BD3CC9BE45DE
+  %32 = getelementptr inbounds %struct.planet, ptr %25, i32 0, i32 5
+  store double %31, ptr %32, align 8
   ret void
 }
 

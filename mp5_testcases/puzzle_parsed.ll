@@ -52,9 +52,9 @@ define dso_local void @shuffle(ptr noundef %0, i32 noundef %1) #0 {
   br label %5
 
 5:                                                ; preds = %7, %2
-  %.0 = phi i64 [ %4, %2 ], [ %26, %7 ]
+  %.0 = phi i64 [ %4, %2 ], [ %23, %7 ]
   %6 = icmp ugt i64 %.0, 0
-  br i1 %6, label %7, label %27
+  br i1 %6, label %7, label %24
 
 7:                                                ; preds = %5
   %8 = add i64 %.0, 1
@@ -65,22 +65,19 @@ define dso_local void @shuffle(ptr noundef %0, i32 noundef %1) #0 {
   %13 = fmul double %9, %12
   %14 = fptosi double %13 to i32
   %15 = sext i32 %14 to i64
-  %16 = add i64 %.0, 1
-  %17 = icmp eq i64 %15, %16
-  %18 = sub i64 %15, 1
-  %19 = select i1 %17, i64 %18, i64 %15
-  %20 = getelementptr inbounds i32, ptr %0, i64 %.0
-  %21 = load i32, ptr %20, align 4
-  %22 = getelementptr inbounds i32, ptr %0, i64 %19
-  %23 = load i32, ptr %22, align 4
-  %24 = getelementptr inbounds i32, ptr %0, i64 %.0
-  store i32 %23, ptr %24, align 4
-  %25 = getelementptr inbounds i32, ptr %0, i64 %19
-  store i32 %21, ptr %25, align 4
-  %26 = add i64 %.0, -1
+  %16 = icmp eq i64 %15, %8
+  %17 = sub i64 %15, 1
+  %18 = select i1 %16, i64 %17, i64 %15
+  %19 = getelementptr inbounds i32, ptr %0, i64 %.0
+  %20 = load i32, ptr %19, align 4
+  %21 = getelementptr inbounds i32, ptr %0, i64 %18
+  %22 = load i32, ptr %21, align 4
+  store i32 %22, ptr %19, align 4
+  store i32 %20, ptr %21, align 4
+  %23 = add i64 %.0, -1
   br label %5, !llvm.loop !6
 
-27:                                               ; preds = %5
+24:                                               ; preds = %5
   ret void
 }
 
@@ -120,10 +117,10 @@ define dso_local i32 @findDuplicate(ptr noundef %0, i32 noundef %1) #0 {
   br label %3
 
 3:                                                ; preds = %5, %2
-  %.01 = phi i32 [ 0, %2 ], [ %12, %5 ]
+  %.01 = phi i32 [ 0, %2 ], [ %6, %5 ]
   %.0 = phi i32 [ 0, %2 ], [ %11, %5 ]
   %4 = icmp slt i32 %.01, %1
-  br i1 %4, label %5, label %13
+  br i1 %4, label %5, label %12
 
 5:                                                ; preds = %3
   %6 = add nsw i32 %.01, 1
@@ -132,12 +129,11 @@ define dso_local i32 @findDuplicate(ptr noundef %0, i32 noundef %1) #0 {
   %9 = getelementptr inbounds i32, ptr %0, i64 %8
   %10 = load i32, ptr %9, align 4
   %11 = xor i32 %7, %10
-  %12 = add nsw i32 %.01, 1
   br label %3, !llvm.loop !9
 
-13:                                               ; preds = %3
-  %14 = xor i32 %.0, %1
-  ret i32 %14
+12:                                               ; preds = %3
+  %13 = xor i32 %.0, %1
+  ret i32 %13
 }
 
 ; Function Attrs: noinline nounwind uwtable

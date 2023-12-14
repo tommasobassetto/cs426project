@@ -11,12 +11,12 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
   %4 = add i64 %3, 4
   %5 = call noalias ptr @malloc(i64 noundef %4) #5
   %6 = icmp ne ptr %5, null
-  br i1 %6, label %7, label %61
+  br i1 %6, label %7, label %52
 
-7:                                                ; preds = %2, %57
-  %.03 = phi i32 [ %59, %57 ], [ 0, %2 ]
+7:                                                ; preds = %2, %48
+  %.03 = phi i32 [ %50, %48 ], [ 0, %2 ]
   %8 = icmp ule i32 %.03, 2
-  br i1 %8, label %9, label %60
+  br i1 %8, label %9, label %51
 
 9:                                                ; preds = %7
   %10 = lshr i32 40960000, %.03
@@ -26,81 +26,72 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
   call void @llvm.memset.p0.i64(ptr align 4 %5, i8 -1, i64 %13, i1 false)
   br label %14
 
-14:                                               ; preds = %55, %9
-  %.04 = phi i32 [ 2, %9 ], [ %56, %55 ]
-  %.01 = phi i32 [ 0, %9 ], [ %.1, %55 ]
+14:                                               ; preds = %46, %9
+  %.04 = phi i32 [ 2, %9 ], [ %47, %46 ]
+  %.01 = phi i32 [ 0, %9 ], [ %.1, %46 ]
   %15 = icmp ule i32 %.04, %10
-  br i1 %15, label %16, label %57
+  br i1 %15, label %16, label %48
 
 16:                                               ; preds = %14
   %17 = zext i32 %.04 to i64
   %18 = udiv i64 %17, 32
   %19 = getelementptr inbounds i32, ptr %5, i64 %18
   %20 = load i32, ptr %19, align 4
-  %21 = zext i32 %.04 to i64
-  %22 = urem i64 %21, 32
-  %23 = trunc i64 %22 to i32
-  %24 = shl i32 1, %23
-  %25 = and i32 %20, %24
-  %26 = icmp ne i32 %25, 0
-  br i1 %26, label %27, label %55
+  %21 = urem i64 %17, 32
+  %22 = trunc i64 %21 to i32
+  %23 = shl i32 1, %22
+  %24 = and i32 %20, %23
+  %25 = icmp ne i32 %24, 0
+  br i1 %25, label %26, label %46
 
-27:                                               ; preds = %16
-  %28 = add i32 %.01, 1
-  %29 = add i32 %.04, %.04
-  br label %30
+26:                                               ; preds = %16
+  %27 = add i32 %.01, 1
+  %28 = add i32 %.04, %.04
+  br label %29
 
-30:                                               ; preds = %53, %27
-  %.02 = phi i32 [ %29, %27 ], [ %54, %53 ]
-  %31 = icmp ule i32 %.02, %10
-  br i1 %31, label %32, label %55
+29:                                               ; preds = %44, %26
+  %.02 = phi i32 [ %28, %26 ], [ %45, %44 ]
+  %30 = icmp ule i32 %.02, %10
+  br i1 %30, label %31, label %46
 
-32:                                               ; preds = %30
-  %33 = zext i32 %.02 to i64
-  %34 = udiv i64 %33, 32
-  %35 = getelementptr inbounds i32, ptr %5, i64 %34
-  %36 = load i32, ptr %35, align 4
-  %37 = zext i32 %.02 to i64
-  %38 = urem i64 %37, 32
-  %39 = trunc i64 %38 to i32
-  %40 = shl i32 1, %39
-  %41 = and i32 %36, %40
-  %42 = icmp ne i32 %41, 0
-  br i1 %42, label %43, label %53
+31:                                               ; preds = %29
+  %32 = zext i32 %.02 to i64
+  %33 = udiv i64 %32, 32
+  %34 = getelementptr inbounds i32, ptr %5, i64 %33
+  %35 = load i32, ptr %34, align 4
+  %36 = urem i64 %32, 32
+  %37 = trunc i64 %36 to i32
+  %38 = shl i32 1, %37
+  %39 = and i32 %35, %38
+  %40 = icmp ne i32 %39, 0
+  br i1 %40, label %41, label %44
 
-43:                                               ; preds = %32
-  %44 = zext i32 %.02 to i64
-  %45 = urem i64 %44, 32
-  %46 = trunc i64 %45 to i32
-  %47 = shl i32 1, %46
-  %48 = zext i32 %.02 to i64
-  %49 = udiv i64 %48, 32
-  %50 = getelementptr inbounds i32, ptr %5, i64 %49
-  %51 = load i32, ptr %50, align 4
-  %52 = xor i32 %51, %47
-  store i32 %52, ptr %50, align 4
-  br label %53
+41:                                               ; preds = %31
+  %42 = load i32, ptr %34, align 4
+  %43 = xor i32 %42, %38
+  store i32 %43, ptr %34, align 4
+  br label %44
 
-53:                                               ; preds = %32, %43
-  %54 = add i32 %.02, %.04
-  br label %30, !llvm.loop !6
+44:                                               ; preds = %31, %41
+  %45 = add i32 %.02, %.04
+  br label %29, !llvm.loop !6
 
-55:                                               ; preds = %16, %30
-  %.1 = phi i32 [ %.01, %16 ], [ %28, %30 ]
-  %56 = add i32 %.04, 1
+46:                                               ; preds = %16, %29
+  %.1 = phi i32 [ %.01, %16 ], [ %27, %29 ]
+  %47 = add i32 %.04, 1
   br label %14, !llvm.loop !8
 
-57:                                               ; preds = %14
-  %58 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %10, i32 noundef %.01)
-  %59 = add i32 %.03, 1
+48:                                               ; preds = %14
+  %49 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %10, i32 noundef %.01)
+  %50 = add i32 %.03, 1
   br label %7, !llvm.loop !9
 
-60:                                               ; preds = %7
+51:                                               ; preds = %7
   call void @free(ptr noundef %5) #6
-  br label %61
+  br label %52
 
-61:                                               ; preds = %2, %60
-  %.0 = phi i32 [ 0, %60 ], [ 1, %2 ]
+52:                                               ; preds = %2, %51
+  %.0 = phi i32 [ 0, %51 ], [ 1, %2 ]
   ret i32 %.0
 }
 

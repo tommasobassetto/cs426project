@@ -5,30 +5,29 @@ target triple = "x86_64-pc-linux-gnu"
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @foo(i32 noundef %0, ptr noalias noundef %1, ptr noalias noundef %2) #0 {
-  %4 = sdiv i32 %0, -3
-  br label %5
+  br label %4
 
-5:                                                ; preds = %8, %3
-  %.01 = phi i32 [ 1, %3 ], [ %spec.select, %8 ]
-  %.0 = phi i32 [ %0, %3 ], [ %11, %8 ]
-  %6 = icmp sgt i32 %.01, 0
-  br i1 %6, label %7, label %8
+4:                                                ; preds = %7, %3
+  %.01 = phi i32 [ 1, %3 ], [ %spec.select, %7 ]
+  %.0 = phi i32 [ %0, %3 ], [ %11, %7 ]
+  %5 = icmp sgt i32 %.01, 0
+  br i1 %5, label %6, label %7
 
-7:                                                ; preds = %5
+6:                                                ; preds = %4
   store i32 %0, ptr %1, align 4
-  br label %8
+  br label %7
 
-8:                                                ; preds = %7, %5
+7:                                                ; preds = %6, %4
+  %8 = sdiv i32 %0, -3
   %9 = add nsw i32 1, %.01
-  %10 = sub nsw i32 %4, %9
+  %10 = sub nsw i32 %8, %9
   %11 = add nsw i32 %.0, %10
-  %12 = icmp sgt i32 %.01, 0
-  %spec.select = select i1 %12, i32 %.01, i32 %10
+  %spec.select = select i1 %5, i32 %.01, i32 %10
   store i32 %0, ptr %2, align 4
-  %13 = icmp slt i32 0, %11
-  br i1 %13, label %5, label %14, !llvm.loop !6
+  %12 = icmp slt i32 0, %11
+  br i1 %12, label %4, label %13, !llvm.loop !6
 
-14:                                               ; preds = %8
+13:                                               ; preds = %7
   ret i32 %spec.select
 }
 

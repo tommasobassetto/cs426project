@@ -121,16 +121,14 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef 11, i32 noundef %3)
   %5 = sitofp i32 10 to double
   %6 = fadd double 2.800000e+01, %5
-  %7 = sitofp i32 10 to double
-  %8 = fadd double 2.800000e+01, %7
-  %9 = call double @fibFP(double noundef %8)
-  %10 = call i32 (ptr, ...) @printf(ptr noundef @.str.1, double noundef %6, double noundef %9)
-  %11 = call i32 @tak(i32 noundef 30, i32 noundef 20, i32 noundef 10)
-  %12 = call i32 (ptr, ...) @printf(ptr noundef @.str.2, i32 noundef 30, i32 noundef 20, i32 noundef 10, i32 noundef %11)
-  %13 = call i32 @fib(i32 noundef 3)
-  %14 = call i32 (ptr, ...) @printf(ptr noundef @.str.3, i32 noundef %13)
-  %15 = call double @takFP(double noundef 3.000000e+00, double noundef 2.000000e+00, double noundef 1.000000e+00)
-  %16 = call i32 (ptr, ...) @printf(ptr noundef @.str.4, double noundef %15)
+  %7 = call double @fibFP(double noundef %6)
+  %8 = call i32 (ptr, ...) @printf(ptr noundef @.str.1, double noundef %6, double noundef %7)
+  %9 = call i32 @tak(i32 noundef 30, i32 noundef 20, i32 noundef 10)
+  %10 = call i32 (ptr, ...) @printf(ptr noundef @.str.2, i32 noundef 30, i32 noundef 20, i32 noundef 10, i32 noundef %9)
+  %11 = call i32 @fib(i32 noundef 3)
+  %12 = call i32 (ptr, ...) @printf(ptr noundef @.str.3, i32 noundef %11)
+  %13 = call double @takFP(double noundef 3.000000e+00, double noundef 2.000000e+00, double noundef 1.000000e+00)
+  %14 = call i32 (ptr, ...) @printf(ptr noundef @.str.4, double noundef %13)
   ret i32 0
 }
 
