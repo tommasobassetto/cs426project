@@ -16,7 +16,7 @@ int icmp(int n){
     // if (a<b) c=n;
     // else c=1+n;
     c=a+b;
-    return a+b;
+    return b+a;
     // return c;
 }
 

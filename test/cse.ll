@@ -42,8 +42,8 @@ define dso_local i32 @icmp(i32 noundef %0) #0 {
   %7 = load i32, ptr %5, align 4
   %8 = add nsw i32 %6, %7
   store i32 %8, ptr %3, align 4
-  %9 = load i32, ptr %4, align 4
-  %10 = load i32, ptr %5, align 4
+  %9 = load i32, ptr %5, align 4
+  %10 = load i32, ptr %4, align 4
   %11 = add nsw i32 %9, %10
   ret i32 %11
 }

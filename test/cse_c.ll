@@ -20,7 +20,7 @@ define dso_local i32 @bitcast(i8 noundef signext %0) #0 {
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @icmp(i32 noundef %0) #0 {
   %2 = add nsw i32 1, 2
-  %3 = add nsw i32 1, 2
+  %3 = add nsw i32 2, 1
   ret i32 %3
 }
 
