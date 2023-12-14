@@ -43,12 +43,19 @@ PreservedAnalyses UnitCSE::run(Function& F, FunctionAnalysisManager& FAM) {
       if (!inst.getType()->isVoidTy()){// this means it is an assignment
         outs() << inst << "\n";
         bool mayEliminate = false;
-        // for (auto inst: Cse.uniqueInsts){
-          // todo: to test whether ok to eliminate
-          // should have another loop
-          // outs() << "opcode: " << opcode << "\n";
-          int match = Cse.findSameInst(&inst, Cse.uniqueInsts);
-          outs() << "match: " << match << "\n";
+        int match = Cse.findSameInst(&inst, Cse.uniqueInsts);
+        if (match != -1){
+          // found 1
+          // replace all its use
+          outs()<< "++++++++inst matched "<< *Cse.uniqueInsts[match]<<"\n";
+          //
+    //           if (inst.hasName()) {
+    //     errs() << "Return Operand: " << inst.getName() << "\n";
+    // } else {
+    //     errs() << "inst->getName() = "<<inst.getName().str()<<"\n";
+    // }
+          inst.replaceAllUsesWith(Cse.uniqueInsts[match]);
+        }
         // }
         if (!mayEliminate){
           Cse.uniqueInsts.push_back(&inst);

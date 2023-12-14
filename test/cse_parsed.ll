@@ -26,9 +26,18 @@ define dso_local i32 @icmp(i32 noundef %0) #0 {
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @main() #0 {
   %1 = fcmp olt float 4.000000e+00, 2.000000e+00
-  %. = select i1 %1, float 4.000000e+00, float 1.000000e+00
-  %2 = fpext float %. to double
-  %3 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %2)
+  br i1 %1, label %2, label %3
+
+2:                                                ; preds = %0
+  br label %4
+
+3:                                                ; preds = %0
+  br label %4
+
+4:                                                ; preds = %3, %2
+  %5 = phi float [ 4.000000e+00, %2 ], [ 1.000000e+00, %3 ]
+  %6 = fpext float %5 to double
+  %7 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %6)
   ret i32 3
 }
 
