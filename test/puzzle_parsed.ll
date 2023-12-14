@@ -22,118 +22,188 @@ define dso_local i32 @rand() #0 {
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local void @srand(i32 noundef %0) #0 {
-  %2 = zext i32 %0 to i64
-  store i64 %2, ptr @next, align 8
+  %2 = alloca i32, align 4
+  store i32 %0, ptr %2, align 4
+  %3 = load i32, ptr %2, align 4
+  %4 = zext i32 %3 to i64
+  store i64 %4, ptr @next, align 8
   ret void
 }
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @randInt(i32 noundef %0, i32 noundef %1) #0 {
-  %3 = sub nsw i32 %1, %0
-  %4 = add nsw i32 %3, 1
-  %5 = sitofp i32 %4 to double
-  %6 = call i32 @rand() #4
-  %7 = sitofp i32 %6 to double
-  %8 = fdiv double %7, 3.276800e+04
-  %9 = fmul double %5, %8
-  %10 = fptosi double %9 to i32
-  %11 = icmp eq i32 %10, %4
-  br i1 %11, label %12, label %15
+  %3 = alloca i32, align 4
+  %4 = alloca i32, align 4
+  %5 = alloca i32, align 4
+  %6 = alloca i32, align 4
+  store i32 %0, ptr %3, align 4
+  store i32 %1, ptr %4, align 4
+  %7 = load i32, ptr %4, align 4
+  %8 = load i32, ptr %3, align 4
+  %9 = sub nsw i32 %7, %8
+  %10 = add nsw i32 %9, 1
+  store i32 %10, ptr %6, align 4
+  %11 = load i32, ptr %6, align 4
+  %12 = sitofp i32 %11 to double
+  %13 = call i32 @rand() #4
+  %14 = sitofp i32 %13 to double
+  %15 = fdiv double %14, 3.276800e+04
+  %16 = fmul double %12, %15
+  %17 = fptosi double %16 to i32
+  store i32 %17, ptr %5, align 4
+  %18 = load i32, ptr %5, align 4
+  %19 = load i32, ptr %6, align 4
+  %20 = icmp eq i32 %18, %19
+  br i1 %20, label %21, label %26
 
-12:                                               ; preds = %2
-  %13 = add nsw i32 %10, %0
-  %14 = sub nsw i32 %13, 1
-  br label %17
+21:                                               ; preds = %2
+  %22 = load i32, ptr %5, align 4
+  %23 = load i32, ptr %3, align 4
+  %24 = add nsw i32 %22, %23
+  %25 = sub nsw i32 %24, 1
+  br label %30
 
-15:                                               ; preds = %2
-  %16 = add nsw i32 %10, %0
-  br label %17
+26:                                               ; preds = %2
+  %27 = load i32, ptr %5, align 4
+  %28 = load i32, ptr %3, align 4
+  %29 = add nsw i32 %27, %28
+  br label %30
 
-17:                                               ; preds = %15, %12
-  %18 = phi i32 [ %14, %12 ], [ %16, %15 ]
-  ret i32 %18
+30:                                               ; preds = %26, %21
+  %31 = phi i32 [ %25, %21 ], [ %29, %26 ]
+  ret i32 %31
 }
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local void @shuffle(ptr noundef %0, i32 noundef %1) #0 {
-  %3 = sub nsw i32 %1, 1
-  %4 = sext i32 %3 to i64
-  br label %5
+  %3 = alloca ptr, align 8
+  %4 = alloca i32, align 4
+  %5 = alloca i64, align 8
+  %6 = alloca i64, align 8
+  %7 = alloca i64, align 8
+  %8 = alloca i32, align 4
+  store ptr %0, ptr %3, align 8
+  store i32 %1, ptr %4, align 4
+  %9 = load i32, ptr %4, align 4
+  %10 = sub nsw i32 %9, 1
+  %11 = sext i32 %10 to i64
+  store i64 %11, ptr %7, align 8
+  br label %12
 
-5:                                                ; preds = %29, %2
-  %.0 = phi i64 [ %4, %2 ], [ %30, %29 ]
-  %6 = icmp ugt i64 %.0, 0
-  br i1 %6, label %7, label %31
+12:                                               ; preds = %51, %2
+  %13 = load i64, ptr %7, align 8
+  %14 = icmp ugt i64 %13, 0
+  br i1 %14, label %15, label %54
 
-7:                                                ; preds = %5
-  %8 = add i64 %.0, 1
-  %9 = uitofp i64 %8 to double
-  %10 = call i32 @rand() #4
-  %11 = sitofp i32 %10 to double
-  %12 = fdiv double %11, 3.276800e+04
-  %13 = fmul double %9, %12
-  %14 = fptosi double %13 to i32
-  %15 = sext i32 %14 to i64
-  %16 = add i64 %.0, 1
-  %17 = icmp eq i64 %15, %16
-  br i1 %17, label %18, label %20
+15:                                               ; preds = %12
+  %16 = load i64, ptr %7, align 8
+  %17 = add i64 %16, 1
+  %18 = uitofp i64 %17 to double
+  %19 = call i32 @rand() #4
+  %20 = sitofp i32 %19 to double
+  %21 = fdiv double %20, 3.276800e+04
+  %22 = fmul double %18, %21
+  %23 = fptosi double %22 to i32
+  %24 = sext i32 %23 to i64
+  store i64 %24, ptr %6, align 8
+  %25 = load i64, ptr %6, align 8
+  %26 = load i64, ptr %7, align 8
+  %27 = add i64 %26, 1
+  %28 = icmp eq i64 %25, %27
+  br i1 %28, label %29, label %32
 
-18:                                               ; preds = %7
-  %19 = sub i64 %15, 1
-  br label %21
+29:                                               ; preds = %15
+  %30 = load i64, ptr %6, align 8
+  %31 = sub i64 %30, 1
+  br label %34
 
-20:                                               ; preds = %7
-  br label %21
+32:                                               ; preds = %15
+  %33 = load i64, ptr %6, align 8
+  br label %34
 
-21:                                               ; preds = %20, %18
-  %22 = phi i64 [ %19, %18 ], [ %15, %20 ]
-  %23 = getelementptr inbounds i32, ptr %0, i64 %.0
-  %24 = load i32, ptr %23, align 4
-  %25 = getelementptr inbounds i32, ptr %0, i64 %22
-  %26 = load i32, ptr %25, align 4
-  %27 = getelementptr inbounds i32, ptr %0, i64 %.0
-  store i32 %26, ptr %27, align 4
-  %28 = getelementptr inbounds i32, ptr %0, i64 %22
-  store i32 %24, ptr %28, align 4
-  br label %29
+34:                                               ; preds = %32, %29
+  %35 = phi i64 [ %31, %29 ], [ %33, %32 ]
+  store i64 %35, ptr %5, align 8
+  %36 = load ptr, ptr %3, align 8
+  %37 = load i64, ptr %7, align 8
+  %38 = getelementptr inbounds i32, ptr %36, i64 %37
+  %39 = load i32, ptr %38, align 4
+  store i32 %39, ptr %8, align 4
+  %40 = load ptr, ptr %3, align 8
+  %41 = load i64, ptr %5, align 8
+  %42 = getelementptr inbounds i32, ptr %40, i64 %41
+  %43 = load i32, ptr %42, align 4
+  %44 = load ptr, ptr %3, align 8
+  %45 = load i64, ptr %7, align 8
+  %46 = getelementptr inbounds i32, ptr %44, i64 %45
+  store i32 %43, ptr %46, align 4
+  %47 = load i32, ptr %8, align 4
+  %48 = load ptr, ptr %3, align 8
+  %49 = load i64, ptr %5, align 8
+  %50 = getelementptr inbounds i32, ptr %48, i64 %49
+  store i32 %47, ptr %50, align 4
+  br label %51
 
-29:                                               ; preds = %21
-  %30 = add i64 %.0, -1
-  br label %5, !llvm.loop !6
+51:                                               ; preds = %34
+  %52 = load i64, ptr %7, align 8
+  %53 = add i64 %52, -1
+  store i64 %53, ptr %7, align 8
+  br label %12, !llvm.loop !6
 
-31:                                               ; preds = %5
+54:                                               ; preds = %12
   ret void
 }
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local ptr @createRandomArray(i32 noundef %0) #0 {
-  %2 = add nsw i32 %0, 1
-  %3 = sext i32 %2 to i64
-  %4 = mul i64 %3, 4
-  %5 = call noalias ptr @malloc(i64 noundef %4) #5
-  br label %6
+  %2 = alloca i32, align 4
+  %3 = alloca i32, align 4
+  %4 = alloca i32, align 4
+  %5 = alloca ptr, align 8
+  store i32 %0, ptr %2, align 4
+  %6 = load i32, ptr %2, align 4
+  %7 = add nsw i32 %6, 1
+  store i32 %7, ptr %4, align 4
+  %8 = load i32, ptr %4, align 4
+  %9 = sext i32 %8 to i64
+  %10 = mul i64 %9, 4
+  %11 = call noalias ptr @malloc(i64 noundef %10) #5
+  store ptr %11, ptr %5, align 8
+  store i32 0, ptr %3, align 4
+  br label %12
 
-6:                                                ; preds = %11, %1
-  %.0 = phi i32 [ 0, %1 ], [ %12, %11 ]
-  %7 = icmp slt i32 %.0, %2
-  br i1 %7, label %8, label %13
+12:                                               ; preds = %22, %1
+  %13 = load i32, ptr %3, align 4
+  %14 = load i32, ptr %4, align 4
+  %15 = icmp slt i32 %13, %14
+  br i1 %15, label %16, label %25
 
-8:                                                ; preds = %6
-  %9 = sext i32 %.0 to i64
-  %10 = getelementptr inbounds i32, ptr %5, i64 %9
-  store i32 %.0, ptr %10, align 4
-  br label %11
+16:                                               ; preds = %12
+  %17 = load i32, ptr %3, align 4
+  %18 = load ptr, ptr %5, align 8
+  %19 = load i32, ptr %3, align 4
+  %20 = sext i32 %19 to i64
+  %21 = getelementptr inbounds i32, ptr %18, i64 %20
+  store i32 %17, ptr %21, align 4
+  br label %22
 
-11:                                               ; preds = %8
-  %12 = add nsw i32 %.0, 1
-  br label %6, !llvm.loop !8
+22:                                               ; preds = %16
+  %23 = load i32, ptr %3, align 4
+  %24 = add nsw i32 %23, 1
+  store i32 %24, ptr %3, align 4
+  br label %12, !llvm.loop !8
 
-13:                                               ; preds = %6
-  %14 = call i32 @randInt(i32 noundef 1, i32 noundef %0)
-  %15 = getelementptr inbounds i32, ptr %5, i64 0
-  store i32 %14, ptr %15, align 4
-  call void @shuffle(ptr noundef %5, i32 noundef %2)
-  ret ptr %5
+25:                                               ; preds = %12
+  %26 = load i32, ptr %2, align 4
+  %27 = call i32 @randInt(i32 noundef 1, i32 noundef %26)
+  %28 = load ptr, ptr %5, align 8
+  %29 = getelementptr inbounds i32, ptr %28, i64 0
+  store i32 %27, ptr %29, align 4
+  %30 = load ptr, ptr %5, align 8
+  %31 = load i32, ptr %4, align 4
+  call void @shuffle(ptr noundef %30, i32 noundef %31)
+  %32 = load ptr, ptr %5, align 8
+  ret ptr %32
 }
 
 ; Function Attrs: nounwind allocsize(0)
@@ -141,71 +211,105 @@ declare noalias ptr @malloc(i64 noundef) #1
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @findDuplicate(ptr noundef %0, i32 noundef %1) #0 {
-  br label %3
+  %3 = alloca ptr, align 8
+  %4 = alloca i32, align 4
+  %5 = alloca i32, align 4
+  %6 = alloca i32, align 4
+  store ptr %0, ptr %3, align 8
+  store i32 %1, ptr %4, align 4
+  store i32 0, ptr %6, align 4
+  store i32 0, ptr %5, align 4
+  br label %7
 
-3:                                                ; preds = %12, %2
-  %.01 = phi i32 [ 0, %2 ], [ %13, %12 ]
-  %.0 = phi i32 [ 0, %2 ], [ %11, %12 ]
-  %4 = icmp slt i32 %.01, %1
-  br i1 %4, label %5, label %14
+7:                                                ; preds = %22, %2
+  %8 = load i32, ptr %5, align 4
+  %9 = load i32, ptr %4, align 4
+  %10 = icmp slt i32 %8, %9
+  br i1 %10, label %11, label %25
 
-5:                                                ; preds = %3
-  %6 = add nsw i32 %.01, 1
-  %7 = xor i32 %.0, %6
-  %8 = sext i32 %.01 to i64
-  %9 = getelementptr inbounds i32, ptr %0, i64 %8
-  %10 = load i32, ptr %9, align 4
-  %11 = xor i32 %7, %10
-  br label %12
+11:                                               ; preds = %7
+  %12 = load i32, ptr %6, align 4
+  %13 = load i32, ptr %5, align 4
+  %14 = add nsw i32 %13, 1
+  %15 = xor i32 %12, %14
+  %16 = load ptr, ptr %3, align 8
+  %17 = load i32, ptr %5, align 4
+  %18 = sext i32 %17 to i64
+  %19 = getelementptr inbounds i32, ptr %16, i64 %18
+  %20 = load i32, ptr %19, align 4
+  %21 = xor i32 %15, %20
+  store i32 %21, ptr %6, align 4
+  br label %22
 
-12:                                               ; preds = %5
-  %13 = add nsw i32 %.01, 1
-  br label %3, !llvm.loop !9
+22:                                               ; preds = %11
+  %23 = load i32, ptr %5, align 4
+  %24 = add nsw i32 %23, 1
+  store i32 %24, ptr %5, align 4
+  br label %7, !llvm.loop !9
 
-14:                                               ; preds = %3
-  %15 = xor i32 %.0, %1
-  ret i32 %15
+25:                                               ; preds = %7
+  %26 = load i32, ptr %4, align 4
+  %27 = load i32, ptr %6, align 4
+  %28 = xor i32 %27, %26
+  store i32 %28, ptr %6, align 4
+  %29 = load i32, ptr %6, align 4
+  ret i32 %29
 }
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @main() #0 {
+  %1 = alloca i32, align 4
+  %2 = alloca i32, align 4
+  %3 = alloca i32, align 4
+  %4 = alloca i32, align 4
+  %5 = alloca ptr, align 8
+  store i32 0, ptr %1, align 4
   call void @srand(i32 noundef 1) #4
-  br label %1
+  store i32 0, ptr %2, align 4
+  br label %6
 
-1:                                                ; preds = %13, %0
-  %.01 = phi i32 [ 0, %0 ], [ %14, %13 ]
-  %.0 = phi i32 [ undef, %0 ], [ %.1, %13 ]
-  %2 = icmp slt i32 %.01, 5
-  br i1 %2, label %3, label %15
+6:                                                ; preds = %24, %0
+  %7 = load i32, ptr %2, align 4
+  %8 = icmp slt i32 %7, 5
+  br i1 %8, label %9, label %27
 
-3:                                                ; preds = %1
-  %4 = call ptr @createRandomArray(i32 noundef 500000)
-  br label %5
+9:                                                ; preds = %6
+  %10 = call ptr @createRandomArray(i32 noundef 500000)
+  store ptr %10, ptr %5, align 8
+  store i32 0, ptr %3, align 4
+  br label %11
 
-5:                                                ; preds = %9, %3
-  %.02 = phi i32 [ 0, %3 ], [ %10, %9 ]
-  %.1 = phi i32 [ %.0, %3 ], [ %8, %9 ]
-  %6 = icmp slt i32 %.02, 200
-  br i1 %6, label %7, label %11
+11:                                               ; preds = %17, %9
+  %12 = load i32, ptr %3, align 4
+  %13 = icmp slt i32 %12, 200
+  br i1 %13, label %14, label %20
 
-7:                                                ; preds = %5
-  %8 = call i32 @findDuplicate(ptr noundef %4, i32 noundef 500001)
-  br label %9
+14:                                               ; preds = %11
+  %15 = load ptr, ptr %5, align 8
+  %16 = call i32 @findDuplicate(ptr noundef %15, i32 noundef 500001)
+  store i32 %16, ptr %4, align 4
+  br label %17
 
-9:                                                ; preds = %7
-  %10 = add nsw i32 %.02, 1
-  br label %5, !llvm.loop !10
+17:                                               ; preds = %14
+  %18 = load i32, ptr %3, align 4
+  %19 = add nsw i32 %18, 1
+  store i32 %19, ptr %3, align 4
+  br label %11, !llvm.loop !10
 
-11:                                               ; preds = %5
-  call void @free(ptr noundef %4) #4
-  %12 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %.1)
-  br label %13
+20:                                               ; preds = %11
+  %21 = load ptr, ptr %5, align 8
+  call void @free(ptr noundef %21) #4
+  %22 = load i32, ptr %4, align 4
+  %23 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %22)
+  br label %24
 
-13:                                               ; preds = %11
-  %14 = add nsw i32 %.01, 1
-  br label %1, !llvm.loop !11
+24:                                               ; preds = %20
+  %25 = load i32, ptr %2, align 4
+  %26 = add nsw i32 %25, 1
+  store i32 %26, ptr %2, align 4
+  br label %6, !llvm.loop !11
 
-15:                                               ; preds = %1
+27:                                               ; preds = %6
   ret i32 0
 }
 

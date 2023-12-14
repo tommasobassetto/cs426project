@@ -133,6 +133,8 @@ PreservedAnalyses UnitCSE::run(Function& F, FunctionAnalysisManager& FAM) {
       nextInst: ;
       // DominatorTree is not used, but CEs across BBs are actually detected!
     }
+
+    dbgs() << "Cumulative statistics for CSE: " << NumInstCSE << " instructions removed\n";
   }
   return PreservedAnalyses::all();
 }

@@ -7,120 +7,171 @@ target triple = "x86_64-pc-linux-gnu"
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
-  %3 = udiv i32 40960000, 8
-  %4 = zext i32 %3 to i64
-  %5 = add i64 %4, 4
-  %6 = call noalias ptr @malloc(i64 noundef %5) #5
-  %7 = icmp ne ptr %6, null
-  br i1 %7, label %9, label %8
-
-8:                                                ; preds = %2
-  br label %68
-
-9:                                                ; preds = %2
-  br label %10
-
-10:                                               ; preds = %65, %9
-  %.03 = phi i32 [ 0, %9 ], [ %66, %65 ]
-  %11 = icmp ule i32 %.03, 2
-  br i1 %11, label %12, label %67
-
-12:                                               ; preds = %10
-  %13 = lshr i32 40960000, %.03
+  %3 = alloca i32, align 4
+  %4 = alloca i32, align 4
+  %5 = alloca ptr, align 8
+  %6 = alloca i32, align 4
+  %7 = alloca i32, align 4
+  %8 = alloca ptr, align 8
+  %9 = alloca i32, align 4
+  %10 = alloca i32, align 4
+  %11 = alloca i32, align 4
+  %12 = alloca i32, align 4
+  store i32 0, ptr %3, align 4
+  store i32 %0, ptr %4, align 4
+  store ptr %1, ptr %5, align 8
+  store i32 40960000, ptr %7, align 4
+  %13 = load i32, ptr %7, align 4
   %14 = udiv i32 %13, 8
   %15 = zext i32 %14 to i64
   %16 = add i64 %15, 4
-  call void @llvm.memset.p0.i64(ptr align 4 %6, i8 -1, i64 %16, i1 false)
-  br label %17
+  %17 = call noalias ptr @malloc(i64 noundef %16) #5
+  store ptr %17, ptr %8, align 8
+  %18 = load ptr, ptr %8, align 8
+  %19 = icmp ne ptr %18, null
+  br i1 %19, label %21, label %20
 
-17:                                               ; preds = %61, %12
-  %.04 = phi i32 [ 2, %12 ], [ %62, %61 ]
-  %.01 = phi i32 [ 0, %12 ], [ %.1, %61 ]
-  %18 = icmp ule i32 %.04, %13
-  br i1 %18, label %19, label %63
+20:                                               ; preds = %2
+  store i32 1, ptr %3, align 4
+  br label %108
 
-19:                                               ; preds = %17
-  %20 = zext i32 %.04 to i64
-  %21 = udiv i64 %20, 32
-  %22 = getelementptr inbounds i32, ptr %6, i64 %21
-  %23 = load i32, ptr %22, align 4
-  %24 = zext i32 %.04 to i64
-  %25 = urem i64 %24, 32
-  %26 = trunc i64 %25 to i32
-  %27 = shl i32 1, %26
-  %28 = and i32 %23, %27
-  %29 = icmp ne i32 %28, 0
-  br i1 %29, label %30, label %60
+21:                                               ; preds = %2
+  store i32 0, ptr %6, align 4
+  br label %22
 
-30:                                               ; preds = %19
-  %31 = add i32 %.01, 1
-  %32 = add i32 %.04, %.04
-  br label %33
+22:                                               ; preds = %103, %21
+  %23 = load i32, ptr %6, align 4
+  %24 = icmp ule i32 %23, 2
+  br i1 %24, label %25, label %106
 
-33:                                               ; preds = %57, %30
-  %.02 = phi i32 [ %32, %30 ], [ %58, %57 ]
-  %34 = icmp ule i32 %.02, %13
-  br i1 %34, label %35, label %59
+25:                                               ; preds = %22
+  store i32 0, ptr %11, align 4
+  %26 = load i32, ptr %7, align 4
+  %27 = load i32, ptr %6, align 4
+  %28 = lshr i32 %26, %27
+  store i32 %28, ptr %12, align 4
+  %29 = load ptr, ptr %8, align 8
+  %30 = load i32, ptr %12, align 4
+  %31 = udiv i32 %30, 8
+  %32 = zext i32 %31 to i64
+  %33 = add i64 %32, 4
+  call void @llvm.memset.p0.i64(ptr align 4 %29, i8 -1, i64 %33, i1 false)
+  store i32 2, ptr %9, align 4
+  br label %34
 
-35:                                               ; preds = %33
-  %36 = zext i32 %.02 to i64
-  %37 = udiv i64 %36, 32
-  %38 = getelementptr inbounds i32, ptr %6, i64 %37
-  %39 = load i32, ptr %38, align 4
-  %40 = zext i32 %.02 to i64
-  %41 = urem i64 %40, 32
-  %42 = trunc i64 %41 to i32
-  %43 = shl i32 1, %42
-  %44 = and i32 %39, %43
-  %45 = icmp ne i32 %44, 0
-  br i1 %45, label %46, label %56
+34:                                               ; preds = %96, %25
+  %35 = load i32, ptr %9, align 4
+  %36 = load i32, ptr %12, align 4
+  %37 = icmp ule i32 %35, %36
+  br i1 %37, label %38, label %99
 
-46:                                               ; preds = %35
-  %47 = zext i32 %.02 to i64
-  %48 = urem i64 %47, 32
-  %49 = trunc i64 %48 to i32
-  %50 = shl i32 1, %49
-  %51 = zext i32 %.02 to i64
-  %52 = udiv i64 %51, 32
-  %53 = getelementptr inbounds i32, ptr %6, i64 %52
-  %54 = load i32, ptr %53, align 4
-  %55 = xor i32 %54, %50
-  store i32 %55, ptr %53, align 4
-  br label %56
+38:                                               ; preds = %34
+  %39 = load ptr, ptr %8, align 8
+  %40 = load i32, ptr %9, align 4
+  %41 = zext i32 %40 to i64
+  %42 = udiv i64 %41, 32
+  %43 = getelementptr inbounds i32, ptr %39, i64 %42
+  %44 = load i32, ptr %43, align 4
+  %45 = load i32, ptr %9, align 4
+  %46 = zext i32 %45 to i64
+  %47 = urem i64 %46, 32
+  %48 = trunc i64 %47 to i32
+  %49 = shl i32 1, %48
+  %50 = and i32 %44, %49
+  %51 = icmp ne i32 %50, 0
+  br i1 %51, label %52, label %95
 
-56:                                               ; preds = %46, %35
-  br label %57
+52:                                               ; preds = %38
+  %53 = load i32, ptr %11, align 4
+  %54 = add i32 %53, 1
+  store i32 %54, ptr %11, align 4
+  %55 = load i32, ptr %9, align 4
+  %56 = load i32, ptr %9, align 4
+  %57 = add i32 %55, %56
+  store i32 %57, ptr %10, align 4
+  br label %58
 
-57:                                               ; preds = %56
-  %58 = add i32 %.02, %.04
-  br label %33, !llvm.loop !6
+58:                                               ; preds = %90, %52
+  %59 = load i32, ptr %10, align 4
+  %60 = load i32, ptr %12, align 4
+  %61 = icmp ule i32 %59, %60
+  br i1 %61, label %62, label %94
 
-59:                                               ; preds = %33
-  br label %60
+62:                                               ; preds = %58
+  %63 = load ptr, ptr %8, align 8
+  %64 = load i32, ptr %10, align 4
+  %65 = zext i32 %64 to i64
+  %66 = udiv i64 %65, 32
+  %67 = getelementptr inbounds i32, ptr %63, i64 %66
+  %68 = load i32, ptr %67, align 4
+  %69 = load i32, ptr %10, align 4
+  %70 = zext i32 %69 to i64
+  %71 = urem i64 %70, 32
+  %72 = trunc i64 %71 to i32
+  %73 = shl i32 1, %72
+  %74 = and i32 %68, %73
+  %75 = icmp ne i32 %74, 0
+  br i1 %75, label %76, label %89
 
-60:                                               ; preds = %59, %19
-  %.1 = phi i32 [ %31, %59 ], [ %.01, %19 ]
-  br label %61
+76:                                               ; preds = %62
+  %77 = load i32, ptr %10, align 4
+  %78 = zext i32 %77 to i64
+  %79 = urem i64 %78, 32
+  %80 = trunc i64 %79 to i32
+  %81 = shl i32 1, %80
+  %82 = load ptr, ptr %8, align 8
+  %83 = load i32, ptr %10, align 4
+  %84 = zext i32 %83 to i64
+  %85 = udiv i64 %84, 32
+  %86 = getelementptr inbounds i32, ptr %82, i64 %85
+  %87 = load i32, ptr %86, align 4
+  %88 = xor i32 %87, %81
+  store i32 %88, ptr %86, align 4
+  br label %89
 
-61:                                               ; preds = %60
-  %62 = add i32 %.04, 1
-  br label %17, !llvm.loop !8
+89:                                               ; preds = %76, %62
+  br label %90
 
-63:                                               ; preds = %17
-  %64 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %13, i32 noundef %.01)
-  br label %65
+90:                                               ; preds = %89
+  %91 = load i32, ptr %9, align 4
+  %92 = load i32, ptr %10, align 4
+  %93 = add i32 %92, %91
+  store i32 %93, ptr %10, align 4
+  br label %58, !llvm.loop !6
 
-65:                                               ; preds = %63
-  %66 = add i32 %.03, 1
-  br label %10, !llvm.loop !9
+94:                                               ; preds = %58
+  br label %95
 
-67:                                               ; preds = %10
-  call void @free(ptr noundef %6) #6
-  br label %68
+95:                                               ; preds = %94, %38
+  br label %96
 
-68:                                               ; preds = %67, %8
-  %.0 = phi i32 [ 0, %67 ], [ 1, %8 ]
-  ret i32 %.0
+96:                                               ; preds = %95
+  %97 = load i32, ptr %9, align 4
+  %98 = add i32 %97, 1
+  store i32 %98, ptr %9, align 4
+  br label %34, !llvm.loop !8
+
+99:                                               ; preds = %34
+  %100 = load i32, ptr %12, align 4
+  %101 = load i32, ptr %11, align 4
+  %102 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %100, i32 noundef %101)
+  br label %103
+
+103:                                              ; preds = %99
+  %104 = load i32, ptr %6, align 4
+  %105 = add i32 %104, 1
+  store i32 %105, ptr %6, align 4
+  br label %22, !llvm.loop !9
+
+106:                                              ; preds = %22
+  %107 = load ptr, ptr %8, align 8
+  call void @free(ptr noundef %107) #6
+  store i32 0, ptr %3, align 4
+  br label %108
+
+108:                                              ; preds = %106, %20
+  %109 = load i32, ptr %3, align 4
+  ret i32 %109
 }
 
 ; Function Attrs: nounwind allocsize(0)

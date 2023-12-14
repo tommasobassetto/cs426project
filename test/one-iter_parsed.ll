@@ -5,32 +5,45 @@ target triple = "x86_64-pc-linux-gnu"
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @foo(i32 noundef %0) #0 {
-  br label %2
+  %2 = alloca i32, align 4
+  %3 = alloca i32, align 4
+  %4 = alloca i32, align 4
+  store i32 %0, ptr %2, align 4
+  store i32 1, ptr %3, align 4
+  br label %5
 
-2:                                                ; preds = %12, %1
-  %.0 = phi i32 [ 1, %1 ], [ %.1, %12 ]
-  %3 = add nsw i32 %.0, 1
-  %4 = call i32 @rand() #2
-  %5 = srem i32 %4, 4
-  %6 = add nsw i32 1, %3
-  %7 = sub nsw i32 %5, %6
-  %8 = add nsw i32 %7, %0
-  %9 = icmp sgt i32 %3, 0
-  br i1 %9, label %10, label %11
+5:                                                ; preds = %20, %1
+  %6 = load i32, ptr %3, align 4
+  %7 = add nsw i32 %6, 1
+  store i32 %7, ptr %4, align 4
+  %8 = call i32 @rand() #2
+  %9 = srem i32 %8, 4
+  %10 = load i32, ptr %4, align 4
+  %11 = add nsw i32 1, %10
+  %12 = sub nsw i32 %9, %11
+  %13 = load i32, ptr %2, align 4
+  %14 = add nsw i32 %12, %13
+  store i32 %14, ptr %3, align 4
+  %15 = load i32, ptr %4, align 4
+  %16 = icmp sgt i32 %15, 0
+  br i1 %16, label %17, label %19
 
-10:                                               ; preds = %2
-  br label %11
+17:                                               ; preds = %5
+  %18 = load i32, ptr %4, align 4
+  store i32 %18, ptr %3, align 4
+  br label %19
 
-11:                                               ; preds = %10, %2
-  %.1 = phi i32 [ %3, %10 ], [ %8, %2 ]
-  br label %12
+19:                                               ; preds = %17, %5
+  br label %20
 
-12:                                               ; preds = %11
-  %13 = icmp slt i32 %3, 2
-  br i1 %13, label %2, label %14, !llvm.loop !6
+20:                                               ; preds = %19
+  %21 = load i32, ptr %4, align 4
+  %22 = icmp slt i32 %21, 2
+  br i1 %22, label %5, label %23, !llvm.loop !6
 
-14:                                               ; preds = %12
-  ret i32 %.1
+23:                                               ; preds = %20
+  %24 = load i32, ptr %3, align 4
+  ret i32 %24
 }
 
 ; Function Attrs: nounwind

@@ -5,40 +5,67 @@ target triple = "x86_64-pc-linux-gnu"
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @foo(i32 noundef %0, ptr noalias noundef %1, ptr noalias noundef %2) #0 {
-  %4 = sdiv i32 %0, -3
-  br label %5
+  %4 = alloca i32, align 4
+  %5 = alloca ptr, align 8
+  %6 = alloca ptr, align 8
+  %7 = alloca i32, align 4
+  %8 = alloca i32, align 4
+  %9 = alloca i32, align 4
+  store i32 %0, ptr %4, align 4
+  store ptr %1, ptr %5, align 8
+  store ptr %2, ptr %6, align 8
+  store i32 1, ptr %7, align 4
+  %10 = load i32, ptr %4, align 4
+  store i32 %10, ptr %8, align 4
+  br label %11
 
-5:                                                ; preds = %15, %3
-  %.01 = phi i32 [ 1, %3 ], [ %.1, %15 ]
-  %.0 = phi i32 [ %0, %3 ], [ %11, %15 ]
-  %6 = icmp sgt i32 %.01, 0
-  br i1 %6, label %7, label %8
+11:                                               ; preds = %34, %3
+  %12 = load i32, ptr %7, align 4
+  %13 = icmp sgt i32 %12, 0
+  br i1 %13, label %14, label %17
 
-7:                                                ; preds = %5
-  store i32 %0, ptr %1, align 4
-  br label %8
+14:                                               ; preds = %11
+  %15 = load i32, ptr %8, align 4
+  %16 = load ptr, ptr %5, align 8
+  store i32 %15, ptr %16, align 4
+  br label %17
 
-8:                                                ; preds = %7, %5
-  %9 = add nsw i32 1, %.01
-  %10 = sub nsw i32 %4, %9
-  %11 = add nsw i32 %.0, %10
-  %12 = icmp sgt i32 %.01, 0
-  br i1 %12, label %13, label %14
+17:                                               ; preds = %14, %11
+  %18 = load i32, ptr %7, align 4
+  store i32 %18, ptr %9, align 4
+  %19 = load i32, ptr %8, align 4
+  %20 = sdiv i32 %19, -3
+  %21 = load i32, ptr %9, align 4
+  %22 = add nsw i32 1, %21
+  %23 = sub nsw i32 %20, %22
+  store i32 %23, ptr %7, align 4
+  %24 = load i32, ptr %7, align 4
+  %25 = load i32, ptr %4, align 4
+  %26 = add nsw i32 %25, %24
+  store i32 %26, ptr %4, align 4
+  %27 = load i32, ptr %9, align 4
+  %28 = icmp sgt i32 %27, 0
+  br i1 %28, label %29, label %31
 
-13:                                               ; preds = %8
-  br label %14
+29:                                               ; preds = %17
+  %30 = load i32, ptr %9, align 4
+  store i32 %30, ptr %7, align 4
+  br label %31
 
-14:                                               ; preds = %13, %8
-  %.1 = phi i32 [ %.01, %13 ], [ %10, %8 ]
-  store i32 %0, ptr %2, align 4
-  br label %15
+31:                                               ; preds = %29, %17
+  %32 = load i32, ptr %8, align 4
+  %33 = load ptr, ptr %6, align 8
+  store i32 %32, ptr %33, align 4
+  br label %34
 
-15:                                               ; preds = %14
-  %16 = icmp slt i32 0, %11
-  br i1 %16, label %5, label %17, !llvm.loop !6
+34:                                               ; preds = %31
+  %35 = load i32, ptr %4, align 4
+  %36 = icmp slt i32 0, %35
+  br i1 %36, label %11, label %37, !llvm.loop !6
 
-17:                                               ; preds = %15
-  ret i32 %.1
+37:                                               ; preds = %34
+  %38 = load i32, ptr %7, align 4
+  ret i32 %38
 }
 
 attributes #0 = { noinline nounwind uwtable "frame-pointer"="all" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }

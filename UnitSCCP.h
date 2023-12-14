@@ -55,10 +55,6 @@ class UnitSCCPInfo {
   void visitInst(Instruction *inst);
   void visitPhi(Instruction *inst);
 
-  // stats
-  unsigned numInstrRemoved = 0;
-  unsigned numBBUnreachable = 0;
-  unsigned numInstrReplaced = 0;
 };
 } // namespace
 

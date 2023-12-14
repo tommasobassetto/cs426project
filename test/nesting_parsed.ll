@@ -5,49 +5,67 @@ target triple = "x86_64-pc-linux-gnu"
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @foo(i32 noundef %0) #0 {
-  br label %2
+  %2 = alloca i32, align 4
+  %3 = alloca i32, align 4
+  %4 = alloca i32, align 4
+  store i32 %0, ptr %2, align 4
+  store i32 1, ptr %3, align 4
+  br label %5
 
-2:                                                ; preds = %19, %1
-  %.01 = phi i32 [ 1, %1 ], [ %.2, %19 ]
-  %.0 = phi i32 [ %0, %1 ], [ %9, %19 ]
-  %3 = icmp slt i32 0, %.0
-  br i1 %3, label %4, label %20
+5:                                                ; preds = %33, %1
+  %6 = load i32, ptr %2, align 4
+  %7 = icmp slt i32 0, %6
+  br i1 %7, label %8, label %34
 
-4:                                                ; preds = %2
-  %5 = call i32 @rand() #2
-  %6 = srem i32 %5, 7
-  %7 = add nsw i32 3, %.01
-  %8 = sub nsw i32 %6, %7
-  %9 = add nsw i32 %.0, %8
-  %10 = icmp sgt i32 %.01, 0
-  br i1 %10, label %11, label %12
+8:                                                ; preds = %5
+  %9 = load i32, ptr %3, align 4
+  store i32 %9, ptr %4, align 4
+  %10 = call i32 @rand() #2
+  %11 = srem i32 %10, 7
+  %12 = load i32, ptr %4, align 4
+  %13 = add nsw i32 3, %12
+  %14 = sub nsw i32 %11, %13
+  store i32 %14, ptr %3, align 4
+  %15 = load i32, ptr %3, align 4
+  %16 = load i32, ptr %2, align 4
+  %17 = add nsw i32 %16, %15
+  store i32 %17, ptr %2, align 4
+  %18 = load i32, ptr %4, align 4
+  %19 = icmp sgt i32 %18, 0
+  br i1 %19, label %20, label %22
 
-11:                                               ; preds = %4
-  br label %19
+20:                                               ; preds = %8
+  %21 = load i32, ptr %4, align 4
+  store i32 %21, ptr %3, align 4
+  br label %33
 
-12:                                               ; preds = %4
-  br label %13
+22:                                               ; preds = %8
+  br label %23
 
-13:                                               ; preds = %15, %12
-  %.02 = phi i32 [ %.01, %12 ], [ %16, %15 ]
-  %.1 = phi i32 [ %8, %12 ], [ %17, %15 ]
-  %14 = icmp slt i32 %.1, %.02
-  br i1 %14, label %15, label %18
+23:                                               ; preds = %27, %22
+  %24 = load i32, ptr %3, align 4
+  %25 = load i32, ptr %4, align 4
+  %26 = icmp slt i32 %24, %25
+  br i1 %26, label %27, label %32
 
-15:                                               ; preds = %13
-  %16 = mul nsw i32 %.02, 3
-  %17 = mul nsw i32 %.1, 4
-  br label %13, !llvm.loop !6
+27:                                               ; preds = %23
+  %28 = load i32, ptr %4, align 4
+  %29 = mul nsw i32 %28, 3
+  store i32 %29, ptr %4, align 4
+  %30 = load i32, ptr %3, align 4
+  %31 = mul nsw i32 %30, 4
+  store i32 %31, ptr %3, align 4
+  br label %23, !llvm.loop !6
 
-18:                                               ; preds = %13
-  br label %19
+32:                                               ; preds = %23
+  br label %33
 
-19:                                               ; preds = %18, %11
-  %.2 = phi i32 [ %.01, %11 ], [ %.1, %18 ]
-  br label %2, !llvm.loop !8
+33:                                               ; preds = %32, %20
+  br label %5, !llvm.loop !8
 
-20:                                               ; preds = %2
-  ret i32 %.01
+34:                                               ; preds = %5
+  %35 = load i32, ptr %3, align 4
+  ret i32 %35
 }
 
 ; Function Attrs: nounwind
