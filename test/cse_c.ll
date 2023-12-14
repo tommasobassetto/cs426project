@@ -6,22 +6,12 @@ target triple = "x86_64-pc-linux-gnu"
 @.str = private unnamed_addr constant [16 x i8] c"in c, ret = %f\0A\00", align 1
 
 ; Function Attrs: noinline nounwind uwtable
-define dso_local i32 @add(i32 noundef %0) #0 {
-  %2 = add nsw i32 3, %0
-  ret i32 %2
-}
-
-; Function Attrs: noinline nounwind uwtable
-define dso_local i32 @bitcast(i8 noundef signext %0) #0 {
-  %2 = sext i8 %0 to i32
-  ret i32 %2
-}
-
-; Function Attrs: noinline nounwind uwtable
-define dso_local i32 @icmp(i32 noundef %0) #0 {
-  %2 = add nsw i32 1, 2
-  %3 = add nsw i32 2, 1
-  ret i32 %3
+define dso_local i32 @volatilefunc(ptr noundef %0) #0 {
+  %2 = alloca i32, align 4
+  %3 = alloca i32, align 4
+  store volatile i32 6, ptr %2, align 4
+  store volatile i32 6, ptr %3, align 4
+  ret i32 43
 }
 
 ; Function Attrs: noinline nounwind uwtable
@@ -39,7 +29,7 @@ define dso_local i32 @main() #0 {
   %5 = phi float [ 4.000000e+00, %2 ], [ 1.000000e+00, %3 ]
   %6 = fpext float %5 to double
   %7 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %6)
-  ret i32 3
+  ret i32 0
 }
 
 declare i32 @printf(ptr noundef, ...) #1

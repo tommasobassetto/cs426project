@@ -68,7 +68,15 @@ PreservedAnalyses UnitCSE::run(Function& F, FunctionAnalysisManager& FAM) {
   for (BasicBlock &bb : F){
     for (Instruction &inst : bb) {
       if (!inst.getType()->isVoidTy()){// this means it is an assignment
-        outs() << inst << "\n";
+        // and should not be volatile!!
+        for (User *user: inst.users()){
+          auto userInst = dyn_cast<Instruction>(user);
+          if (userInst->isVolatile())
+          // outs()<< "Volatile detected!! "<< *userInst<<"\n";
+          // direct go to the end of the loop
+          goto nextInst;
+        }
+        // outs() << inst << "\n";
         int match = Cse.findIdenticalInst(&inst, Cse.uniqueInsts);
         if (match == -1){
           match = Cse.findCommunativeInst(&inst, Cse.uniqueInsts);
@@ -86,6 +94,8 @@ PreservedAnalyses UnitCSE::run(Function& F, FunctionAnalysisManager& FAM) {
           Cse.uniqueInsts.push_back(&inst);
         }
       }
+      nextInst: ;
+      // DominatorTree is not used, but CEs across BBs are actually detected!
     }
   }
   return PreservedAnalyses::all();

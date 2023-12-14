@@ -6,46 +6,14 @@ target triple = "x86_64-pc-linux-gnu"
 @.str = private unnamed_addr constant [16 x i8] c"in c, ret = %f\0A\00", align 1
 
 ; Function Attrs: noinline nounwind uwtable
-define dso_local i32 @add(i32 noundef %0) #0 {
-  %2 = alloca i32, align 4
+define dso_local i32 @volatilefunc(ptr noundef %0) #0 {
+  %2 = alloca ptr, align 8
   %3 = alloca i32, align 4
   %4 = alloca i32, align 4
-  store i32 %0, ptr %2, align 4
-  store i32 3, ptr %3, align 4
-  %5 = load i32, ptr %3, align 4
-  %6 = load i32, ptr %2, align 4
-  %7 = add nsw i32 %5, %6
-  store i32 %7, ptr %4, align 4
-  %8 = load i32, ptr %4, align 4
-  ret i32 %8
-}
-
-; Function Attrs: noinline nounwind uwtable
-define dso_local i32 @bitcast(i8 noundef signext %0) #0 {
-  %2 = alloca i8, align 1
-  store i8 %0, ptr %2, align 1
-  %3 = load i8, ptr %2, align 1
-  %4 = sext i8 %3 to i32
-  ret i32 %4
-}
-
-; Function Attrs: noinline nounwind uwtable
-define dso_local i32 @icmp(i32 noundef %0) #0 {
-  %2 = alloca i32, align 4
-  %3 = alloca i32, align 4
-  %4 = alloca i32, align 4
-  %5 = alloca i32, align 4
-  store i32 %0, ptr %2, align 4
-  store i32 1, ptr %4, align 4
-  store i32 2, ptr %5, align 4
-  %6 = load i32, ptr %4, align 4
-  %7 = load i32, ptr %5, align 4
-  %8 = add nsw i32 %6, %7
-  store i32 %8, ptr %3, align 4
-  %9 = load i32, ptr %5, align 4
-  %10 = load i32, ptr %4, align 4
-  %11 = add nsw i32 %9, %10
-  ret i32 %11
+  store ptr %0, ptr %2, align 8
+  store volatile i32 6, ptr %3, align 4
+  store volatile i32 6, ptr %4, align 4
+  ret i32 43
 }
 
 ; Function Attrs: noinline nounwind uwtable
@@ -78,7 +46,7 @@ define dso_local i32 @main() #0 {
   %15 = load float, ptr %2, align 4
   %16 = fpext float %15 to double
   %17 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %16)
-  ret i32 3
+  ret i32 0
 }
 
 declare i32 @printf(ptr noundef, ...) #1
