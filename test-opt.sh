@@ -4,13 +4,13 @@ cd build
 make -j &&
 cd .. &&
 export LLVM_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-15
-clang-15 test/$1.c -c -O0 -S -Xclang -disable-O0-optnone -emit-llvm -o test/$1.ll
+clang-15 mp5_testcases/$1.c -c -O0 -S -Xclang -disable-O0-optnone -emit-llvm -o test/$1.ll
 # opt-15 -stats -load-pass-plugin=build/libUnitProject.so -passes="unit-cse" test/$1.ll -S -o test/$1_parsed.ll
 # clang-15 test/$1_parsed.ll -lm -o test/a.out
 
 # this is for licm --------
 # opt-15 -passes="mem2reg" test/$1.ll -S -o test/$1_c.ll &&
-opt-15 -load-pass-plugin=build/libUnitProject.so -passes="unit-licm" test/$1.ll -S -o test/$1_parsed.ll
+opt-15 -load-pass-plugin=build/libUnitProject.so -passes="mem2reg,loop-simplify,unit-licm-multiple" test/$1.ll -S -o test/$1_parsed.ll
 clang-15 test/$1_parsed.ll coolrt.o -Wl,--unresolved-symbols=ignore-in-object-files -o test/a.out
 test/a.out
 # -------- this is for licm
