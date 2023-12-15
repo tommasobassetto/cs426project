@@ -67,7 +67,6 @@ int UnitCSEInfo::findCommunativeInst(Instruction* inst, std::vector<Instruction*
       // todo: process fmulfadd?
       // else if (IntrinsicInst *inInst = dyn_cast<IntrinsicInst>(inst)){
       //   if (numOperands >= 2){// fmulfadd
-
       //   }
       //   outs() << "+++++++++++ what is this: " << * inst << "\n";
       // }
@@ -86,8 +85,7 @@ PreservedAnalyses UnitCSE::run(Function& F, FunctionAnalysisManager& FAM) {
     i != GraphTraits<DominatorTree*>::nodes_end(&DT); 
     ++i) {
     BasicBlock *block = i->getBlock();
-
-  // for (BasicBlock &bb : F){
+    // for (BasicBlock &bb : F){
     for (Instruction &inst : *block) {
       if (!inst.getType()->isVoidTy() && !inst.mayReadOrWriteMemory() && !inst.mayHaveSideEffects()){// this means it is an assignment
         // and should not be volatile!!
@@ -113,16 +111,15 @@ PreservedAnalyses UnitCSE::run(Function& F, FunctionAnalysisManager& FAM) {
           // found at least one pattern
           // replace all its use
           // outs()<< "matched "<< match<<"\n";
-        for (User *user: inst.users()){
-          auto userInst = dyn_cast<Instruction>(user);
-          // outs()<< "UUUUUUUUUUUser detected!! "<< *userInst<<"\n";
-        }
+        // for (User *user: inst.users()){
+        //   auto userInst = dyn_cast<Instruction>(user);
+        //   // outs()<< "UUUUUUUUUUUser detected!! "<< *userInst<<"\n";
+        // }
           // outs()<< "TTTTTo replace with "<< *Cse.uniqueInsts[match]<<"\n";
           if (DT.dominates((Cse.uniqueInsts[match])->getParent(), block) && !inst.mayReadOrWriteMemory()){
           // outs()<< "REPLACE! with "<< *Cse.uniqueInsts[match]<< "\n";
           inst.replaceAllUsesWith(Cse.uniqueInsts[match]);
           NumInstCSE++;
-
           }
         }
         else{
@@ -133,8 +130,7 @@ PreservedAnalyses UnitCSE::run(Function& F, FunctionAnalysisManager& FAM) {
       nextInst: ;
       // DominatorTree is not used, but CEs across BBs are actually detected!
     }
-
-    dbgs() << "Cumulative statistics for CSE: " << NumInstCSE << " instructions removed\n";
   }
+  dbgs() << "Cumulative statistics for CSE: " << NumInstCSE << " instructions removed\n";
   return PreservedAnalyses::all();
 }

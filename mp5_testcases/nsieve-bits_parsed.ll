@@ -7,100 +7,92 @@ target triple = "x86_64-pc-linux-gnu"
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
-  %3 = zext i32 5120000 to i64
-  %4 = add i64 %3, 4
-  %5 = call noalias ptr @malloc(i64 noundef %4) #5
-  %6 = icmp ne ptr %5, null
-  br i1 %6, label %7, label %61
+  %3 = udiv i32 40960000, 8
+  %4 = zext i32 %3 to i64
+  %5 = add i64 %4, 4
+  %6 = call noalias ptr @malloc(i64 noundef %5) #5
+  %7 = icmp ne ptr %6, null
+  br i1 %7, label %8, label %53
 
-7:                                                ; preds = %2, %57
-  %.03 = phi i32 [ %59, %57 ], [ 0, %2 ]
-  %8 = icmp ule i32 %.03, 2
-  br i1 %8, label %9, label %60
+8:                                                ; preds = %2, %49
+  %.03 = phi i32 [ %51, %49 ], [ 0, %2 ]
+  %9 = icmp ule i32 %.03, 2
+  br i1 %9, label %10, label %52
 
-9:                                                ; preds = %7
-  %10 = lshr i32 40960000, %.03
-  %11 = udiv i32 %10, 8
-  %12 = zext i32 %11 to i64
-  %13 = add i64 %12, 4
-  call void @llvm.memset.p0.i64(ptr align 4 %5, i8 -1, i64 %13, i1 false)
-  br label %14
+10:                                               ; preds = %8
+  %11 = lshr i32 40960000, %.03
+  %12 = udiv i32 %11, 8
+  %13 = zext i32 %12 to i64
+  %14 = add i64 %13, 4
+  call void @llvm.memset.p0.i64(ptr align 4 %6, i8 -1, i64 %14, i1 false)
+  br label %15
 
-14:                                               ; preds = %55, %9
-  %.04 = phi i32 [ 2, %9 ], [ %56, %55 ]
-  %.01 = phi i32 [ 0, %9 ], [ %.1, %55 ]
-  %15 = icmp ule i32 %.04, %10
-  br i1 %15, label %16, label %57
+15:                                               ; preds = %47, %10
+  %.04 = phi i32 [ 2, %10 ], [ %48, %47 ]
+  %.01 = phi i32 [ 0, %10 ], [ %.1, %47 ]
+  %16 = icmp ule i32 %.04, %11
+  br i1 %16, label %17, label %49
 
-16:                                               ; preds = %14
-  %17 = zext i32 %.04 to i64
-  %18 = udiv i64 %17, 32
-  %19 = getelementptr inbounds i32, ptr %5, i64 %18
-  %20 = load i32, ptr %19, align 4
-  %21 = zext i32 %.04 to i64
-  %22 = urem i64 %21, 32
+17:                                               ; preds = %15
+  %18 = zext i32 %.04 to i64
+  %19 = udiv i64 %18, 32
+  %20 = getelementptr inbounds i32, ptr %6, i64 %19
+  %21 = load i32, ptr %20, align 4
+  %22 = urem i64 %18, 32
   %23 = trunc i64 %22 to i32
   %24 = shl i32 1, %23
-  %25 = and i32 %20, %24
+  %25 = and i32 %21, %24
   %26 = icmp ne i32 %25, 0
-  br i1 %26, label %27, label %55
+  br i1 %26, label %27, label %47
 
-27:                                               ; preds = %16
+27:                                               ; preds = %17
   %28 = add i32 %.01, 1
   %29 = add i32 %.04, %.04
   br label %30
 
-30:                                               ; preds = %53, %27
-  %.02 = phi i32 [ %29, %27 ], [ %54, %53 ]
-  %31 = icmp ule i32 %.02, %10
-  br i1 %31, label %32, label %55
+30:                                               ; preds = %45, %27
+  %.02 = phi i32 [ %29, %27 ], [ %46, %45 ]
+  %31 = icmp ule i32 %.02, %11
+  br i1 %31, label %32, label %47
 
 32:                                               ; preds = %30
   %33 = zext i32 %.02 to i64
   %34 = udiv i64 %33, 32
-  %35 = getelementptr inbounds i32, ptr %5, i64 %34
+  %35 = getelementptr inbounds i32, ptr %6, i64 %34
   %36 = load i32, ptr %35, align 4
-  %37 = zext i32 %.02 to i64
-  %38 = urem i64 %37, 32
-  %39 = trunc i64 %38 to i32
-  %40 = shl i32 1, %39
-  %41 = and i32 %36, %40
-  %42 = icmp ne i32 %41, 0
-  br i1 %42, label %43, label %53
+  %37 = urem i64 %33, 32
+  %38 = trunc i64 %37 to i32
+  %39 = shl i32 1, %38
+  %40 = and i32 %36, %39
+  %41 = icmp ne i32 %40, 0
+  br i1 %41, label %42, label %45
 
-43:                                               ; preds = %32
-  %44 = zext i32 %.02 to i64
-  %45 = urem i64 %44, 32
-  %46 = trunc i64 %45 to i32
-  %47 = shl i32 1, %46
-  %48 = zext i32 %.02 to i64
-  %49 = udiv i64 %48, 32
-  %50 = getelementptr inbounds i32, ptr %5, i64 %49
-  %51 = load i32, ptr %50, align 4
-  %52 = xor i32 %51, %47
-  store i32 %52, ptr %50, align 4
-  br label %53
+42:                                               ; preds = %32
+  %43 = load i32, ptr %35, align 4
+  %44 = xor i32 %43, %39
+  store i32 %44, ptr %35, align 4
+  br label %45
 
-53:                                               ; preds = %32, %43
-  %54 = add i32 %.02, %.04
+45:                                               ; preds = %32, %42
+  %46 = add i32 %.02, %.04
   br label %30, !llvm.loop !6
 
-55:                                               ; preds = %16, %30
-  %.1 = phi i32 [ %.01, %16 ], [ %28, %30 ]
-  %56 = add i32 %.04, 1
-  br label %14, !llvm.loop !8
+47:                                               ; preds = %17, %30
+  %.1 = phi i32 [ %.01, %17 ], [ %28, %30 ]
+  %48 = add i32 %.04, 1
+  br label %15, !llvm.loop !8
 
-57:                                               ; preds = %14
-  %58 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %10, i32 noundef %.01)
-  %59 = add i32 %.03, 1
-  br label %7, !llvm.loop !9
+49:                                               ; preds = %15
+  %50 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %11, i32 noundef %.01)
+  %51 = add i32 %.03, 1
+  br label %8, !llvm.loop !9
 
-60:                                               ; preds = %7
-  call void @free(ptr noundef %5) #6
-  br label %61
+52:                                               ; preds = %8
+  call void @free(ptr noundef %6) #6
+  br label %53
 
-61:                                               ; preds = %2, %60
-  %.0 = phi i32 [ 0, %60 ], [ 1, %2 ]
+53:                                               ; preds = %2, %52
+  %.0 = phi i32 [ 0, %52 ], [ 1, %2 ]
   ret i32 %.0
 }
 
