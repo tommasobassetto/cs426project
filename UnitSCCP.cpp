@@ -214,6 +214,56 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
           constant_map.insert({inst,ret_value_});
           return ret_value_;
         }
+        else if (binaryOp->getOpcode() == Instruction::FRem) {
+          float result = fmod(ValueArg1,ValueArg2);  // actually frem is fmod in c++
+          Value * ret = ConstantFP::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else {
+          outs() << "unsupported op " << binaryOp->getOpcode() << "\n";
+          exit(-1);
+        }
+      }
+      else if(inst->getType()->isDoubleTy()){
+        double ValueArg1 = dyn_cast<ConstantFP>(const1)->getValueAPF().convertToDouble();
+        double ValueArg2 = dyn_cast<ConstantFP>(const2)->getValueAPF().convertToDouble();
+        if (binaryOp->getOpcode() == Instruction::FAdd) {
+          double result = ValueArg1 + ValueArg2;
+          Value * ret = ConstantFP::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::FSub) {
+          double result = ValueArg1 - ValueArg2;
+          Value * ret = ConstantFP::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::FMul) {
+          double result = ValueArg1 * ValueArg2;
+          Value * ret = ConstantFP::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::FDiv) {
+          double result = ValueArg1 / ValueArg2;
+          Value * ret = ConstantFP::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
+        else if (binaryOp->getOpcode() == Instruction::FRem) {
+          double result = fmod(ValueArg1,ValueArg2);  // actually frem is fmod in c++
+          Value * ret = ConstantFP::get(inst->getType(), result);
+          Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          constant_map.insert({inst,ret_value_});
+          return ret_value_;
+        }
         else {
           outs() << "unsupported op " << binaryOp->getOpcode() << "\n";
           exit(-1);
