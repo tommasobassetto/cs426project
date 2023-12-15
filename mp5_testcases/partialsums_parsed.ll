@@ -82,60 +82,59 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
   store <2 x double> %8, ptr %3, align 16
   br label %34
 
-34:                                               ; preds = %38, %33
-  %.09 = phi <2 x double> [ %4, %33 ], [ %44, %38 ]
-  %.08 = phi <2 x double> [ %4, %33 ], [ %52, %38 ]
-  %.07 = phi <2 x double> [ %4, %33 ], [ %47, %38 ]
-  %.02 = phi <2 x double> [ %4, %33 ], [ %55, %38 ]
-  %.01 = phi <2 x double> [ %4, %33 ], [ %60, %38 ]
+34:                                               ; preds = %37, %33
+  %.09 = phi <2 x double> [ %4, %33 ], [ %43, %37 ]
+  %.08 = phi <2 x double> [ %4, %33 ], [ %51, %37 ]
+  %.07 = phi <2 x double> [ %4, %33 ], [ %46, %37 ]
+  %.02 = phi <2 x double> [ %4, %33 ], [ %54, %37 ]
+  %.01 = phi <2 x double> [ %4, %33 ], [ %59, %37 ]
   %35 = load double, ptr %3, align 16
-  %36 = sitofp i32 2500000 to double
-  %37 = fcmp ole double %35, %36
-  br i1 %37, label %38, label %63
+  %36 = fcmp ole double %35, %11
+  br i1 %36, label %37, label %62
 
-38:                                               ; preds = %34
+37:                                               ; preds = %34
+  %38 = load <2 x double>, ptr %3, align 16
   %39 = load <2 x double>, ptr %3, align 16
-  %40 = load <2 x double>, ptr %3, align 16
-  %41 = fadd <2 x double> %40, %5
-  %42 = fmul <2 x double> %39, %41
-  %43 = fdiv <2 x double> %5, %42
-  %44 = fadd <2 x double> %.09, %43
-  %45 = load <2 x double>, ptr %3, align 16
-  %46 = fdiv <2 x double> %5, %45
-  %47 = fadd <2 x double> %.07, %46
+  %40 = fadd <2 x double> %39, %5
+  %41 = fmul <2 x double> %38, %40
+  %42 = fdiv <2 x double> %5, %41
+  %43 = fadd <2 x double> %.09, %42
+  %44 = load <2 x double>, ptr %3, align 16
+  %45 = fdiv <2 x double> %5, %44
+  %46 = fadd <2 x double> %.07, %45
+  %47 = load <2 x double>, ptr %3, align 16
   %48 = load <2 x double>, ptr %3, align 16
-  %49 = load <2 x double>, ptr %3, align 16
-  %50 = fmul <2 x double> %48, %49
-  %51 = fdiv <2 x double> %5, %50
-  %52 = fadd <2 x double> %.08, %51
-  %53 = load <2 x double>, ptr %3, align 16
-  %54 = fdiv <2 x double> %9, %53
-  %55 = fadd <2 x double> %.02, %54
-  %56 = load <2 x double>, ptr %3, align 16
-  %57 = fneg <2 x double> %5
-  %58 = call <2 x double> @llvm.fmuladd.v2f64(<2 x double> %6, <2 x double> %56, <2 x double> %57)
-  %59 = fdiv <2 x double> %9, %58
-  %60 = fadd <2 x double> %.01, %59
-  %61 = load <2 x double>, ptr %3, align 16
-  %62 = fadd <2 x double> %61, %6
-  store <2 x double> %62, ptr %3, align 16
+  %49 = fmul <2 x double> %47, %48
+  %50 = fdiv <2 x double> %5, %49
+  %51 = fadd <2 x double> %.08, %50
+  %52 = load <2 x double>, ptr %3, align 16
+  %53 = fdiv <2 x double> %9, %52
+  %54 = fadd <2 x double> %.02, %53
+  %55 = load <2 x double>, ptr %3, align 16
+  %56 = fneg <2 x double> %5
+  %57 = call <2 x double> @llvm.fmuladd.v2f64(<2 x double> %6, <2 x double> %55, <2 x double> %56)
+  %58 = fdiv <2 x double> %9, %57
+  %59 = fadd <2 x double> %.01, %58
+  %60 = load <2 x double>, ptr %3, align 16
+  %61 = fadd <2 x double> %60, %6
+  store <2 x double> %61, ptr %3, align 16
   br label %34, !llvm.loop !8
 
-63:                                               ; preds = %34
-  %64 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %.03, ptr noundef @.str.1)
-  %65 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %.04, ptr noundef @.str.2)
-  %66 = call double @sum_vec(<2 x double> noundef %.09)
-  %67 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %66, ptr noundef @.str.3)
-  %68 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %.05, ptr noundef @.str.4)
-  %69 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %.06, ptr noundef @.str.5)
-  %70 = call double @sum_vec(<2 x double> noundef %.07)
-  %71 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %70, ptr noundef @.str.6)
-  %72 = call double @sum_vec(<2 x double> noundef %.08)
-  %73 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %72, ptr noundef @.str.7)
-  %74 = call double @sum_vec(<2 x double> noundef %.02)
-  %75 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %74, ptr noundef @.str.8)
-  %76 = call double @sum_vec(<2 x double> noundef %.01)
-  %77 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %76, ptr noundef @.str.9)
+62:                                               ; preds = %34
+  %63 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %.03, ptr noundef @.str.1)
+  %64 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %.04, ptr noundef @.str.2)
+  %65 = call double @sum_vec(<2 x double> noundef %.09)
+  %66 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %65, ptr noundef @.str.3)
+  %67 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %.05, ptr noundef @.str.4)
+  %68 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %.06, ptr noundef @.str.5)
+  %69 = call double @sum_vec(<2 x double> noundef %.07)
+  %70 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %69, ptr noundef @.str.6)
+  %71 = call double @sum_vec(<2 x double> noundef %.08)
+  %72 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %71, ptr noundef @.str.7)
+  %73 = call double @sum_vec(<2 x double> noundef %.02)
+  %74 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %73, ptr noundef @.str.8)
+  %75 = call double @sum_vec(<2 x double> noundef %.01)
+  %76 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %75, ptr noundef @.str.9)
   ret i32 0
 }
 

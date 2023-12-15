@@ -26,6 +26,7 @@ def execute_commands():
             execute_gt_cmd = f"echo {exe_name} >> gt.log && ./{file_name}.gt >> gt.log"
             execute_ours_cmd = f"echo {exe_name} >> ours.log && ./{file_name}.ours >> ours.log"
 
+            os.system(f"echo && echo Running {exe_name}...")
             if os.system(build_cmd) == 0:
                 if os.system(compile_cmd1) == 0:
                     # if os.system(compile_cmd2) == 0:
