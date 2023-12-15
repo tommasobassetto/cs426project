@@ -22,12 +22,13 @@ define dso_local i32 @foo(i32 noundef %0, ptr noalias noundef %1, ptr noalias no
   %9 = add nsw i32 1, %.01
   %10 = sub nsw i32 %8, %9
   %11 = add nsw i32 %.0, %10
-  %spec.select = select i1 %5, i32 %.01, i32 %10
+  %12 = icmp sgt i32 %.01, 0
+  %spec.select = select i1 %12, i32 %.01, i32 %10
   store i32 %0, ptr %2, align 4
-  %12 = icmp slt i32 0, %11
-  br i1 %12, label %4, label %13, !llvm.loop !6
+  %13 = icmp slt i32 0, %11
+  br i1 %13, label %4, label %14, !llvm.loop !6
 
-13:                                               ; preds = %7
+14:                                               ; preds = %7
   ret i32 %spec.select
 }
 

@@ -288,6 +288,8 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     }
     
     if(const1 && const2){
+      // outs() << "+++++++ branch detected!!!!\n";
+      numBBUnreachable++; // 1 branches can be determined as unreachable
       bool result;
       result = ICmpInst::compare(dyn_cast<ConstantInt>(const1)->getValue(), dyn_cast<ConstantInt>(const2)->getValue(), pred);
       Value * ret = ConstantInt::get(inst->getType(), result);
@@ -328,6 +330,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     }
 
     if(const1 && const2){
+      numBBUnreachable++; // 1 branches can be determined as unreachable
       bool result;
       result = FCmpInst::compare(dyn_cast<ConstantFP>(const1)->getValueAPF(), dyn_cast<ConstantFP>(const2)->getValueAPF(), pred);
       Value * ret = ConstantInt::get(inst->getType(), result);
@@ -570,6 +573,9 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
   for (auto i: Sccp.latCell) {
     if (i.second.type == UnitSCCPInfo::CONSTANT) {
       // generate the LLVM value, and replace all uses of the instruction
+      // outs() << "inst to be removed: " << *i.first << "\n";
+      // outs() << "num of uses = " << i.first->getNumUses() << "\n";
+      numInstrReplaced += i.first->getNumUses();
       numInstrRemoved++;
       i.first->replaceAllUsesWith(i.second.value);
     }

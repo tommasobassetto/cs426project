@@ -20,7 +20,7 @@ def execute_commands():
             compile_cmd2 = f"clang-15 {file_name}.ll -lm -o {file_name}.gt"
             compile_sccp_cmd = f"""
                                 opt-15 -passes="mem2reg" {file_name}.ll -S -o {file_name}_c.ll &&
-                                opt-15 -load-pass-plugin=build/libUnitProject.so -passes="mem2reg,loop-simplify,unit-cse,adce,unit-sccp,adce,simplifycfg" {file_name}_c.ll -S -o {file_name}_parsed.ll &&
+                                opt-15 -load-pass-plugin=build/libUnitProject.so -passes="mem2reg,loop-simplify,unit-sccp,adce,simplifycfg" {file_name}_c.ll -S -o {file_name}_parsed.ll &&
                                 clang-15 {file_name}_parsed.ll -lm -o {file_name}.ours
                                 """
             execute_gt_cmd = f"echo {exe_name} >> gt.log && ./{file_name}.gt >> gt.log"

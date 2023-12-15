@@ -24,14 +24,14 @@ int main() {
     float ret;
     float a=3+1;
     float b=1+1;
-    // if(a<b){
-    //     ret=1;
-    // }
-    // else{
-    //     ret=2;
-    // }
-    float c=1;
-    ret = a<b?a:c;
+    if(a<b){
+        ret=1;
+    }
+    else{
+        ret=2;
+    }
+    // float c=1;
+    // ret = a<b?a:c;
 
 
 

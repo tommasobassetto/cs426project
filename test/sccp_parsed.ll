@@ -7,7 +7,7 @@ target triple = "x86_64-pc-linux-gnu"
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @main() #0 {
-  %1 = fpext float 1.000000e+00 to double
+  %1 = fpext float 2.000000e+00 to double
   %2 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %1)
   ret i32 3
 }

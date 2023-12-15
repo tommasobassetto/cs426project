@@ -1,4 +1,4 @@
-; ModuleID = 'test/sccp_c.ll'
+; ModuleID = 'test/sccp.ll'
 source_filename = "test/sccp.c"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
@@ -17,9 +17,9 @@ define dso_local i32 @main() #0 {
   br label %4
 
 4:                                                ; preds = %3, %2
-  %5 = phi float [ 4.000000e+00, %2 ], [ 1.000000e+00, %3 ]
-  %6 = fpext float %5 to double
-  %7 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %6)
+  %.0 = phi float [ 1.000000e+00, %2 ], [ 2.000000e+00, %3 ]
+  %5 = fpext float %.0 to double
+  %6 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %5)
   ret i32 3
 }
 

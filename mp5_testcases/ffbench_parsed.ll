@@ -81,89 +81,90 @@ define dso_local i32 @main() #0 {
 
 35:                                               ; preds = %31, %38
   %.011 = phi double [ %..011, %38 ], [ 1.000000e+10, %31 ]
-  %.010 = phi double [ %43, %38 ], [ -1.000000e+10, %31 ]
-  %.2 = phi i32 [ %44, %38 ], [ 1, %31 ]
+  %.010 = phi double [ %44, %38 ], [ -1.000000e+10, %31 ]
+  %.2 = phi i32 [ %45, %38 ], [ 1, %31 ]
   %36 = sext i32 %.2 to i64
   %37 = icmp sle i64 %36, %1
-  br i1 %37, label %38, label %45
+  br i1 %37, label %38, label %46
 
 38:                                               ; preds = %35
-  %39 = getelementptr inbounds double, ptr %5, i64 %36
-  %40 = load double, ptr %39, align 8
-  %41 = fcmp ole double %40, %.011
-  %..011 = select i1 %41, double %40, double %.011
-  %42 = fcmp ogt double %40, %.010
-  %43 = select i1 %42, double %40, double %.010
-  %44 = add nsw i32 %.2, 2
+  %39 = sext i32 %.2 to i64
+  %40 = getelementptr inbounds double, ptr %5, i64 %39
+  %41 = load double, ptr %40, align 8
+  %42 = fcmp ole double %41, %.011
+  %..011 = select i1 %42, double %41, double %.011
+  %43 = fcmp ogt double %41, %.010
+  %44 = select i1 %43, double %41, double %.010
+  %45 = add nsw i32 %.2, 2
   br label %35, !llvm.loop !10
 
-45:                                               ; preds = %35
-  %46 = fsub double %.010, %.011
-  %47 = fdiv double 2.550000e+02, %46
-  br label %48
+46:                                               ; preds = %35
+  %47 = fsub double %.010, %.011
+  %48 = fdiv double 2.550000e+02, %47
+  br label %49
 
-48:                                               ; preds = %76, %45
-  %.06 = phi i32 [ 0, %45 ], [ %.17, %76 ]
-  %.3 = phi i32 [ 0, %45 ], [ %77, %76 ]
-  %49 = icmp slt i32 %.3, 256
-  br i1 %49, label %50, label %78
+49:                                               ; preds = %77, %46
+  %.06 = phi i32 [ 0, %46 ], [ %.17, %77 ]
+  %.3 = phi i32 [ 0, %46 ], [ %78, %77 ]
+  %50 = icmp slt i32 %.3, 256
+  br i1 %50, label %51, label %79
 
-50:                                               ; preds = %48, %74
-  %.17 = phi i32 [ %.28, %74 ], [ %.06, %48 ]
-  %.13 = phi i32 [ %75, %74 ], [ 0, %48 ]
-  %51 = icmp slt i32 %.13, 256
-  br i1 %51, label %52, label %76
+51:                                               ; preds = %49, %75
+  %.17 = phi i32 [ %.28, %75 ], [ %.06, %49 ]
+  %.13 = phi i32 [ %76, %75 ], [ 0, %49 ]
+  %52 = icmp slt i32 %.13, 256
+  br i1 %52, label %53, label %77
 
-52:                                               ; preds = %50
-  %53 = mul nsw i32 256, %.3
-  %54 = add nsw i32 %53, %.13
-  %55 = mul nsw i32 %54, 2
-  %56 = add nsw i32 1, %55
-  %57 = sext i32 %56 to i64
-  %58 = getelementptr inbounds double, ptr %5, i64 %57
-  %59 = load double, ptr %58, align 8
-  %60 = fsub double %59, %.011
-  %61 = fmul double %60, %47
-  %62 = fptosi double %61 to i32
-  %63 = and i32 %.3, 15
-  %64 = icmp eq i32 %63, 8
-  %65 = and i32 %.13, 15
-  %66 = icmp eq i32 %65, 8
-  %67 = select i1 %64, i1 true, i1 %66
-  %68 = select i1 %67, i32 255, i32 0
-  %69 = icmp ne i32 %62, %68
-  br i1 %69, label %70, label %74
+53:                                               ; preds = %51
+  %54 = mul nsw i32 256, %.3
+  %55 = add nsw i32 %54, %.13
+  %56 = mul nsw i32 %55, 2
+  %57 = add nsw i32 1, %56
+  %58 = sext i32 %57 to i64
+  %59 = getelementptr inbounds double, ptr %5, i64 %58
+  %60 = load double, ptr %59, align 8
+  %61 = fsub double %60, %.011
+  %62 = fmul double %61, %48
+  %63 = fptosi double %62 to i32
+  %64 = and i32 %.3, 15
+  %65 = icmp eq i32 %64, 8
+  %66 = and i32 %.13, 15
+  %67 = icmp eq i32 %66, 8
+  %68 = select i1 %65, i1 true, i1 %67
+  %69 = select i1 %68, i32 255, i32 0
+  %70 = icmp ne i32 %63, %69
+  br i1 %70, label %71, label %75
 
-70:                                               ; preds = %52
-  %71 = add nsw i32 %.17, 1
-  %72 = load ptr, ptr @stderr, align 8
-  %73 = call i32 (ptr, ptr, ...) @fprintf(ptr noundef %72, ptr noundef @.str.1, i32 noundef %.3, i32 noundef %.13, i32 noundef %68, i32 noundef %62)
-  br label %74
+71:                                               ; preds = %53
+  %72 = add nsw i32 %.17, 1
+  %73 = load ptr, ptr @stderr, align 8
+  %74 = call i32 (ptr, ptr, ...) @fprintf(ptr noundef %73, ptr noundef @.str.1, i32 noundef %.3, i32 noundef %.13, i32 noundef %69, i32 noundef %63)
+  br label %75
 
-74:                                               ; preds = %52, %70
-  %.28 = phi i32 [ %71, %70 ], [ %.17, %52 ]
-  %75 = add nsw i32 %.13, 1
-  br label %50, !llvm.loop !11
+75:                                               ; preds = %53, %71
+  %.28 = phi i32 [ %72, %71 ], [ %.17, %53 ]
+  %76 = add nsw i32 %.13, 1
+  br label %51, !llvm.loop !11
 
-76:                                               ; preds = %50
-  %77 = add nsw i32 %.3, 1
-  br label %48, !llvm.loop !12
+77:                                               ; preds = %51
+  %78 = add nsw i32 %.3, 1
+  br label %49, !llvm.loop !12
 
-78:                                               ; preds = %48
-  %79 = icmp eq i32 %.06, 0
-  br i1 %79, label %80, label %83
+79:                                               ; preds = %49
+  %80 = icmp eq i32 %.06, 0
+  br i1 %80, label %81, label %84
 
-80:                                               ; preds = %78
-  %81 = load ptr, ptr @stderr, align 8
-  %82 = call i32 (ptr, ptr, ...) @fprintf(ptr noundef %81, ptr noundef @.str.2, i32 noundef 63)
-  br label %86
+81:                                               ; preds = %79
+  %82 = load ptr, ptr @stderr, align 8
+  %83 = call i32 (ptr, ptr, ...) @fprintf(ptr noundef %82, ptr noundef @.str.2, i32 noundef 63)
+  br label %87
 
-83:                                               ; preds = %78
-  %84 = load ptr, ptr @stderr, align 8
-  %85 = call i32 (ptr, ptr, ...) @fprintf(ptr noundef %84, ptr noundef @.str.3, i32 noundef 63, i32 noundef %.06)
-  br label %86
+84:                                               ; preds = %79
+  %85 = load ptr, ptr @stderr, align 8
+  %86 = call i32 (ptr, ptr, ...) @fprintf(ptr noundef %85, ptr noundef @.str.3, i32 noundef 63, i32 noundef %.06)
+  br label %87
 
-86:                                               ; preds = %83, %80
+87:                                               ; preds = %84, %81
   ret i32 0
 }
 
@@ -196,11 +197,11 @@ define internal void @fourn(ptr noundef %0, ptr noundef %1, i32 noundef %2, i32 
   %12 = add nsw i32 %.011, 1
   br label %5, !llvm.loop !13
 
-13:                                               ; preds = %5, %127
-  %.112 = phi i32 [ %128, %127 ], [ %2, %5 ]
-  %.010 = phi i32 [ %19, %127 ], [ 1, %5 ]
+13:                                               ; preds = %5, %153
+  %.112 = phi i32 [ %155, %153 ], [ %2, %5 ]
+  %.010 = phi i32 [ %154, %153 ], [ 1, %5 ]
   %14 = icmp sge i32 %.112, 1
-  br i1 %14, label %15, label %129
+  br i1 %14, label %15, label %156
 
 15:                                               ; preds = %13
   %16 = sext i32 %.112 to i64
@@ -213,27 +214,27 @@ define internal void @fourn(ptr noundef %0, ptr noundef %1, i32 noundef %2, i32 
   %23 = mul nsw i32 %22, %20
   br label %24
 
-24:                                               ; preds = %62, %15
-  %.07 = phi i32 [ 1, %15 ], [ %63, %62 ]
-  %.03 = phi i32 [ 1, %15 ], [ %64, %62 ]
+24:                                               ; preds = %72, %15
+  %.07 = phi i32 [ 1, %15 ], [ %73, %72 ]
+  %.03 = phi i32 [ 1, %15 ], [ %74, %72 ]
   %25 = icmp sle i32 %.03, %22
-  br i1 %25, label %26, label %65
+  br i1 %25, label %26, label %75
 
 26:                                               ; preds = %24
   %27 = icmp slt i32 %.03, %.07
-  br i1 %27, label %28, label %54
+  br i1 %27, label %28, label %64
 
-28:                                               ; preds = %26, %52
-  %.02 = phi i32 [ %53, %52 ], [ %.03, %26 ]
+28:                                               ; preds = %26, %62
+  %.02 = phi i32 [ %63, %62 ], [ %.03, %26 ]
   %29 = add nsw i32 %.03, %21
   %30 = sub nsw i32 %29, 2
   %31 = icmp sle i32 %.02, %30
-  br i1 %31, label %32, label %54
+  br i1 %31, label %32, label %64
 
 32:                                               ; preds = %28, %34
-  %.05 = phi i32 [ %51, %34 ], [ %.02, %28 ]
+  %.05 = phi i32 [ %61, %34 ], [ %.02, %28 ]
   %33 = icmp sle i32 %.05, %23
-  br i1 %33, label %34, label %52
+  br i1 %33, label %34, label %62
 
 34:                                               ; preds = %32
   %35 = add nsw i32 %.07, %.05
@@ -244,140 +245,167 @@ define internal void @fourn(ptr noundef %0, ptr noundef %1, i32 noundef %2, i32 
   %40 = sext i32 %36 to i64
   %41 = getelementptr inbounds double, ptr %0, i64 %40
   %42 = load double, ptr %41, align 8
-  store double %42, ptr %38, align 8
-  store double %39, ptr %41, align 8
-  %43 = add nsw i32 %.05, 1
-  %44 = sext i32 %43 to i64
-  %45 = getelementptr inbounds double, ptr %0, i64 %44
-  %46 = load double, ptr %45, align 8
-  %47 = add nsw i32 %36, 1
+  %43 = sext i32 %.05 to i64
+  %44 = getelementptr inbounds double, ptr %0, i64 %43
+  store double %42, ptr %44, align 8
+  %45 = sext i32 %36 to i64
+  %46 = getelementptr inbounds double, ptr %0, i64 %45
+  store double %39, ptr %46, align 8
+  %47 = add nsw i32 %.05, 1
   %48 = sext i32 %47 to i64
   %49 = getelementptr inbounds double, ptr %0, i64 %48
   %50 = load double, ptr %49, align 8
-  store double %50, ptr %45, align 8
-  store double %46, ptr %49, align 8
-  %51 = add nsw i32 %.05, %22
+  %51 = add nsw i32 %36, 1
+  %52 = sext i32 %51 to i64
+  %53 = getelementptr inbounds double, ptr %0, i64 %52
+  %54 = load double, ptr %53, align 8
+  %55 = add nsw i32 %.05, 1
+  %56 = sext i32 %55 to i64
+  %57 = getelementptr inbounds double, ptr %0, i64 %56
+  store double %54, ptr %57, align 8
+  %58 = add nsw i32 %36, 1
+  %59 = sext i32 %58 to i64
+  %60 = getelementptr inbounds double, ptr %0, i64 %59
+  store double %50, ptr %60, align 8
+  %61 = add nsw i32 %.05, %22
   br label %32, !llvm.loop !14
 
-52:                                               ; preds = %32
-  %53 = add nsw i32 %.02, 2
+62:                                               ; preds = %32
+  %63 = add nsw i32 %.02, 2
   br label %28, !llvm.loop !15
 
-54:                                               ; preds = %28, %26
-  %55 = ashr i32 %22, 1
-  br label %56
+64:                                               ; preds = %28, %26
+  %65 = ashr i32 %22, 1
+  br label %66
 
-56:                                               ; preds = %59, %54
-  %.013 = phi i32 [ %55, %54 ], [ %61, %59 ]
-  %.18 = phi i32 [ %.07, %54 ], [ %60, %59 ]
-  %57 = icmp sge i32 %.013, %21
-  %58 = icmp sgt i32 %.18, %.013
-  %spec.select = select i1 %57, i1 %58, i1 false
-  br i1 %spec.select, label %59, label %62
+66:                                               ; preds = %69, %64
+  %.013 = phi i32 [ %65, %64 ], [ %71, %69 ]
+  %.18 = phi i32 [ %.07, %64 ], [ %70, %69 ]
+  %67 = icmp sge i32 %.013, %21
+  %68 = icmp sgt i32 %.18, %.013
+  %spec.select = select i1 %67, i1 %68, i1 false
+  br i1 %spec.select, label %69, label %72
 
-59:                                               ; preds = %56
-  %60 = sub nsw i32 %.18, %.013
-  %61 = ashr i32 %.013, 1
-  br label %56, !llvm.loop !16
+69:                                               ; preds = %66
+  %70 = sub nsw i32 %.18, %.013
+  %71 = ashr i32 %.013, 1
+  br label %66, !llvm.loop !16
 
-62:                                               ; preds = %56
-  %63 = add nsw i32 %.18, %.013
-  %64 = add nsw i32 %.03, %21
+72:                                               ; preds = %66
+  %73 = add nsw i32 %.18, %.013
+  %74 = add nsw i32 %.03, %21
   br label %24, !llvm.loop !17
 
-65:                                               ; preds = %79, %24
-  %.014 = phi i32 [ %21, %24 ], [ %68, %79 ]
-  %66 = icmp slt i32 %.014, %22
-  br i1 %66, label %67, label %127
+75:                                               ; preds = %89, %24
+  %.014 = phi i32 [ %21, %24 ], [ %78, %89 ]
+  %76 = icmp slt i32 %.014, %22
+  br i1 %76, label %77, label %153
 
-67:                                               ; preds = %65
-  %68 = shl i32 %.014, 1
-  %69 = sitofp i32 %3 to double
-  %70 = fmul double %69, 0x401921FB54442D1C
-  %71 = sdiv i32 %68, %21
-  %72 = sitofp i32 %71 to double
-  %73 = fdiv double %70, %72
-  %74 = fmul double 5.000000e-01, %73
-  %75 = call double @sin(double noundef %74) #9
-  %76 = fmul double -2.000000e+00, %75
-  %77 = fmul double %76, %75
-  %78 = call double @sin(double noundef %73) #9
-  br label %79
+77:                                               ; preds = %75
+  %78 = shl i32 %.014, 1
+  %79 = sitofp i32 %3 to double
+  %80 = fmul double %79, 0x401921FB54442D1C
+  %81 = sdiv i32 %78, %21
+  %82 = sitofp i32 %81 to double
+  %83 = fdiv double %80, %82
+  %84 = fmul double 5.000000e-01, %83
+  %85 = call double @sin(double noundef %84) #9
+  %86 = fmul double -2.000000e+00, %85
+  %87 = fmul double %86, %85
+  %88 = call double @sin(double noundef %83) #9
+  br label %89
 
-79:                                               ; preds = %119, %67
-  %.16 = phi i32 [ 1, %67 ], [ %82, %119 ]
-  %.01 = phi double [ 0.000000e+00, %67 ], [ %126, %119 ]
-  %.0 = phi double [ 1.000000e+00, %67 ], [ %123, %119 ]
-  %80 = icmp sle i32 %.16, %.014
-  br i1 %80, label %81, label %65, !llvm.loop !18
+89:                                               ; preds = %144, %77
+  %.16 = phi i32 [ 1, %77 ], [ %152, %144 ]
+  %.01 = phi double [ 0.000000e+00, %77 ], [ %151, %144 ]
+  %.0 = phi double [ 1.000000e+00, %77 ], [ %148, %144 ]
+  %90 = icmp sle i32 %.16, %.014
+  br i1 %90, label %91, label %75, !llvm.loop !18
 
-81:                                               ; preds = %79, %117
-  %.1 = phi i32 [ %118, %117 ], [ %.16, %79 ]
-  %82 = add nsw i32 %.16, %21
-  %83 = sub nsw i32 %82, 2
-  %84 = icmp sle i32 %.1, %83
-  br i1 %84, label %85, label %119
+91:                                               ; preds = %89, %142
+  %.1 = phi i32 [ %143, %142 ], [ %.16, %89 ]
+  %92 = add nsw i32 %.16, %21
+  %93 = sub nsw i32 %92, 2
+  %94 = icmp sle i32 %.1, %93
+  br i1 %94, label %95, label %144
 
-85:                                               ; preds = %81, %87
-  %.14 = phi i32 [ %116, %87 ], [ %.1, %81 ]
-  %86 = icmp sle i32 %.14, %23
-  br i1 %86, label %87, label %117
+95:                                               ; preds = %91, %97
+  %.14 = phi i32 [ %141, %97 ], [ %.1, %91 ]
+  %96 = icmp sle i32 %.14, %23
+  br i1 %96, label %97, label %142
 
-87:                                               ; preds = %85
-  %88 = add nsw i32 %.14, %.014
-  %89 = sext i32 %88 to i64
-  %90 = getelementptr inbounds double, ptr %0, i64 %89
-  %91 = load double, ptr %90, align 8
-  %92 = add nsw i32 %88, 1
-  %93 = sext i32 %92 to i64
-  %94 = getelementptr inbounds double, ptr %0, i64 %93
-  %95 = load double, ptr %94, align 8
-  %96 = fmul double %.01, %95
-  %97 = fneg double %96
-  %98 = call double @llvm.fmuladd.f64(double %.0, double %91, double %97)
-  %99 = load double, ptr %94, align 8
-  %100 = load double, ptr %90, align 8
-  %101 = fmul double %.01, %100
-  %102 = call double @llvm.fmuladd.f64(double %.0, double %99, double %101)
-  %103 = sext i32 %.14 to i64
+97:                                               ; preds = %95
+  %98 = add nsw i32 %.14, %.014
+  %99 = sext i32 %98 to i64
+  %100 = getelementptr inbounds double, ptr %0, i64 %99
+  %101 = load double, ptr %100, align 8
+  %102 = add nsw i32 %98, 1
+  %103 = sext i32 %102 to i64
   %104 = getelementptr inbounds double, ptr %0, i64 %103
   %105 = load double, ptr %104, align 8
-  %106 = fsub double %105, %98
-  store double %106, ptr %90, align 8
-  %107 = add nsw i32 %.14, 1
-  %108 = sext i32 %107 to i64
-  %109 = getelementptr inbounds double, ptr %0, i64 %108
-  %110 = load double, ptr %109, align 8
-  %111 = fsub double %110, %102
-  store double %111, ptr %94, align 8
-  %112 = load double, ptr %104, align 8
-  %113 = fadd double %112, %98
-  store double %113, ptr %104, align 8
-  %114 = load double, ptr %109, align 8
-  %115 = fadd double %114, %102
-  store double %115, ptr %109, align 8
-  %116 = add nsw i32 %.14, %68
-  br label %85, !llvm.loop !19
+  %106 = fmul double %.01, %105
+  %107 = fneg double %106
+  %108 = call double @llvm.fmuladd.f64(double %.0, double %101, double %107)
+  %109 = add nsw i32 %98, 1
+  %110 = sext i32 %109 to i64
+  %111 = getelementptr inbounds double, ptr %0, i64 %110
+  %112 = load double, ptr %111, align 8
+  %113 = sext i32 %98 to i64
+  %114 = getelementptr inbounds double, ptr %0, i64 %113
+  %115 = load double, ptr %114, align 8
+  %116 = fmul double %.01, %115
+  %117 = call double @llvm.fmuladd.f64(double %.0, double %112, double %116)
+  %118 = sext i32 %.14 to i64
+  %119 = getelementptr inbounds double, ptr %0, i64 %118
+  %120 = load double, ptr %119, align 8
+  %121 = fsub double %120, %108
+  %122 = sext i32 %98 to i64
+  %123 = getelementptr inbounds double, ptr %0, i64 %122
+  store double %121, ptr %123, align 8
+  %124 = add nsw i32 %.14, 1
+  %125 = sext i32 %124 to i64
+  %126 = getelementptr inbounds double, ptr %0, i64 %125
+  %127 = load double, ptr %126, align 8
+  %128 = fsub double %127, %117
+  %129 = add nsw i32 %98, 1
+  %130 = sext i32 %129 to i64
+  %131 = getelementptr inbounds double, ptr %0, i64 %130
+  store double %128, ptr %131, align 8
+  %132 = sext i32 %.14 to i64
+  %133 = getelementptr inbounds double, ptr %0, i64 %132
+  %134 = load double, ptr %133, align 8
+  %135 = fadd double %134, %108
+  store double %135, ptr %133, align 8
+  %136 = add nsw i32 %.14, 1
+  %137 = sext i32 %136 to i64
+  %138 = getelementptr inbounds double, ptr %0, i64 %137
+  %139 = load double, ptr %138, align 8
+  %140 = fadd double %139, %117
+  store double %140, ptr %138, align 8
+  %141 = add nsw i32 %.14, %78
+  br label %95, !llvm.loop !19
 
-117:                                              ; preds = %85
-  %118 = add nsw i32 %.1, 2
-  br label %81, !llvm.loop !20
+142:                                              ; preds = %95
+  %143 = add nsw i32 %.1, 2
+  br label %91, !llvm.loop !20
 
-119:                                              ; preds = %81
-  %120 = fmul double %.01, %78
-  %121 = fneg double %120
-  %122 = call double @llvm.fmuladd.f64(double %.0, double %77, double %121)
-  %123 = fadd double %122, %.0
-  %124 = fmul double %.0, %78
-  %125 = call double @llvm.fmuladd.f64(double %.01, double %77, double %124)
-  %126 = fadd double %125, %.01
-  br label %79, !llvm.loop !21
+144:                                              ; preds = %91
+  %145 = fmul double %.01, %88
+  %146 = fneg double %145
+  %147 = call double @llvm.fmuladd.f64(double %.0, double %87, double %146)
+  %148 = fadd double %147, %.0
+  %149 = fmul double %.0, %88
+  %150 = call double @llvm.fmuladd.f64(double %.01, double %87, double %149)
+  %151 = fadd double %150, %.01
+  %152 = add nsw i32 %.16, %21
+  br label %89, !llvm.loop !21
 
-127:                                              ; preds = %65
-  %128 = add nsw i32 %.112, -1
+153:                                              ; preds = %75
+  %154 = mul nsw i32 %.010, %18
+  %155 = add nsw i32 %.112, -1
   br label %13, !llvm.loop !22
 
-129:                                              ; preds = %13
+156:                                              ; preds = %13
   ret void
 }
 
