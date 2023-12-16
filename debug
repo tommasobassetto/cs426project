@@ -1,0 +1,110 @@
+[ 14%] Building CXX object CMakeFiles/UnitProject.dir/UnitSCCP.cpp.o
+[ 28%] Linking CXX shared library libUnitProject.so
+[100%] Built target UnitProject
+visiting inst:   br label %2
+NONONONO NONOMONO return bottom
+ffffffflowwl val.type: 1
+ffffffflowwl inst pushed:   br label %2
+ffffffflowwl succ pushed:   %.0 = phi i32 [ 1, %1 ], [ %spec.select, %2 ]
++++++++++++++ inst:   %.0 = phi i32 [ 1, %1 ], [ %spec.select, %2 ]
+--- now latcell:
+1
+  br label %2, type: 1, name = , v =   br label %2
+0,incoming: i32 1
+MMMMMMMMMMnewtype = 2
+incoming constant
+!!!!! changed, added here
+user:  %3 = add nsw i32 %.0, 1
+1,incoming:   %spec.select = select i1 %5, i32 %3, i32 %4
+edge not in execflag!!
+visiting inst:   %.0 = phi i32 [ 1, %1 ], [ %spec.select, %2 ]
+NONOO return same
+visiting inst:   %3 = add nsw i32 %.0, 1
+opInstr:   %.0 = phi i32 [ 1, %1 ], [ %spec.select, %2 ]
+const phi 1 found to be a const!!
+binaryOp const!!
+visiting inst:   %4 = add nsw i32 %3, %0
+NONONONO NONOMONO return bottom
+visiting inst:   %5 = icmp sgt i32 %3, 0
+icmp const!!
+visiting inst:   %spec.select = select i1 %5, i32 %3, i32 %4
+const2 found to be a const!!
+visiting inst:   %6 = icmp slt i32 %3, 2
+icmp const!!
+visiting inst:   br i1 %6, label %2, label %7, !llvm.loop !6
+branch const!! 0
+NONONONO NONOMONO return bottom
+ffffffflowwl val.type: 1
+ffffffflowwl inst pushed:   br i1 %6, label %7, label %7, !llvm.loop !6
+ffffffflowwl succ pushed:   ret i32 %spec.select
+visiting inst:   ret i32 %spec.select
+NONONONO NONOMONO return bottom
+ffffffflowwl val.type: 1
+ffffffflowwl inst pushed:   ret i32 %spec.select
+ffffffflowwl succ pushed: null!
+visit ssa2 inst:   br i1 %6, label %7, label %7, !llvm.loop !6
+visiting inst:   br i1 %6, label %7, label %7, !llvm.loop !6
+branch const!! 0
+NONOO return same
+visit ssa1 inst:   %.0 = phi i32 [ 1, %1 ], [ %spec.select, %2 ]
++++++++++++++ inst:   %.0 = phi i32 [ 1, %1 ], [ %spec.select, %2 ]
+--- now latcell:
+9
+  %3 = add nsw i32 %.0, 1, type: 2, name = , v = i32 2
+  %4 = add nsw i32 %3, %0, type: 1, name = , v =   %4 = add nsw i32 %3, %0
+  %5 = icmp sgt i32 %3, 0, type: 2, name = , v = i1 true
+  %6 = icmp slt i32 %3, 2, type: 2, name = , v = i1 false
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 1, %1 ], [ %spec.select, %2 ], type: 2, name = .0, v = i32 1
+  %spec.select = select i1 %5, i32 2, i32 %4, type: 2, name = spec.select, v = i32 2
+  br i1 %6, label %7, label %7, !llvm.loop !6, type: 1, name = , v =   br i1 %6, label %7, label %7, !llvm.loop !6
+  ret i32 %spec.select, type: 1, name = , v =   ret i32 %spec.select
+0,incoming: i32 1
+MMMMMMMMMMnewtype = 2
+prev constant
+1,incoming:   %spec.select = select i1 %5, i32 2, i32 %4
+edge not in execflag!!
+visit ssa2 inst:   ret i32 %spec.select
+visiting inst:   ret i32 %spec.select
+NONOO return same
+visit ssa2 inst:   %spec.select = select i1 %5, i32 2, i32 %4
+visiting inst:   %spec.select = select i1 %5, i32 2, i32 %4
+const2 found to be a const!!
+visit ssa2 inst:   %spec.select = select i1 %5, i32 2, i32 %4
+visiting inst:   %spec.select = select i1 %5, i32 2, i32 %4
+const2 found to be a const!!
+visit ssa2 inst:   %4 = add nsw i32 %3, %0
+visiting inst:   %4 = add nsw i32 %3, %0
+NONOO return same
+visit ssa2 inst:   %5 = icmp sgt i32 %3, 0
+visiting inst:   %5 = icmp sgt i32 %3, 0
+icmp const!!
+visit ssa2 inst:   %spec.select = select i1 %5, i32 2, i32 %4
+visiting inst:   %spec.select = select i1 %5, i32 2, i32 %4
+const2 found to be a const!!
+visit ssa2 inst:   %6 = icmp slt i32 %3, 2
+visiting inst:   %6 = icmp slt i32 %3, 2
+icmp const!!
+visit ssa2 inst:   %3 = add nsw i32 %.0, 1
+visiting inst:   %3 = add nsw i32 %.0, 1
+opInstr:   %.0 = phi i32 [ 1, %1 ], [ %spec.select, %2 ]
+const phi 1 found to be a const!!
+binaryOp const!!
+in replacing, inst   %3 = add nsw i32 %.0, 1 is const and replaced
+in replacing, inst   %5 = icmp sgt i32 2, 0 is const and replaced
+in replacing, inst   %6 = icmp slt i32 2, 2 is const and replaced
+in replacing, inst   %.0 = phi i32 [ 1, %1 ], [ %spec.select, %2 ] is const and replaced
+in replacing, inst   %spec.select = select i1 true, i32 2, i32 %4 is const and replaced
+visiting inst:   %1 = call i32 @foo(i32 noundef 2)
+NONONONO NONOMONO return bottom
+visiting inst:   %2 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %1)
+NONONONO NONOMONO return bottom
+visiting inst:   ret i32 0
+NONONONO NONOMONO return bottom
+ffffffflowwl val.type: 1
+ffffffflowwl inst pushed:   ret i32 0
+ffffffflowwl succ pushed: null!
+visit ssa2 inst:   %2 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %1)
+visiting inst:   %2 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %1)
+NONOO return same
+in c, ret = 2

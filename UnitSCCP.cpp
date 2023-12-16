@@ -68,18 +68,35 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         const1 = const_value_->second.value;
       }
       // if still not found, find in phi!!
-      // if (!const1){
-      //   if(auto opInstr = dyn_cast<Instruction>(op1)){
-      //     if(latCell.count(opInstr)){
-      //       const1 = latCell[opInstr].value;
-      //       outs() << "const1 found to be a const!!\n";
-      //     }
-      //   }
-      // }
+      if (!const1){
+        if(dyn_cast<PHINode>(op1)){
+          auto opInstr = dyn_cast<Instruction>(op1);
+          outs() << "opInstr: "<< *opInstr << "\n";
+//   outs() << "--- now latcell:\n";
+// outs()<< latCell.size()<< "\n";
+//     for (const auto &edge : latCell) {
+//         Instruction *source = edge.first;
+//         auto type = edge.second.type;
+//         auto varname = edge.second.varname;
+//         auto value = edge.second.value;
+
+
+//         outs() << *source;
+//         outs()  <<", type: " << type;
+//          outs()  << ", name = " << varname;
+//          if(value)
+//          outs() << ", v = " << *value << "\n";
+//          else outs() <<", v = null!\n";
+//     }
+              if(latCell.count(opInstr)){
+            const1 = latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value) ? latCell[opInstr].value : nullptr;
+            if (const1) outs() << "const phi 1 found to be a const!!\n";
+            else {outs() << "NNNNNOOOOOOOOOOOOOOOO\n";}
+          }
+        }
+      }
     }
     if (isa<Constant>(op2)){
-      // outs() << "op2 const!!\n";
-
       const2 = op2;
     }
     else {
@@ -89,14 +106,14 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         // in our map
         const2 = const_value_->second.value;
       }
-      // if (!const2){
-      //   if(auto opInstr = dyn_cast<Instruction>(op2)){
-      //     if(latCell.count(opInstr)){
-      //       const2 = latCell[opInstr].value;
-      //       outs() << "const2 found to be a const!!\n";
-      //     }
-      //   }
-      // }
+      if (!const2){
+        if(auto opInstr = dyn_cast<Instruction>(op2)){
+          if(latCell.count(opInstr)){
+            // const2 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
+            outs() << "const2 found to be a const!!\n";
+          }
+        }
+      }
     }
 
     if(const1 && const2) {
@@ -310,14 +327,14 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         // in our map
         const1 = const_value_->second.value;
       }
-      // if (!const1){
-      //   if(auto opInstr = dyn_cast<Instruction>(op1)){
-      //     if(latCell.count(opInstr)){
-      //       const1 = latCell[opInstr].value;
-      //       outs() << "const1 found to be a const!!\n";
-      //     }
-      //   }
-      // }
+      if (!const1){
+        if(auto opInstr = dyn_cast<Instruction>(op1)){
+          if(latCell.count(opInstr)){
+            // const1 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
+            outs() << "const1 found to be a const!!\n";
+          }
+        }
+      }
     }
     if(const1){
       float ValueArg1 = dyn_cast<ConstantFP>(const1)->getValueAPF().convertToFloat();
@@ -352,14 +369,14 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         // in our map
         const1 = const_value_->second.value;
       }
-      // if (!const1){
-      //   if(auto opInstr = dyn_cast<Instruction>(op1)){
-      //     if(latCell.count(opInstr)){
-      //       const1 = latCell[opInstr].value;
-      //       outs() << "const1 found to be a const!!\n";
-      //     }
-      //   }
-      // }
+      if (!const1){
+        if(auto opInstr = dyn_cast<Instruction>(op1)){
+          if(latCell.count(opInstr)){
+            // const1 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
+            outs() << "const1 found to be a const!!\n";
+          }
+        }
+      }
     }
 
     if (isa<Constant>(op2)){
@@ -372,20 +389,20 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         // in our map
         const2 = const_value_->second.value;
       }
-      // if (!const2){
-      //   if(auto opInstr = dyn_cast<Instruction>(op2)){
-      //     if(latCell.count(opInstr)){
-      //       const2 = latCell[opInstr].value;
-      //       outs() << "const1 found to be a const!!\n";
-      //     }
-      //   }
-      // }
+      if (!const2){
+        if(auto opInstr = dyn_cast<Instruction>(op2)){
+          if(latCell.count(opInstr)){
+            // const2 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
+            outs() << "const2 found to be a const!!\n";
+          }
+        }
+      }
     }
     
     if(const1 && const2){
       outs() << "icmp const!!\n";
 
-      numBBUnreachable++; // 1 branches can be determined as unreachable
+      // numBBUnreachable++; // 1 branches can be determined as unreachable
       bool result;
       result = ICmpInst::compare(dyn_cast<ConstantInt>(const1)->getValue(), dyn_cast<ConstantInt>(const2)->getValue(), pred);
       Value * ret = ConstantInt::get(inst->getType(), result);
@@ -411,6 +428,14 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         // in our map
         const1 = const_value_->second.value;
       }
+      if (!const1){
+        if(auto opInstr = dyn_cast<Instruction>(op1)){
+          if(latCell.count(opInstr)){
+            // const1 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
+            outs() << "const1 found to be a const!!\n";
+          }
+        }
+      }
     }
 
     if (isa<Constant>(op2)){
@@ -423,10 +448,18 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         // in our map
         const2 = const_value_->second.value;
       }
+      if (!const2){
+        if(auto opInstr = dyn_cast<Instruction>(op2)){
+          if(latCell.count(opInstr)){
+            // const2 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
+            outs() << "const2 found to be a const!!\n";
+          }
+        }
+      }
     }
 
     if(const1 && const2){
-      numBBUnreachable++; // 1 branches can be determined as unreachable
+      // numBBUnreachable++; // 1 branches can be determined as unreachable
       bool result;
       result = FCmpInst::compare(dyn_cast<ConstantFP>(const1)->getValueAPF(), dyn_cast<ConstantFP>(const2)->getValueAPF(), pred);
       Value * ret = ConstantInt::get(inst->getType(), result);
@@ -450,18 +483,19 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
           // in our map
           const_pred = const_value_->second.value;
         }
-        // if (!const_pred){
-        //   if(auto opInstr = dyn_cast<Instruction>(pred)){
-        //     if(latCell.count(opInstr)){
-        //       const_pred = latCell[opInstr].value;
-        //       outs() << "const_pred found to be a const!!\n";
-        //     }
-        //   }
-        // }
+        if (!const_pred){
+          if(auto opInstr = dyn_cast<Instruction>(pred)){
+            if(latCell.count(opInstr)){
+              // const_pred = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
+              outs() << "const_pred found to be a const!!\n";
+            }
+          }
+        }
       }
     }
 
     if (const_pred){
+      numBBUnreachable ++;
       bool pred_value = dyn_cast<ConstantInt>(const_pred)->getSExtValue();
       outs() << "branch const!! "<< pred_value << "\n";
       if (pred_value == true){
@@ -488,14 +522,14 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         // in our map
         const1 = const_value_->second.value;
       }
-      // if (!const1){
-      //   if(auto opInstr = dyn_cast<Instruction>(op1)){
-      //     if(latCell.count(opInstr)){
-      //       const1 = latCell[opInstr].value;
-      //       outs() << "const1 found to be a const!!\n";
-      //     }
-      //   }
-      // }
+      if (!const1){
+        if(auto opInstr = dyn_cast<Instruction>(op1)){
+          if(latCell.count(opInstr)){
+            // const1 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
+            outs() << "const1 found to be a const!!\n";
+          }
+        }
+      }
     }
     if (isa<Constant>(op2)){
       const2 = op2;
@@ -507,14 +541,14 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         // in our map
         const2 = const_value_->second.value;
       }
-      // if (!const2){
-      //   if(auto opInstr = dyn_cast<Instruction>(op2)){
-      //     if(latCell.count(opInstr)){
-      //       const2 = latCell[opInstr].value;
-      //       outs() << "const2 found to be a const!!\n";
-      //     }
-      //   }
-      // }
+      if (!const2){
+        if(auto opInstr = dyn_cast<Instruction>(op2)){
+          if(latCell.count(opInstr)){
+            // const2 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
+            outs() << "const2 found to be a const!!\n";
+          }
+        }
+      }
     }
     // until now const1 and const2 can still be variable
     if(const1){
@@ -536,14 +570,14 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         // in our map
         const_pred = const_value_->second.value;
       }
-      // if (!const_pred){
-      //   if(auto opInstr = dyn_cast<Instruction>(pred)){
-      //     if(latCell.count(opInstr)){
-      //       const_pred = latCell[opInstr].value;
-      //       outs() << "const_pred found to be a const!!\n";
-      //     }
-      //   }
-      // }
+      if (!const_pred){
+        if(auto opInstr = dyn_cast<Instruction>(pred)){
+          if(latCell.count(opInstr)){
+            // const_pred = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
+            outs() << "const_pred found to be a const!!\n";
+          }
+        }
+      }
     }
 
     if (const_pred){
@@ -566,8 +600,16 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
 
   // default return value, NECESSARY!!
   Value_ value;
-  if(latCell.count(inst)) value = latCell[inst];
-  else value = UnitSCCPInfo::Value_(UnitSCCPInfo::BOTTOM, inst->getName().str(), inst);
+  if(0){
+    // todo: return value!!!!
+  // if(latCell.count(inst)){
+    outs() << "NONOO return same\n";
+    value = latCell[inst];
+  }
+  else{
+    outs() << "NONONONO NONOMONO return bottom\n";
+    value = UnitSCCPInfo::Value_(UnitSCCPInfo::BOTTOM, inst->getName().str(), inst);
+  }
   // value.type = UnitSCCPInfo::BOTTOM;
   return value;
 }
@@ -585,6 +627,19 @@ std::set<Instruction*> UnitSCCPInfo::successors_(Instruction *inst) {
     next_instrs.insert(inst->getNextNode());
   }
   return next_instrs;
+}
+
+bool UnitSCCPInfo::inEdges(Instruction *inst){
+  // outs() << "---now execflags: "  << "\n";
+  for (const auto &execFlag : execFlags) {
+    Instruction *source = execFlag.first.first;
+    Instruction *sink = execFlag.first.second;
+    bool value = execFlag.second;
+    if ( inst == sink && value == true){
+      return true;
+    }
+  }
+  return false;
 }
 
 void UnitSCCPInfo::visitInst(Instruction *inst) {
@@ -739,8 +794,9 @@ outs()<< latCell.size()<< "\n";
         latCell[inst] = newVal;
         if (latCell[inst] != valPrev){
           // add SSAOutEdges(S) to SSAWL
-          // outs() <<"!!!!!!!!!!!!!!!!!added here\n";
+          outs() <<"!!!!! changed, added here\n";
           for (User *user: inst->users()) {
+            outs() <<"user:" << *dyn_cast<Instruction>(user) <<"\n";
             ssaWL.push_back(
               Edge(inst, dyn_cast<Instruction>(user))
             );
@@ -823,11 +879,17 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
 
       if (isa<PHINode>(edge.second)) {
         // outs() << "call phi from 2\n";
-
+outs() << "visit ssa1 inst: "<< *edge.second << "\n";
         Sccp.visitPhi(edge.second);
-      } else if (Sccp.execFlags[edge]) { // if (E->sink has 1 or more executable in-edges)
+      // } else if (Sccp.execFlags[edge]) { // if (E->sink has 1 or more executable in-edges)
+      //   outs() << "visit ssa2 inst: "<< *edge.second << "\n";
+      //   Sccp.visitInst(edge.second);
+      // }
+      } else if (Sccp.inEdges(edge.second)) { // if (E->sink has 1 or more executable in-edges)
+        outs() << "visit ssa2 inst: "<< *edge.second << "\n";
         Sccp.visitInst(edge.second);
       }
+      // else if ()
     }
   }
 
@@ -837,6 +899,7 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
       // generate the LLVM value, and replace all uses of the instruction
       numInstrReplaced += i.first->getNumUses();
       numInstrRemoved++;
+      outs() << "in replacing, inst " << *i.first << " is const and replaced\n";
       i.first->replaceAllUsesWith(i.second.value);
     }
   }

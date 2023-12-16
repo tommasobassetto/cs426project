@@ -15,7 +15,7 @@ define dso_local void @advance(i32 noundef %0, ptr noundef %1, double noundef %2
 4:                                                ; preds = %77, %3
   %.01 = phi i32 [ 0, %3 ], [ %78, %77 ]
   %5 = icmp slt i32 %.01, %0
-  br i1 %5, label %6, label %79
+  br i1 %5, label %6, label %.preheader
 
 6:                                                ; preds = %4
   %7 = sext i32 %.01 to i64
@@ -105,36 +105,36 @@ define dso_local void @advance(i32 noundef %0, ptr noundef %1, double noundef %2
   %78 = add nsw i32 %.01, 1
   br label %4, !llvm.loop !8
 
-79:                                               ; preds = %4, %81
-  %.1 = phi i32 [ %99, %81 ], [ 0, %4 ]
-  %80 = icmp slt i32 %.1, %0
-  br i1 %80, label %81, label %100
+.preheader:                                       ; preds = %4, %80
+  %.1 = phi i32 [ %98, %80 ], [ 0, %4 ]
+  %79 = icmp slt i32 %.1, %0
+  br i1 %79, label %80, label %99
 
-81:                                               ; preds = %79
-  %82 = sext i32 %.1 to i64
-  %83 = getelementptr inbounds %struct.planet, ptr %1, i64 %82
-  %84 = getelementptr inbounds %struct.planet, ptr %83, i32 0, i32 3
-  %85 = load double, ptr %84, align 8
-  %86 = getelementptr inbounds %struct.planet, ptr %83, i32 0, i32 0
-  %87 = load double, ptr %86, align 8
-  %88 = call double @llvm.fmuladd.f64(double %2, double %85, double %87)
-  store double %88, ptr %86, align 8
-  %89 = getelementptr inbounds %struct.planet, ptr %83, i32 0, i32 4
-  %90 = load double, ptr %89, align 8
-  %91 = getelementptr inbounds %struct.planet, ptr %83, i32 0, i32 1
-  %92 = load double, ptr %91, align 8
-  %93 = call double @llvm.fmuladd.f64(double %2, double %90, double %92)
-  store double %93, ptr %91, align 8
-  %94 = getelementptr inbounds %struct.planet, ptr %83, i32 0, i32 5
-  %95 = load double, ptr %94, align 8
-  %96 = getelementptr inbounds %struct.planet, ptr %83, i32 0, i32 2
-  %97 = load double, ptr %96, align 8
-  %98 = call double @llvm.fmuladd.f64(double %2, double %95, double %97)
-  store double %98, ptr %96, align 8
-  %99 = add nsw i32 %.1, 1
-  br label %79, !llvm.loop !9
+80:                                               ; preds = %.preheader
+  %81 = sext i32 %.1 to i64
+  %82 = getelementptr inbounds %struct.planet, ptr %1, i64 %81
+  %83 = getelementptr inbounds %struct.planet, ptr %82, i32 0, i32 3
+  %84 = load double, ptr %83, align 8
+  %85 = getelementptr inbounds %struct.planet, ptr %82, i32 0, i32 0
+  %86 = load double, ptr %85, align 8
+  %87 = call double @llvm.fmuladd.f64(double %2, double %84, double %86)
+  store double %87, ptr %85, align 8
+  %88 = getelementptr inbounds %struct.planet, ptr %82, i32 0, i32 4
+  %89 = load double, ptr %88, align 8
+  %90 = getelementptr inbounds %struct.planet, ptr %82, i32 0, i32 1
+  %91 = load double, ptr %90, align 8
+  %92 = call double @llvm.fmuladd.f64(double %2, double %89, double %91)
+  store double %92, ptr %90, align 8
+  %93 = getelementptr inbounds %struct.planet, ptr %82, i32 0, i32 5
+  %94 = load double, ptr %93, align 8
+  %95 = getelementptr inbounds %struct.planet, ptr %82, i32 0, i32 2
+  %96 = load double, ptr %95, align 8
+  %97 = call double @llvm.fmuladd.f64(double %2, double %94, double %96)
+  store double %97, ptr %95, align 8
+  %98 = add nsw i32 %.1, 1
+  br label %.preheader, !llvm.loop !9
 
-100:                                              ; preds = %79
+99:                                               ; preds = %.preheader
   ret void
 }
 

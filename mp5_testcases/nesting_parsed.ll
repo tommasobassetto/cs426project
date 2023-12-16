@@ -7,11 +7,11 @@ target triple = "x86_64-pc-linux-gnu"
 define dso_local i32 @foo(i32 noundef %0) #0 {
   br label %2
 
-2:                                                ; preds = %16, %1
-  %.01 = phi i32 [ 1, %1 ], [ %.2, %16 ]
-  %.0 = phi i32 [ %0, %1 ], [ %9, %16 ]
+2:                                                ; preds = %.loopexit, %1
+  %.01 = phi i32 [ 1, %1 ], [ %.2, %.loopexit ]
+  %.0 = phi i32 [ %0, %1 ], [ %9, %.loopexit ]
   %3 = icmp slt i32 0, %.0
-  br i1 %3, label %4, label %17
+  br i1 %3, label %4, label %15
 
 4:                                                ; preds = %2
   %5 = call i32 @rand() #2
@@ -20,24 +20,24 @@ define dso_local i32 @foo(i32 noundef %0) #0 {
   %8 = sub nsw i32 %6, %7
   %9 = add nsw i32 %.0, %8
   %10 = icmp sgt i32 %.01, 0
-  br i1 %10, label %16, label %11
+  br i1 %10, label %.loopexit, label %.preheader
 
-11:                                               ; preds = %4, %13
-  %.02 = phi i32 [ %14, %13 ], [ %.01, %4 ]
-  %.1 = phi i32 [ %15, %13 ], [ %8, %4 ]
-  %12 = icmp slt i32 %.1, %.02
-  br i1 %12, label %13, label %16
+.preheader:                                       ; preds = %4, %12
+  %.02 = phi i32 [ %13, %12 ], [ %.01, %4 ]
+  %.1 = phi i32 [ %14, %12 ], [ %8, %4 ]
+  %11 = icmp slt i32 %.1, %.02
+  br i1 %11, label %12, label %.loopexit
 
-13:                                               ; preds = %11
-  %14 = mul nsw i32 %.02, 3
-  %15 = mul nsw i32 %.1, 4
-  br label %11, !llvm.loop !6
+12:                                               ; preds = %.preheader
+  %13 = mul nsw i32 %.02, 3
+  %14 = mul nsw i32 %.1, 4
+  br label %.preheader, !llvm.loop !6
 
-16:                                               ; preds = %11, %4
-  %.2 = phi i32 [ %.01, %4 ], [ %.1, %11 ]
+.loopexit:                                        ; preds = %.preheader, %4
+  %.2 = phi i32 [ %.01, %4 ], [ %.1, %.preheader ]
   br label %2, !llvm.loop !8
 
-17:                                               ; preds = %2
+15:                                               ; preds = %2
   ret i32 %.01
 }
 

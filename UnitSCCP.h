@@ -50,6 +50,7 @@ class UnitSCCPInfo {
   std::vector<Edge> ssaWL;
 
   Value_ evaluate(Instruction *inst);
+  bool inEdges(Instruction *inst);
 
   std::set<Instruction*> successors_(Instruction *inst);
   void visitInst(Instruction *inst);

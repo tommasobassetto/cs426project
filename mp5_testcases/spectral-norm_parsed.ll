@@ -144,7 +144,7 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
 15:                                               ; preds = %17, %8
   %.02 = phi i32 [ 0, %8 ], [ %20, %17 ]
   %16 = icmp slt i32 %.02, %9
-  br i1 %16, label %17, label %21
+  br i1 %16, label %17, label %.preheader1
 
 17:                                               ; preds = %15
   %18 = sext i32 %.02 to i64
@@ -153,46 +153,46 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
   %20 = add nsw i32 %.02, 1
   br label %15, !llvm.loop !11
 
-21:                                               ; preds = %15, %23
-  %.1 = phi i32 [ %24, %23 ], [ 0, %15 ]
-  %22 = icmp slt i32 %.1, 10
-  br i1 %22, label %23, label %25
+.preheader1:                                      ; preds = %15, %22
+  %.1 = phi i32 [ %23, %22 ], [ 0, %15 ]
+  %21 = icmp slt i32 %.1, 10
+  br i1 %21, label %22, label %.preheader
 
-23:                                               ; preds = %21
+22:                                               ; preds = %.preheader1
   call void @eval_AtA_times_u(i32 noundef %9, ptr noundef %12, ptr noundef %14)
   call void @eval_AtA_times_u(i32 noundef %9, ptr noundef %14, ptr noundef %12)
-  %24 = add nsw i32 %.1, 1
-  br label %21, !llvm.loop !12
+  %23 = add nsw i32 %.1, 1
+  br label %.preheader1, !llvm.loop !12
 
-25:                                               ; preds = %21, %27
-  %.2 = phi i32 [ %42, %27 ], [ 0, %21 ]
-  %.01 = phi double [ %34, %27 ], [ 0.000000e+00, %21 ]
-  %.0 = phi double [ %41, %27 ], [ 0.000000e+00, %21 ]
-  %26 = icmp slt i32 %.2, %9
-  br i1 %26, label %27, label %43
+.preheader:                                       ; preds = %.preheader1, %25
+  %.2 = phi i32 [ %40, %25 ], [ 0, %.preheader1 ]
+  %.01 = phi double [ %32, %25 ], [ 0.000000e+00, %.preheader1 ]
+  %.0 = phi double [ %39, %25 ], [ 0.000000e+00, %.preheader1 ]
+  %24 = icmp slt i32 %.2, %9
+  br i1 %24, label %25, label %41
 
-27:                                               ; preds = %25
-  %28 = sext i32 %.2 to i64
-  %29 = getelementptr inbounds double, ptr %12, i64 %28
-  %30 = load double, ptr %29, align 8
-  %31 = sext i32 %.2 to i64
-  %32 = getelementptr inbounds double, ptr %14, i64 %31
-  %33 = load double, ptr %32, align 8
-  %34 = call double @llvm.fmuladd.f64(double %30, double %33, double %.01)
-  %35 = sext i32 %.2 to i64
-  %36 = getelementptr inbounds double, ptr %14, i64 %35
-  %37 = load double, ptr %36, align 8
-  %38 = sext i32 %.2 to i64
-  %39 = getelementptr inbounds double, ptr %14, i64 %38
-  %40 = load double, ptr %39, align 8
-  %41 = call double @llvm.fmuladd.f64(double %37, double %40, double %.0)
-  %42 = add nsw i32 %.2, 1
-  br label %25, !llvm.loop !13
+25:                                               ; preds = %.preheader
+  %26 = sext i32 %.2 to i64
+  %27 = getelementptr inbounds double, ptr %12, i64 %26
+  %28 = load double, ptr %27, align 8
+  %29 = sext i32 %.2 to i64
+  %30 = getelementptr inbounds double, ptr %14, i64 %29
+  %31 = load double, ptr %30, align 8
+  %32 = call double @llvm.fmuladd.f64(double %28, double %31, double %.01)
+  %33 = sext i32 %.2 to i64
+  %34 = getelementptr inbounds double, ptr %14, i64 %33
+  %35 = load double, ptr %34, align 8
+  %36 = sext i32 %.2 to i64
+  %37 = getelementptr inbounds double, ptr %14, i64 %36
+  %38 = load double, ptr %37, align 8
+  %39 = call double @llvm.fmuladd.f64(double %35, double %38, double %.0)
+  %40 = add nsw i32 %.2, 1
+  br label %.preheader, !llvm.loop !13
 
-43:                                               ; preds = %25
-  %44 = fdiv double %.01, %.0
-  %45 = call double @sqrt(double noundef %44) #7
-  %46 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %45)
+41:                                               ; preds = %.preheader
+  %42 = fdiv double %.01, %.0
+  %43 = call double @sqrt(double noundef %42) #7
+  %44 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %43)
   call void @llvm.stackrestore(ptr %11)
   ret i32 0
 }

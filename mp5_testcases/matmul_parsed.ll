@@ -10,64 +10,64 @@ define dso_local void @matmul(i32 noundef %0, i32 noundef %1, i32 noundef %2, pt
   %9 = zext i32 %2 to i64
   br label %10
 
-10:                                               ; preds = %46, %6
-  %.02 = phi i32 [ 0, %6 ], [ %47, %46 ]
+10:                                               ; preds = %45, %6
+  %.02 = phi i32 [ 0, %6 ], [ %46, %45 ]
   %11 = icmp slt i32 %.02, %0
-  br i1 %11, label %12, label %48
+  br i1 %11, label %.preheader, label %47
 
-12:                                               ; preds = %10, %44
-  %.01 = phi i32 [ %45, %44 ], [ 0, %10 ]
-  %13 = icmp slt i32 %.01, %2
-  br i1 %13, label %14, label %46
+.preheader:                                       ; preds = %10, %43
+  %.01 = phi i32 [ %44, %43 ], [ 0, %10 ]
+  %12 = icmp slt i32 %.01, %2
+  br i1 %12, label %13, label %45
 
-14:                                               ; preds = %12
-  %15 = sext i32 %.02 to i64
-  %16 = mul nsw i64 %15, %9
-  %17 = getelementptr inbounds i32, ptr %5, i64 %16
-  %18 = sext i32 %.01 to i64
-  %19 = getelementptr inbounds i32, ptr %17, i64 %18
-  store i32 0, ptr %19, align 4
-  br label %20
+13:                                               ; preds = %.preheader
+  %14 = sext i32 %.02 to i64
+  %15 = mul nsw i64 %14, %9
+  %16 = getelementptr inbounds i32, ptr %5, i64 %15
+  %17 = sext i32 %.01 to i64
+  %18 = getelementptr inbounds i32, ptr %16, i64 %17
+  store i32 0, ptr %18, align 4
+  br label %19
 
-20:                                               ; preds = %22, %14
-  %.0 = phi i32 [ 0, %14 ], [ %43, %22 ]
-  %21 = icmp slt i32 %.0, %1
-  br i1 %21, label %22, label %44
+19:                                               ; preds = %21, %13
+  %.0 = phi i32 [ 0, %13 ], [ %42, %21 ]
+  %20 = icmp slt i32 %.0, %1
+  br i1 %20, label %21, label %43
 
-22:                                               ; preds = %20
-  %23 = sext i32 %.02 to i64
-  %24 = mul nsw i64 %23, %7
-  %25 = getelementptr inbounds i32, ptr %3, i64 %24
-  %26 = sext i32 %.0 to i64
-  %27 = getelementptr inbounds i32, ptr %25, i64 %26
-  %28 = load i32, ptr %27, align 4
-  %29 = sext i32 %.0 to i64
-  %30 = mul nsw i64 %29, %8
-  %31 = getelementptr inbounds i32, ptr %4, i64 %30
-  %32 = sext i32 %.01 to i64
-  %33 = getelementptr inbounds i32, ptr %31, i64 %32
-  %34 = load i32, ptr %33, align 4
-  %35 = mul nsw i32 %28, %34
-  %36 = sext i32 %.02 to i64
-  %37 = mul nsw i64 %36, %9
-  %38 = getelementptr inbounds i32, ptr %5, i64 %37
-  %39 = sext i32 %.01 to i64
-  %40 = getelementptr inbounds i32, ptr %38, i64 %39
-  %41 = load i32, ptr %40, align 4
-  %42 = add nsw i32 %41, %35
-  store i32 %42, ptr %40, align 4
-  %43 = add nsw i32 %.0, 1
-  br label %20, !llvm.loop !6
+21:                                               ; preds = %19
+  %22 = sext i32 %.02 to i64
+  %23 = mul nsw i64 %22, %7
+  %24 = getelementptr inbounds i32, ptr %3, i64 %23
+  %25 = sext i32 %.0 to i64
+  %26 = getelementptr inbounds i32, ptr %24, i64 %25
+  %27 = load i32, ptr %26, align 4
+  %28 = sext i32 %.0 to i64
+  %29 = mul nsw i64 %28, %8
+  %30 = getelementptr inbounds i32, ptr %4, i64 %29
+  %31 = sext i32 %.01 to i64
+  %32 = getelementptr inbounds i32, ptr %30, i64 %31
+  %33 = load i32, ptr %32, align 4
+  %34 = mul nsw i32 %27, %33
+  %35 = sext i32 %.02 to i64
+  %36 = mul nsw i64 %35, %9
+  %37 = getelementptr inbounds i32, ptr %5, i64 %36
+  %38 = sext i32 %.01 to i64
+  %39 = getelementptr inbounds i32, ptr %37, i64 %38
+  %40 = load i32, ptr %39, align 4
+  %41 = add nsw i32 %40, %34
+  store i32 %41, ptr %39, align 4
+  %42 = add nsw i32 %.0, 1
+  br label %19, !llvm.loop !6
 
-44:                                               ; preds = %20
-  %45 = add nsw i32 %.01, 1
-  br label %12, !llvm.loop !8
+43:                                               ; preds = %19
+  %44 = add nsw i32 %.01, 1
+  br label %.preheader, !llvm.loop !8
 
-46:                                               ; preds = %12
-  %47 = add nsw i32 %.02, 1
+45:                                               ; preds = %.preheader
+  %46 = add nsw i32 %.02, 1
   br label %10, !llvm.loop !9
 
-48:                                               ; preds = %10
+47:                                               ; preds = %10
   ret void
 }
 

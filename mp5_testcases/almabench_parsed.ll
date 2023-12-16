@@ -470,31 +470,34 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
   %4 = alloca [2 x [3 x double]], align 16
   %5 = alloca [8 x [3 x double]], align 16
   %6 = icmp sgt i32 %0, 1
-  br i1 %6, label %7, label %.loopexit
+  br i1 %6, label %.preheader1, label %.loopexit
 
-7:                                                ; preds = %2, %14
-  %.02 = phi i32 [ %15, %14 ], [ 1, %2 ]
-  %8 = icmp slt i32 %.02, %0
-  br i1 %8, label %9, label %.loopexit
+.preheader1:                                      ; preds = %2
+  %7 = getelementptr inbounds ptr, ptr %1, i64 1
+  br label %8
 
-9:                                                ; preds = %7
-  %10 = getelementptr inbounds ptr, ptr %1, i64 1
-  %11 = load ptr, ptr %10, align 8
+8:                                                ; preds = %.preheader1, %14
+  %.02 = phi i32 [ %15, %14 ], [ 1, %.preheader1 ]
+  %9 = icmp slt i32 %.02, %0
+  br i1 %9, label %10, label %.loopexit
+
+10:                                               ; preds = %8
+  %11 = load ptr, ptr %7, align 8
   %12 = call i32 @strcmp(ptr noundef %11, ptr noundef @.str) #6
   %13 = icmp ne i32 %12, 0
   br i1 %13, label %14, label %.loopexit
 
-14:                                               ; preds = %9
+14:                                               ; preds = %10
   %15 = add nsw i32 %.02, 1
-  br label %7, !llvm.loop !9
+  br label %8, !llvm.loop !9
 
-.loopexit:                                        ; preds = %9, %7, %2
+.loopexit:                                        ; preds = %8, %10, %2
   br label %16
 
 16:                                               ; preds = %39, %.loopexit
   %.13 = phi i32 [ 0, %.loopexit ], [ %40, %39 ]
   %17 = icmp slt i32 %.13, 20
-  br i1 %17, label %18, label %41
+  br i1 %17, label %18, label %.preheader
 
 18:                                               ; preds = %16
   %19 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 0
@@ -540,31 +543,31 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
   %40 = add nsw i32 %.13, 1
   br label %16, !llvm.loop !12
 
-41:                                               ; preds = %16, %43
-  %.1 = phi i32 [ %57, %43 ], [ 0, %16 ]
-  %42 = icmp slt i32 %.1, 8
-  br i1 %42, label %43, label %58
+.preheader:                                       ; preds = %16, %42
+  %.1 = phi i32 [ %56, %42 ], [ 0, %16 ]
+  %41 = icmp slt i32 %.1, 8
+  br i1 %41, label %42, label %57
 
-43:                                               ; preds = %41
-  %44 = sext i32 %.1 to i64
-  %45 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %44
-  %46 = getelementptr inbounds [3 x double], ptr %45, i64 0, i64 0
-  %47 = load double, ptr %46, align 8
-  %48 = sext i32 %.1 to i64
-  %49 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %48
-  %50 = getelementptr inbounds [3 x double], ptr %49, i64 0, i64 1
-  %51 = load double, ptr %50, align 8
-  %52 = sext i32 %.1 to i64
-  %53 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %52
-  %54 = getelementptr inbounds [3 x double], ptr %53, i64 0, i64 2
-  %55 = load double, ptr %54, align 8
-  %56 = call i32 (ptr, ...) @printf(ptr noundef @.str.1, double noundef %47, double noundef %51, double noundef %55)
-  %57 = add nsw i32 %.1, 1
-  br label %41, !llvm.loop !13
+42:                                               ; preds = %.preheader
+  %43 = sext i32 %.1 to i64
+  %44 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %43
+  %45 = getelementptr inbounds [3 x double], ptr %44, i64 0, i64 0
+  %46 = load double, ptr %45, align 8
+  %47 = sext i32 %.1 to i64
+  %48 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %47
+  %49 = getelementptr inbounds [3 x double], ptr %48, i64 0, i64 1
+  %50 = load double, ptr %49, align 8
+  %51 = sext i32 %.1 to i64
+  %52 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %51
+  %53 = getelementptr inbounds [3 x double], ptr %52, i64 0, i64 2
+  %54 = load double, ptr %53, align 8
+  %55 = call i32 (ptr, ...) @printf(ptr noundef @.str.1, double noundef %46, double noundef %50, double noundef %54)
+  %56 = add nsw i32 %.1, 1
+  br label %.preheader, !llvm.loop !13
 
-58:                                               ; preds = %41
-  %59 = load ptr, ptr @stdout, align 8
-  %60 = call i32 @fflush(ptr noundef %59)
+57:                                               ; preds = %.preheader
+  %58 = load ptr, ptr @stdout, align 8
+  %59 = call i32 @fflush(ptr noundef %58)
   ret i32 0
 }
 

@@ -34,10 +34,6 @@ int main() {
     //     ret=2;
     // }
     // ret = ret+9;
-
-
-    // ret = add(123);
-
     // ret = bitcast(-3);
     // ret = icmp(3);
     // printf("in c, ret = %f\n", ret);
@@ -46,6 +42,16 @@ int main() {
     // printf("sum of all array elements plus 2 was %d", sum);
 }
 
+/*
+ * The Computer Lannguage Shootout
+ * http://shootout.alioth.debian.org/
+ * Contributed by Heiner Marxen
+ *
+ * "fannkuch"	for C gcc
+ *
+ * $Id: fannkuch-gcc.code,v 1.51 2008-03-06 02:23:27 igouy-guest Exp $
+ */
+
 /* -*- mode: c -*-
  *
  * The Great Computer Language Shootout
@@ -53,58 +59,61 @@ int main() {
  *
  * Contributed by Sebastien Loisel
  */
-/*
- * The Computer Language Shootout
- * http://shootout.alioth.debian.org/
 
- * contributed by bearophile, Jan 24 2006
- * modified by wolfjb, Feb 28 2007
- */
 // #include <stdio.h>
-
-// int ack(int x, int y) {
-//   if (x == 0) {
-//     return y + 1;
+// #include <stdlib.h>
+// #include <math.h>
+// int loop(int k){
+//   int i;
+//   int a=444;
+//   for(i=0;i<k;i++){
+//     a=a+66;
 //   }
-
-//   return ack(x - 1, ((y | 0) ? ack(x, y - 1) : 1));
+//   return a;
 // }
 
-// int fib(int n) {
-//   if (n < 2) {
-//     return 1;
-//   }
-//   return fib(n - 2) + fib(n - 1);
+// int main(){
+//   printf("in c, ret = %d\n", loop(2));
+//   return 0;
+// }
+// double eval_A(int i, int j) { return 1.0/((i+j)*(i+j+1)/2+i+1); }
+
+// void eval_A_times_u(int N, const double u[], double Au[])
+// {
+//   int i,j;
+//   for(i=0;i<N;i++)
+//     {
+//       Au[i]=0;
+//       for(j=0;j<N;j++) Au[i]+=eval_A(i,j)*u[j];
+//     }
 // }
 
-// double fibFP(double n) {
-//   if (n < 2.0) {
-//     return 1.0;
-//   }
-//   return fibFP(n - 2.0) + fibFP(n - 1.0);
+// void eval_At_times_u(int N, const double u[], double Au[])
+// {
+//   int i,j;
+//   for(i=0;i<N;i++)
+//     {
+//       Au[i]=0;
+//       for(j=0;j<N;j++) Au[i]+=eval_A(j,i)*u[j];
+//     }
 // }
 
-// int tak(int x, int y, int z) {
-//   if (y < x) {
-//     return tak(tak(x - 1, y, z), tak(y - 1, z, x), tak(z - 1, x, y));
-//   }
-//   return z;
-// }
+// void eval_AtA_times_u(int N, const double u[], double AtAu[])
+// { double v[N]; eval_A_times_u(N,u,v); eval_At_times_u(N,v,AtAu); }
 
-// double takFP(double x, double y, double z) {
-//     if (y < x)
-//         return takFP( takFP(x-1.0, y, z), takFP(y-1.0, z, x), takFP(z-1.0, x, y) );
-//     return z;
-// }
-
-// int main(int argc, char ** argv) {
-//   int n = 10;
-
-//   printf("Ack(3,%d): %d\n", n + 1, ack(3, n+1));
-//   printf("Fib(%.1f): %.1f\n", 28.0 + n, fibFP(28.0+n));
-//   printf("Tak(%d,%d,%d): %d\n", 3 * n, 2 * n, n, tak(3*n, 2*n, n));
-//   printf("Fib(3): %d\n", fib(3));
-//   printf("Tak(3.0,2.0,1.0): %.1f\n", takFP(3.0, 2.0, 1.0));
-
+// int main(int argc, char *argv[])
+// {
+//   int i;
+//   int N = ((argc == 2) ? atoi(argv[1]) : 2000);
+//   double u[N],v[N],vBv,vv;
+//   for(i=0;i<N;i++) u[i]=1;
+//   for(i=0;i<10;i++)
+//     {
+//       eval_AtA_times_u(N,u,v);
+//       eval_AtA_times_u(N,v,u);
+//     }
+//   vBv=vv=0;
+//   for(i=0;i<N;i++) { vBv+=u[i]*v[i]; vv+=v[i]*v[i]; }
+//   printf("%0.9f\n",sqrt(vBv/vv));
 //   return 0;
 // }
