@@ -3,13 +3,18 @@ source_filename = "test/sccp.c"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
 
-@.str = private unnamed_addr constant [16 x i8] c"in c, ret = %f\0A\00", align 1
+@.str = private unnamed_addr constant [16 x i8] c"in c, ret = %d\0A\00", align 1
+
+; Function Attrs: noinline nounwind uwtable
+define dso_local i32 @foo(i32 noundef %0) #0 {
+  ret i32 2
+}
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @main() #0 {
-  %1 = fpext float 2.000000e+00 to double
-  %2 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %1)
-  ret i32 3
+  %1 = call i32 @foo(i32 noundef 2)
+  %2 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %1)
+  ret i32 0
 }
 
 declare i32 @printf(ptr noundef, ...) #1
