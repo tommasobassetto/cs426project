@@ -5,23 +5,9 @@ target triple = "x86_64-pc-linux-gnu"
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @foo(i32 noundef %0) #0 {
-  br label %2
-
-2:                                                ; preds = %2, %1
-  %.0 = phi i32 [ 1, %1 ], [ %spec.select, %2 ]
-  %3 = add nsw i32 %.0, 1
-  %4 = call i32 @rand() #2
-  %5 = srem i32 %4, 4
-  %6 = add nsw i32 1, %3
-  %7 = sub nsw i32 %5, %6
-  %8 = add nsw i32 %7, %0
-  %9 = icmp sgt i32 %3, 0
-  %spec.select = select i1 %9, i32 %3, i32 %8
-  %10 = icmp slt i32 %3, 2
-  br i1 %10, label %2, label %11, !llvm.loop !6
-
-11:                                               ; preds = %2
-  ret i32 %spec.select
+  %2 = add nsw i32 1, 1
+  %3 = call i32 @rand() #2
+  ret i32 %2
 }
 
 ; Function Attrs: nounwind
@@ -40,5 +26,3 @@ attributes #2 = { nounwind }
 !3 = !{i32 7, !"uwtable", i32 2}
 !4 = !{i32 7, !"frame-pointer", i32 2}
 !5 = !{!"Ubuntu clang version 15.0.7"}
-!6 = distinct !{!6, !7}
-!7 = !{!"llvm.loop.mustprogress"}

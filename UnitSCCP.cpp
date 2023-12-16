@@ -50,6 +50,23 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
   // check https://llvm.org/doxygen/classllvm_1_1Interpreter.html
   // note: visit instruction is built in
   // handle binary ops
+  // outs() << "--- in eval latcell:\n";
+// outs()<< latCell.size()<< "\n";
+//     for (const auto &edge : latCell) {
+//         Instruction *source = edge.first;
+//         auto type = edge.second.type;
+//         auto varname = edge.second.varname;
+//         auto value = edge.second.value;
+
+
+//         outs() << *source;
+//         outs()  <<", type: " << type;
+//          outs()  << ", name = " << varname;
+//          if(value)
+//          outs() << ", v = " << *value << "\n";
+//          else outs() <<", v = null!\n";
+//     }
+
   if (BinaryOperator *binaryOp = dyn_cast<BinaryOperator>(inst)){
     Value *op1 = binaryOp->getOperand(0);
     Value *op2 = binaryOp->getOperand(1);
@@ -72,22 +89,6 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         if(dyn_cast<PHINode>(op1)){
           auto opInstr = dyn_cast<Instruction>(op1);
           outs() << "opInstr: "<< *opInstr << "\n";
-//   outs() << "--- now latcell:\n";
-// outs()<< latCell.size()<< "\n";
-//     for (const auto &edge : latCell) {
-//         Instruction *source = edge.first;
-//         auto type = edge.second.type;
-//         auto varname = edge.second.varname;
-//         auto value = edge.second.value;
-
-
-//         outs() << *source;
-//         outs()  <<", type: " << type;
-//          outs()  << ", name = " << varname;
-//          if(value)
-//          outs() << ", v = " << *value << "\n";
-//          else outs() <<", v = null!\n";
-//     }
               if(latCell.count(opInstr)){
             const1 = latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value) ? latCell[opInstr].value : nullptr;
             if (const1) outs() << "const phi 1 found to be a const!!\n";
@@ -110,7 +111,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         if(auto opInstr = dyn_cast<Instruction>(op2)){
           if(latCell.count(opInstr)){
             // const2 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            outs() << "const2 found to be a const!!\n";
+            // outs() << "const2 found to be a const!!\n";
           }
         }
       }
@@ -122,6 +123,8 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         // both are constants, add the result to the map
         // perform real operation
         // binary comes from https://llvm.org/docs/LangRef.html#binary-operations
+        // outs() << "1::" << *const1<<"\n";
+        // outs() << "2::" << *const2<<"\n";
         int64_t ValueArg1 = dyn_cast<ConstantInt>(const1)->getSExtValue();
         int64_t ValueArg2 = dyn_cast<ConstantInt>(const2)->getSExtValue();
         // first, integer
@@ -129,6 +132,9 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
           int64_t result = ValueArg1 + ValueArg2;
           Value * ret = ConstantInt::get(inst->getType(), result);
           Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
+          // outs() << "inst " << *inst<<"\n";
+          // outs() << "RRRRRRRResult " << result<<"\n";
+          // outs() << "reeeeeeeer " << *ret<<"\n";
           constant_map.insert({inst,ret_value_});
           return ret_value_;
         }
@@ -331,7 +337,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         if(auto opInstr = dyn_cast<Instruction>(op1)){
           if(latCell.count(opInstr)){
             // const1 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            outs() << "const1 found to be a const!!\n";
+            // outs() << "const1 found to be a const!!\n";
           }
         }
       }
@@ -373,7 +379,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         if(auto opInstr = dyn_cast<Instruction>(op1)){
           if(latCell.count(opInstr)){
             // const1 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            outs() << "const1 found to be a const!!\n";
+            // outs() << "const1 found to be a const!!\n";
           }
         }
       }
@@ -393,7 +399,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         if(auto opInstr = dyn_cast<Instruction>(op2)){
           if(latCell.count(opInstr)){
             // const2 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            outs() << "const2 found to be a const!!\n";
+            // outs() << "const2 found to be a const!!\n";
           }
         }
       }
@@ -432,7 +438,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         if(auto opInstr = dyn_cast<Instruction>(op1)){
           if(latCell.count(opInstr)){
             // const1 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            outs() << "const1 found to be a const!!\n";
+            // outs() << "const1 found to be a const!!\n";
           }
         }
       }
@@ -452,7 +458,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         if(auto opInstr = dyn_cast<Instruction>(op2)){
           if(latCell.count(opInstr)){
             // const2 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            outs() << "const2 found to be a const!!\n";
+            // outs() << "const2 found to be a const!!\n";
           }
         }
       }
@@ -487,7 +493,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
           if(auto opInstr = dyn_cast<Instruction>(pred)){
             if(latCell.count(opInstr)){
               // const_pred = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-              outs() << "const_pred found to be a const!!\n";
+              // outs() << "const_pred found to be a const!!\n";
             }
           }
         }
@@ -526,7 +532,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         if(auto opInstr = dyn_cast<Instruction>(op1)){
           if(latCell.count(opInstr)){
             // const1 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            outs() << "const1 found to be a const!!\n";
+            // outs() << "const1 found to be a const!!\n";
           }
         }
       }
@@ -545,17 +551,18 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         if(auto opInstr = dyn_cast<Instruction>(op2)){
           if(latCell.count(opInstr)){
             // const2 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            outs() << "const2 found to be a const!!\n";
+            // outs() << "const2 found to be a const!!\n";
           }
         }
       }
     }
     // until now const1 and const2 can still be variable
     if(const1){
-      selectInst->setTrueValue(const1);
+      outs() << "really const1 yes????\n";
+      // selectInst->setTrueValue(const1);
     }
     if(const2){
-      selectInst->setFalseValue(const2);
+      // selectInst->setFalseValue(const2);
     }
 
     Value *const_pred = nullptr;
@@ -574,7 +581,7 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         if(auto opInstr = dyn_cast<Instruction>(pred)){
           if(latCell.count(opInstr)){
             // const_pred = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            outs() << "const_pred found to be a const!!\n";
+            // outs() << "const_pred found to be a const!!\n";
           }
         }
       }
@@ -600,8 +607,8 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
 
   // default return value, NECESSARY!!
   Value_ value;
+  // todo: return value!!!!
   if(0){
-    // todo: return value!!!!
   // if(latCell.count(inst)){
     outs() << "NONOO return same\n";
     value = latCell[inst];
@@ -693,13 +700,14 @@ outs()<< latCell.size()<< "\n";
         auto varname = edge.second.varname;
         auto value = edge.second.value;
 
-
+      if (type == CONSTANT){
         outs() << *source;
         outs()  <<", type: " << type;
          outs()  << ", name = " << varname;
          if(value)
          outs() << ", v = " << *value << "\n";
          else outs() <<", v = null!\n";
+      }
     }
 
   // outs() << "---now execflags: "  << "\n";
@@ -823,6 +831,7 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
   // visit the first instruction
   Instruction *first = &F.front().front();
   Sccp.visitInst(first);
+  visited.insert(first);
 
   // find the successors of the inst
   // add the edges to flowWL
@@ -854,9 +863,11 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
       if (isa<PHINode>(edge.second)) {
         // outs() << "call phi from 1\n";
         Sccp.visitPhi(edge.second);
+        visited.insert(edge.second);
       }
       if (!visited.contains(edge.second)) {
         Sccp.visitInst(edge.second);
+        visited.insert(edge.second);
 
       }
 
@@ -869,7 +880,7 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
       }
 
       // This needs to be at the end so it doesn't interfere with the other checks
-      visited.insert(edge.second);
+      // visited.insert(edge.second);
     }
 
 
@@ -881,6 +892,7 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
         // outs() << "call phi from 2\n";
 outs() << "visit ssa1 inst: "<< *edge.second << "\n";
         Sccp.visitPhi(edge.second);
+        // visited.insert(edge.second);
       // } else if (Sccp.execFlags[edge]) { // if (E->sink has 1 or more executable in-edges)
       //   outs() << "visit ssa2 inst: "<< *edge.second << "\n";
       //   Sccp.visitInst(edge.second);
@@ -888,6 +900,7 @@ outs() << "visit ssa1 inst: "<< *edge.second << "\n";
       } else if (Sccp.inEdges(edge.second)) { // if (E->sink has 1 or more executable in-edges)
         outs() << "visit ssa2 inst: "<< *edge.second << "\n";
         Sccp.visitInst(edge.second);
+        // visited.insert(edge.second);
       }
       // else if ()
     }
