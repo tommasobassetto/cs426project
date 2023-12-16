@@ -88,13 +88,32 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
       if (!const1){
         if(dyn_cast<PHINode>(op1)){
           auto opInstr = dyn_cast<Instruction>(op1);
-          outs() << "opInstr: "<< *opInstr << "\n";
+          outs() << "opInstr1: "<< *opInstr << "\n";
               if(latCell.count(opInstr)){
             const1 = latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value) ? latCell[opInstr].value : nullptr;
             if (const1) outs() << "const phi 1 found to be a const!!\n";
             else {outs() << "NNNNNOOOOOOOOOOOOOOOO\n";}
           }
         }
+      }
+      else{
+        outs() << "not in latcell, latcell:\n";
+        outs()<< latCell.size()<< "\n";
+        for (const auto &edge : latCell) {
+            Instruction *source = edge.first;
+            auto type = edge.second.type;
+            auto varname = edge.second.varname;
+            auto value = edge.second.value;
+
+          if (1){
+            outs() << *source;
+            outs()  <<", type: " << type;
+            outs()  << ", name = " << varname;
+            if(value)
+            outs() << ", v = " << *value << "\n";
+            else outs() <<", v = null!\n";
+          }
+          }
       }
     }
     if (isa<Constant>(op2)){
@@ -108,13 +127,36 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
         const2 = const_value_->second.value;
       }
       if (!const2){
-        if(auto opInstr = dyn_cast<Instruction>(op2)){
-          if(latCell.count(opInstr)){
-            // const2 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            // outs() << "const2 found to be a const!!\n";
+        if(dyn_cast<PHINode>(op2)){
+          auto opInstr = dyn_cast<Instruction>(op2);
+          outs() << "opInstr2: "<< *opInstr << "\n";
+              if(latCell.count(opInstr)){
+            const2 = latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value) ? latCell[opInstr].value : nullptr;
+            if (const2) outs() << "const phi 2 found to be a const!!\n";
+            else {outs() << "NNNNNOOOOOOOOOOOOOOOO\n";}
           }
         }
       }
+      else{
+        outs() << "not in latcell, latcell:\n";
+        outs()<< latCell.size()<< "\n";
+        for (const auto &edge : latCell) {
+            Instruction *source = edge.first;
+            auto type = edge.second.type;
+            auto varname = edge.second.varname;
+            auto value = edge.second.value;
+
+          if (1){
+            outs() << *source;
+            outs()  <<", type: " << type;
+            outs()  << ", name = " << varname;
+            if(value)
+            outs() << ", v = " << *value << "\n";
+            else outs() <<", v = null!\n";
+          }
+          }
+      }
+
     }
 
     if(const1 && const2) {
@@ -690,25 +732,24 @@ void UnitSCCPInfo::visitInst(Instruction *inst) {
 void UnitSCCPInfo::visitPhi(Instruction *inst) {
   PHINode *phi = dyn_cast<PHINode>(inst);
   unsigned numOperands = phi->getNumIncomingValues();
+  outs() << "visit phi inst: " << *inst << "\n";
+//   outs() << "--- now latcell:\n";
+// outs()<< latCell.size()<< "\n";
+//     for (const auto &edge : latCell) {
+//         Instruction *source = edge.first;
+//         auto type = edge.second.type;
+//         auto varname = edge.second.varname;
+//         auto value = edge.second.value;
 
-  outs() << "+++++++++++++ inst: " << *inst << "\n";
-  outs() << "--- now latcell:\n";
-outs()<< latCell.size()<< "\n";
-    for (const auto &edge : latCell) {
-        Instruction *source = edge.first;
-        auto type = edge.second.type;
-        auto varname = edge.second.varname;
-        auto value = edge.second.value;
-
-      if (type == CONSTANT){
-        outs() << *source;
-        outs()  <<", type: " << type;
-         outs()  << ", name = " << varname;
-         if(value)
-         outs() << ", v = " << *value << "\n";
-         else outs() <<", v = null!\n";
-      }
-    }
+//       if (type == CONSTANT){
+//         outs() << *source;
+//         outs()  <<", type: " << type;
+//          outs()  << ", name = " << varname;
+//          if(value)
+//          outs() << ", v = " << *value << "\n";
+//          else outs() <<", v = null!\n";
+//       }
+//     }
 
   // outs() << "---now execflags: "  << "\n";
   //   for (const auto &edge : execFlags) {
@@ -730,6 +771,8 @@ outs()<< latCell.size()<< "\n";
       // assume to be constant
       auto incomingBB = phi->getIncomingBlock(i);
       sourceInstr = incomingBB->getTerminator();
+      Instruction &sinkInstr = (inst->getParent())->front();
+
     // }
     assert(sourceInstr);
     UnitSCCPInfo::Edge edge = UnitSCCPInfo::Edge(sourceInstr,inst);
@@ -804,7 +847,7 @@ outs()<< latCell.size()<< "\n";
           // add SSAOutEdges(S) to SSAWL
           outs() <<"!!!!! changed, added here\n";
           for (User *user: inst->users()) {
-            outs() <<"user:" << *dyn_cast<Instruction>(user) <<"\n";
+            // outs() <<"user:" << *dyn_cast<Instruction>(user) <<"\n";
             ssaWL.push_back(
               Edge(inst, dyn_cast<Instruction>(user))
             );
@@ -890,19 +933,10 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
 
       if (isa<PHINode>(edge.second)) {
         // outs() << "call phi from 2\n";
-outs() << "visit ssa1 inst: "<< *edge.second << "\n";
         Sccp.visitPhi(edge.second);
-        // visited.insert(edge.second);
-      // } else if (Sccp.execFlags[edge]) { // if (E->sink has 1 or more executable in-edges)
-      //   outs() << "visit ssa2 inst: "<< *edge.second << "\n";
-      //   Sccp.visitInst(edge.second);
-      // }
       } else if (Sccp.inEdges(edge.second)) { // if (E->sink has 1 or more executable in-edges)
-        outs() << "visit ssa2 inst: "<< *edge.second << "\n";
         Sccp.visitInst(edge.second);
-        // visited.insert(edge.second);
       }
-      // else if ()
     }
   }
 
