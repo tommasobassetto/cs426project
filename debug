@@ -1,3 +1,5 @@
+[ 14%] Building CXX object CMakeFiles/UnitProject.dir/UnitSCCP.cpp.o
+[ 28%] Linking CXX shared library libUnitProject.so
 [100%] Built target UnitProject
 visiting inst:   %2 = call double @fmod(double noundef %0, double noundef 0x401921FB54442D18) #5
 NONONONO NONOMONO return bottom
@@ -294,12 +296,16 @@ incoming constant
 edge not in execflag!!
 visit phi inst:   %.02 = phi double [ %24, %3 ], [ %135, %108 ]
 0,incoming:   %24 = call double @llvm.fmuladd.f64(double %23, double %10, double %14)
-edge not in execflag!!
+MMMMMMMMMMnewtype = 1
+no constant
+!!!!! changed, added here
 1,incoming:   %135 = call double @llvm.fmuladd.f64(double %134, double 0x3E7AD7F29ABCAF48, double %.02)
 edge not in execflag!!
 visit phi inst:   %.01 = phi double [ %40, %3 ], [ %150, %108 ]
 0,incoming:   %40 = fmul double %39, 0x3ED455A5B2FF8F9D
-edge not in execflag!!
+MMMMMMMMMMnewtype = 1
+no constant
+!!!!! changed, added here
 1,incoming:   %150 = call double @llvm.fmuladd.f64(double %149, double 0x3E7AD7F29ABCAF48, double %.01)
 edge not in execflag!!
 visiting inst:   %107 = icmp slt i32 %.03, 8
@@ -363,7 +369,9 @@ incoming constant
 edge not in execflag!!
 visit phi inst:   %.1 = phi double [ %.01, %152 ], [ %196, %174 ]
 0,incoming:   %.01 = phi double [ %40, %3 ], [ %150, %108 ]
-edge not in execflag!!
+MMMMMMMMMMnewtype = 1
+no constant
+!!!!! changed, added here
 1,incoming:   %196 = call double @llvm.fmuladd.f64(double %195, double 0x3E7AD7F29ABCAF48, double %.1)
 edge not in execflag!!
 visiting inst:   %173 = icmp sle i32 %.14, 9
@@ -397,11 +405,14 @@ incoming constant
 edge not in execflag!!
 visit phi inst:   %.0 = phi double [ %202, %198 ], [ %211, %203 ]
 0,incoming:   %202 = call double @llvm.fmuladd.f64(double %54, double %201, double %200)
-edge not in execflag!!
+MMMMMMMMMMnewtype = 1
+no constant
+!!!!! changed, added here
 1,incoming:   %211 = fadd double %.0, %210
 edge not in execflag!!
 visiting inst:   %204 = fsub double %200, %.0
 opInstr2:   %.0 = phi double [ %202, %198 ], [ %211, %203 ]
+NNNNNOOOOOOOOOOOOOOOO
 NONONONO NONOMONO return bottom
 visiting inst:   %205 = call double @sin(double noundef %.0) #5
 NONONONO NONOMONO return bottom
@@ -417,6 +428,7 @@ visiting inst:   %210 = fdiv double %206, %209
 NONONONO NONOMONO return bottom
 visiting inst:   %211 = fadd double %.0, %210
 opInstr1:   %.0 = phi double [ %202, %198 ], [ %211, %203 ]
+NNNNNOOOOOOOOOOOOOOOO
 NONONONO NONOMONO return bottom
 visiting inst:   %212 = add nsw i32 %.2, 1
 opInstr1:   %.2 = phi i32 [ 0, %198 ], [ %212, %203 ]

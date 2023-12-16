@@ -1,5 +1,5 @@
-; ModuleID = 'test/sccp_c.ll'
-source_filename = "test/sccp.c"
+; ModuleID = 'mp5_testcases/almabench_c.ll'
+source_filename = "mp5_testcases/almabench.c"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
 
@@ -470,101 +470,104 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
   %4 = alloca [2 x [3 x double]], align 16
   %5 = alloca [8 x [3 x double]], align 16
   %6 = icmp sgt i32 %0, 1
-  br i1 %6, label %7, label %16
+  br i1 %6, label %.preheader1, label %.loopexit
 
-7:                                                ; preds = %14, %2
-  %.02 = phi i32 [ %15, %14 ], [ 1, %2 ]
-  %8 = icmp slt i32 %.02, %0
-  br i1 %8, label %9, label %16
+.preheader1:                                      ; preds = %2
+  %7 = getelementptr inbounds ptr, ptr %1, i64 1
+  br label %8
 
-9:                                                ; preds = %7
-  %10 = getelementptr inbounds ptr, ptr %1, i64 1
-  %11 = load ptr, ptr %10, align 8
+8:                                                ; preds = %.preheader1, %14
+  %.02 = phi i32 [ %15, %14 ], [ 1, %.preheader1 ]
+  %9 = icmp slt i32 %.02, %0
+  br i1 %9, label %10, label %.loopexit
+
+10:                                               ; preds = %8
+  %11 = load ptr, ptr %7, align 8
   %12 = call i32 @strcmp(ptr noundef %11, ptr noundef @.str) #6
   %13 = icmp ne i32 %12, 0
-  br i1 %13, label %14, label %16
+  br i1 %13, label %14, label %.loopexit
 
-14:                                               ; preds = %9
+14:                                               ; preds = %10
   %15 = add nsw i32 %.02, 1
-  br label %7, !llvm.loop !9
+  br label %8, !llvm.loop !9
 
-16:                                               ; preds = %9, %7, %2
-  br label %17
+.loopexit:                                        ; preds = %8, %10, %2
+  br label %16
 
-17:                                               ; preds = %40, %16
-  %.13 = phi i32 [ 0, %16 ], [ %41, %40 ]
-  %18 = icmp slt i32 %.13, 20
-  br i1 %18, label %19, label %42
+16:                                               ; preds = %39, %.loopexit
+  %.13 = phi i32 [ 0, %.loopexit ], [ %40, %39 ]
+  %17 = icmp slt i32 %.13, 20
+  br i1 %17, label %18, label %.preheader
 
-19:                                               ; preds = %17
-  %20 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 0
-  store double 0x4142B42C80000000, ptr %20, align 16
-  %21 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 1
-  store double 0.000000e+00, ptr %21, align 8
-  br label %22
+18:                                               ; preds = %16
+  %19 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 0
+  store double 0x4142B42C80000000, ptr %19, align 16
+  %20 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 1
+  store double 0.000000e+00, ptr %20, align 8
+  br label %21
 
-22:                                               ; preds = %38, %19
-  %.01 = phi i32 [ 0, %19 ], [ %39, %38 ]
-  %23 = icmp slt i32 %.01, 36525
-  br i1 %23, label %24, label %40
+21:                                               ; preds = %37, %18
+  %.01 = phi i32 [ 0, %18 ], [ %38, %37 ]
+  %22 = icmp slt i32 %.01, 36525
+  br i1 %22, label %23, label %39
 
-24:                                               ; preds = %22
-  %25 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 0
-  %26 = load double, ptr %25, align 16
-  %27 = fadd double %26, 1.000000e+00
-  store double %27, ptr %25, align 16
-  br label %28
+23:                                               ; preds = %21
+  %24 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 0
+  %25 = load double, ptr %24, align 16
+  %26 = fadd double %25, 1.000000e+00
+  store double %26, ptr %24, align 16
+  br label %27
 
-28:                                               ; preds = %30, %24
-  %.0 = phi i32 [ 0, %24 ], [ %37, %30 ]
-  %29 = icmp slt i32 %.0, 8
-  br i1 %29, label %30, label %38
+27:                                               ; preds = %29, %23
+  %.0 = phi i32 [ 0, %23 ], [ %36, %29 ]
+  %28 = icmp slt i32 %.0, 8
+  br i1 %28, label %29, label %37
 
-30:                                               ; preds = %28
-  %31 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 0
+29:                                               ; preds = %27
+  %30 = getelementptr inbounds [2 x double], ptr %3, i64 0, i64 0
+  %31 = getelementptr inbounds [2 x [3 x double]], ptr %4, i64 0, i64 0
+  call void @planetpv(ptr noundef %30, i32 noundef %.0, ptr noundef %31)
   %32 = getelementptr inbounds [2 x [3 x double]], ptr %4, i64 0, i64 0
-  call void @planetpv(ptr noundef %31, i32 noundef %.0, ptr noundef %32)
-  %33 = getelementptr inbounds [2 x [3 x double]], ptr %4, i64 0, i64 0
-  %34 = sext i32 %.0 to i64
-  %35 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %34
-  %36 = getelementptr inbounds [3 x double], ptr %35, i64 0, i64 0
-  call void @radecdist(ptr noundef %33, ptr noundef %36)
-  %37 = add nsw i32 %.0, 1
-  br label %28, !llvm.loop !10
+  %33 = sext i32 %.0 to i64
+  %34 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %33
+  %35 = getelementptr inbounds [3 x double], ptr %34, i64 0, i64 0
+  call void @radecdist(ptr noundef %32, ptr noundef %35)
+  %36 = add nsw i32 %.0, 1
+  br label %27, !llvm.loop !10
 
-38:                                               ; preds = %28
-  %39 = add nsw i32 %.01, 1
-  br label %22, !llvm.loop !11
+37:                                               ; preds = %27
+  %38 = add nsw i32 %.01, 1
+  br label %21, !llvm.loop !11
 
-40:                                               ; preds = %22
-  %41 = add nsw i32 %.13, 1
-  br label %17, !llvm.loop !12
+39:                                               ; preds = %21
+  %40 = add nsw i32 %.13, 1
+  br label %16, !llvm.loop !12
 
-42:                                               ; preds = %44, %17
-  %.1 = phi i32 [ %58, %44 ], [ 0, %17 ]
-  %43 = icmp slt i32 %.1, 8
-  br i1 %43, label %44, label %59
+.preheader:                                       ; preds = %16, %42
+  %.1 = phi i32 [ %56, %42 ], [ 0, %16 ]
+  %41 = icmp slt i32 %.1, 8
+  br i1 %41, label %42, label %57
 
-44:                                               ; preds = %42
-  %45 = sext i32 %.1 to i64
-  %46 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %45
-  %47 = getelementptr inbounds [3 x double], ptr %46, i64 0, i64 0
-  %48 = load double, ptr %47, align 8
-  %49 = sext i32 %.1 to i64
-  %50 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %49
-  %51 = getelementptr inbounds [3 x double], ptr %50, i64 0, i64 1
-  %52 = load double, ptr %51, align 8
-  %53 = sext i32 %.1 to i64
-  %54 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %53
-  %55 = getelementptr inbounds [3 x double], ptr %54, i64 0, i64 2
-  %56 = load double, ptr %55, align 8
-  %57 = call i32 (ptr, ...) @printf(ptr noundef @.str.1, double noundef %48, double noundef %52, double noundef %56)
-  %58 = add nsw i32 %.1, 1
-  br label %42, !llvm.loop !13
+42:                                               ; preds = %.preheader
+  %43 = sext i32 %.1 to i64
+  %44 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %43
+  %45 = getelementptr inbounds [3 x double], ptr %44, i64 0, i64 0
+  %46 = load double, ptr %45, align 8
+  %47 = sext i32 %.1 to i64
+  %48 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %47
+  %49 = getelementptr inbounds [3 x double], ptr %48, i64 0, i64 1
+  %50 = load double, ptr %49, align 8
+  %51 = sext i32 %.1 to i64
+  %52 = getelementptr inbounds [8 x [3 x double]], ptr %5, i64 0, i64 %51
+  %53 = getelementptr inbounds [3 x double], ptr %52, i64 0, i64 2
+  %54 = load double, ptr %53, align 8
+  %55 = call i32 (ptr, ...) @printf(ptr noundef @.str.1, double noundef %46, double noundef %50, double noundef %54)
+  %56 = add nsw i32 %.1, 1
+  br label %.preheader, !llvm.loop !13
 
-59:                                               ; preds = %42
-  %60 = load ptr, ptr @stdout, align 8
-  %61 = call i32 @fflush(ptr noundef %60)
+57:                                               ; preds = %.preheader
+  %58 = load ptr, ptr @stdout, align 8
+  %59 = call i32 @fflush(ptr noundef %58)
   ret i32 0
 }
 

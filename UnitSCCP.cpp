@@ -771,11 +771,20 @@ void UnitSCCPInfo::visitPhi(Instruction *inst) {
       // assume to be constant
       auto incomingBB = phi->getIncomingBlock(i);
       sourceInstr = incomingBB->getTerminator();
-      Instruction &sinkInstr = (inst->getParent())->front();
-
+      // Instruction &sinkInstr = (inst->getParent())->front();
+      auto thisBB = inst->getParent();
+      Instruction &sinkInstr = thisBB->front();
+      UnitSCCPInfo::Edge edge;
+      if(thisBB!=incomingBB){
+        // from 2 branchs
+        edge = UnitSCCPInfo::Edge(incomingBB->getTerminator(),&(thisBB->front()));
+        // edge = UnitSCCPInfo::Edge(incomingBB->getTerminator(),&(thisBB->front()));
+      }
+      else{
+        edge = UnitSCCPInfo::Edge(thisBB->getTerminator(),&(thisBB->front()));
+      }
     // }
     assert(sourceInstr);
-    UnitSCCPInfo::Edge edge = UnitSCCPInfo::Edge(sourceInstr,inst);
     if (execFlags.count(edge)){
       // outs() << "edge src = " << *sourceInstr << "\n";
       if (execFlags[edge] == true){
