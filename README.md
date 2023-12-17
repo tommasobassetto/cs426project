@@ -11,3 +11,9 @@ You can run _just_ your passes like this:
 opt -load-pass-plugin=build/libUnitProject.so -passes="unit-licm,unit-sccp" <input> -o <output>
 ```
 which will probably not do much on their own; or use the full optimization sequence given in the PDF.
+If you want to run on the testbench, you could simply run:
+```
+python3 runtest.py
+```
+Note that comments regarding the ground truth should be removed first, to get the ground truth.
+Unit test cases are in `test/`.

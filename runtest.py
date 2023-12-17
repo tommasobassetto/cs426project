@@ -18,9 +18,9 @@ def execute_commands():
             # clang
             compile_cmd1 = f"clang-15 {file_name}.c -c -O0 -S -Xclang -disable-O0-optnone -emit-llvm -o {file_name}.ll"
             compile_cmd2 = f"clang-15 {file_name}.ll -lm -o {file_name}.gt"
-            compile_sccp_cmd = f"""
+            compile_opt_pass_cmd = f"""
                                 opt-15 -passes="mem2reg" {file_name}.ll -S -o {file_name}_c.ll &&
-                                opt-15 -load-pass-plugin=build/libUnitProject.so -passes="simplifycfg,loop-simplify,unit-sccp,adce,simplifycfg" {file_name}_c.ll -S -o {file_name}_parsed.ll &&
+                                opt-15 -load-pass-plugin=build/libUnitProject.so -passes="simplifycfg,loop-simplify,unit-cse,unit-sccp,adce,simplifycfg,unit-licm-multiple" {file_name}_c.ll -S -o {file_name}_parsed.ll &&
                                 clang-15 {file_name}_parsed.ll -lm -o {file_name}.ours
                                 """
             execute_gt_cmd = f"echo {exe_name} >> gt.log && ./{file_name}.gt >> gt.log"
@@ -32,7 +32,7 @@ def execute_commands():
                     # if os.system(compile_cmd2) == 0:
                     #     if os.system(execute_gt_cmd) == 0:
                     #         pass
-                    if os.system(compile_sccp_cmd) == 0:
+                    if os.system(compile_opt_pass_cmd) == 0:
                         if os.system(execute_ours_cmd) == 0:
                             pass
                         else:

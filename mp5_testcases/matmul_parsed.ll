@@ -7,67 +7,58 @@ target triple = "x86_64-pc-linux-gnu"
 define dso_local void @matmul(i32 noundef %0, i32 noundef %1, i32 noundef %2, ptr noundef %3, ptr noundef %4, ptr noundef %5) #0 {
   %7 = zext i32 %1 to i64
   %8 = zext i32 %2 to i64
-  %9 = zext i32 %2 to i64
-  br label %10
+  br label %9
 
-10:                                               ; preds = %45, %6
-  %.02 = phi i32 [ 0, %6 ], [ %46, %45 ]
-  %11 = icmp slt i32 %.02, %0
-  br i1 %11, label %.preheader, label %47
+9:                                                ; preds = %36, %6
+  %.02 = phi i32 [ 0, %6 ], [ %37, %36 ]
+  %10 = icmp slt i32 %.02, %0
+  br i1 %10, label %.preheader, label %38
 
-.preheader:                                       ; preds = %10, %43
-  %.01 = phi i32 [ %44, %43 ], [ 0, %10 ]
-  %12 = icmp slt i32 %.01, %2
-  br i1 %12, label %13, label %45
+.preheader:                                       ; preds = %9, %34
+  %.01 = phi i32 [ %35, %34 ], [ 0, %9 ]
+  %11 = icmp slt i32 %.01, %2
+  br i1 %11, label %12, label %36
 
-13:                                               ; preds = %.preheader
-  %14 = sext i32 %.02 to i64
-  %15 = mul nsw i64 %14, %9
-  %16 = getelementptr inbounds i32, ptr %5, i64 %15
-  %17 = sext i32 %.01 to i64
-  %18 = getelementptr inbounds i32, ptr %16, i64 %17
-  store i32 0, ptr %18, align 4
-  br label %19
+12:                                               ; preds = %.preheader
+  %13 = sext i32 %.02 to i64
+  %14 = mul nsw i64 %13, %8
+  %15 = getelementptr inbounds i32, ptr %5, i64 %14
+  %16 = sext i32 %.01 to i64
+  %17 = getelementptr inbounds i32, ptr %15, i64 %16
+  store i32 0, ptr %17, align 4
+  br label %18
 
-19:                                               ; preds = %21, %13
-  %.0 = phi i32 [ 0, %13 ], [ %42, %21 ]
-  %20 = icmp slt i32 %.0, %1
-  br i1 %20, label %21, label %43
+18:                                               ; preds = %20, %12
+  %.0 = phi i32 [ 0, %12 ], [ %33, %20 ]
+  %19 = icmp slt i32 %.0, %1
+  br i1 %19, label %20, label %34
 
-21:                                               ; preds = %19
-  %22 = sext i32 %.02 to i64
-  %23 = mul nsw i64 %22, %7
-  %24 = getelementptr inbounds i32, ptr %3, i64 %23
-  %25 = sext i32 %.0 to i64
-  %26 = getelementptr inbounds i32, ptr %24, i64 %25
-  %27 = load i32, ptr %26, align 4
-  %28 = sext i32 %.0 to i64
-  %29 = mul nsw i64 %28, %8
-  %30 = getelementptr inbounds i32, ptr %4, i64 %29
-  %31 = sext i32 %.01 to i64
-  %32 = getelementptr inbounds i32, ptr %30, i64 %31
-  %33 = load i32, ptr %32, align 4
-  %34 = mul nsw i32 %27, %33
-  %35 = sext i32 %.02 to i64
-  %36 = mul nsw i64 %35, %9
-  %37 = getelementptr inbounds i32, ptr %5, i64 %36
-  %38 = sext i32 %.01 to i64
-  %39 = getelementptr inbounds i32, ptr %37, i64 %38
-  %40 = load i32, ptr %39, align 4
-  %41 = add nsw i32 %40, %34
-  store i32 %41, ptr %39, align 4
-  %42 = add nsw i32 %.0, 1
-  br label %19, !llvm.loop !6
+20:                                               ; preds = %18
+  %21 = mul nsw i64 %13, %7
+  %22 = getelementptr inbounds i32, ptr %3, i64 %21
+  %23 = sext i32 %.0 to i64
+  %24 = getelementptr inbounds i32, ptr %22, i64 %23
+  %25 = load i32, ptr %24, align 4
+  %26 = mul nsw i64 %23, %8
+  %27 = getelementptr inbounds i32, ptr %4, i64 %26
+  %28 = getelementptr inbounds i32, ptr %27, i64 %16
+  %29 = load i32, ptr %28, align 4
+  %30 = mul nsw i32 %25, %29
+  %31 = load i32, ptr %17, align 4
+  %32 = add nsw i32 %31, %30
+  store i32 %32, ptr %17, align 4
+  %33 = add nsw i32 %.0, 1
+  br label %18, !llvm.loop !6
 
-43:                                               ; preds = %19
-  %44 = add nsw i32 %.01, 1
+34:                                               ; preds = %18
+  %35 = add nsw i32 %.01, 1
   br label %.preheader, !llvm.loop !8
 
-45:                                               ; preds = %.preheader
-  %46 = add nsw i32 %.02, 1
-  br label %10, !llvm.loop !9
+36:                                               ; preds = %.preheader
+  %37 = add nsw i32 %.02, 1
+  br label %9, !llvm.loop !9
 
-47:                                               ; preds = %10
+38:                                               ; preds = %9
   ret void
 }
 

@@ -8,25 +8,24 @@ target triple = "x86_64-pc-linux-gnu"
 ; Function Attrs: noinline nounwind uwtable
 define dso_local double @eval_A(i32 noundef %0, i32 noundef %1) #0 {
   %3 = add nsw i32 %0, %1
-  %4 = add nsw i32 %0, %1
-  %5 = add nsw i32 %4, 1
-  %6 = mul nsw i32 %3, %5
-  %7 = sdiv i32 %6, 2
-  %8 = add nsw i32 %7, %0
-  %9 = add nsw i32 %8, 1
-  %10 = sitofp i32 %9 to double
-  %11 = fdiv double 1.000000e+00, %10
-  ret double %11
+  %4 = add nsw i32 %3, 1
+  %5 = mul nsw i32 %3, %4
+  %6 = sdiv i32 %5, 2
+  %7 = add nsw i32 %6, %0
+  %8 = add nsw i32 %7, 1
+  %9 = sitofp i32 %8 to double
+  %10 = fdiv double 1.000000e+00, %9
+  ret double %10
 }
 
 ; Function Attrs: noinline nounwind uwtable
 define dso_local void @eval_A_times_u(i32 noundef %0, ptr noundef %1, ptr noundef %2) #0 {
   br label %4
 
-4:                                                ; preds = %21, %3
-  %.01 = phi i32 [ 0, %3 ], [ %22, %21 ]
+4:                                                ; preds = %19, %3
+  %.01 = phi i32 [ 0, %3 ], [ %20, %19 ]
   %5 = icmp slt i32 %.01, %0
-  br i1 %5, label %6, label %23
+  br i1 %5, label %6, label %21
 
 6:                                                ; preds = %4
   %7 = sext i32 %.01 to i64
@@ -35,28 +34,26 @@ define dso_local void @eval_A_times_u(i32 noundef %0, ptr noundef %1, ptr nounde
   br label %9
 
 9:                                                ; preds = %11, %6
-  %.0 = phi i32 [ 0, %6 ], [ %20, %11 ]
+  %.0 = phi i32 [ 0, %6 ], [ %18, %11 ]
   %10 = icmp slt i32 %.0, %0
-  br i1 %10, label %11, label %21
+  br i1 %10, label %11, label %19
 
 11:                                               ; preds = %9
   %12 = call double @eval_A(i32 noundef %.01, i32 noundef %.0)
   %13 = sext i32 %.0 to i64
   %14 = getelementptr inbounds double, ptr %1, i64 %13
   %15 = load double, ptr %14, align 8
-  %16 = sext i32 %.01 to i64
-  %17 = getelementptr inbounds double, ptr %2, i64 %16
-  %18 = load double, ptr %17, align 8
-  %19 = call double @llvm.fmuladd.f64(double %12, double %15, double %18)
-  store double %19, ptr %17, align 8
-  %20 = add nsw i32 %.0, 1
+  %16 = load double, ptr %8, align 8
+  %17 = call double @llvm.fmuladd.f64(double %12, double %15, double %16)
+  store double %17, ptr %8, align 8
+  %18 = add nsw i32 %.0, 1
   br label %9, !llvm.loop !6
 
-21:                                               ; preds = %9
-  %22 = add nsw i32 %.01, 1
+19:                                               ; preds = %9
+  %20 = add nsw i32 %.01, 1
   br label %4, !llvm.loop !8
 
-23:                                               ; preds = %4
+21:                                               ; preds = %4
   ret void
 }
 
@@ -67,10 +64,10 @@ declare double @llvm.fmuladd.f64(double, double, double) #1
 define dso_local void @eval_At_times_u(i32 noundef %0, ptr noundef %1, ptr noundef %2) #0 {
   br label %4
 
-4:                                                ; preds = %21, %3
-  %.01 = phi i32 [ 0, %3 ], [ %22, %21 ]
+4:                                                ; preds = %19, %3
+  %.01 = phi i32 [ 0, %3 ], [ %20, %19 ]
   %5 = icmp slt i32 %.01, %0
-  br i1 %5, label %6, label %23
+  br i1 %5, label %6, label %21
 
 6:                                                ; preds = %4
   %7 = sext i32 %.01 to i64
@@ -79,28 +76,26 @@ define dso_local void @eval_At_times_u(i32 noundef %0, ptr noundef %1, ptr nound
   br label %9
 
 9:                                                ; preds = %11, %6
-  %.0 = phi i32 [ 0, %6 ], [ %20, %11 ]
+  %.0 = phi i32 [ 0, %6 ], [ %18, %11 ]
   %10 = icmp slt i32 %.0, %0
-  br i1 %10, label %11, label %21
+  br i1 %10, label %11, label %19
 
 11:                                               ; preds = %9
   %12 = call double @eval_A(i32 noundef %.0, i32 noundef %.01)
   %13 = sext i32 %.0 to i64
   %14 = getelementptr inbounds double, ptr %1, i64 %13
   %15 = load double, ptr %14, align 8
-  %16 = sext i32 %.01 to i64
-  %17 = getelementptr inbounds double, ptr %2, i64 %16
-  %18 = load double, ptr %17, align 8
-  %19 = call double @llvm.fmuladd.f64(double %12, double %15, double %18)
-  store double %19, ptr %17, align 8
-  %20 = add nsw i32 %.0, 1
+  %16 = load double, ptr %8, align 8
+  %17 = call double @llvm.fmuladd.f64(double %12, double %15, double %16)
+  store double %17, ptr %8, align 8
+  %18 = add nsw i32 %.0, 1
   br label %9, !llvm.loop !9
 
-21:                                               ; preds = %9
-  %22 = add nsw i32 %.01, 1
+19:                                               ; preds = %9
+  %20 = add nsw i32 %.01, 1
   br label %4, !llvm.loop !10
 
-23:                                               ; preds = %4
+21:                                               ; preds = %4
   ret void
 }
 
@@ -137,62 +132,56 @@ define dso_local i32 @main(i32 noundef %0, ptr noundef %1) #0 {
   %10 = zext i32 %9 to i64
   %11 = call ptr @llvm.stacksave()
   %12 = alloca double, i64 %10, align 16
-  %13 = zext i32 %9 to i64
-  %14 = alloca double, i64 %13, align 16
-  br label %15
+  %13 = alloca double, i64 %10, align 16
+  br label %14
 
-15:                                               ; preds = %17, %8
-  %.02 = phi i32 [ 0, %8 ], [ %20, %17 ]
-  %16 = icmp slt i32 %.02, %9
-  br i1 %16, label %17, label %.preheader1
+14:                                               ; preds = %16, %8
+  %.02 = phi i32 [ 0, %8 ], [ %19, %16 ]
+  %15 = icmp slt i32 %.02, %9
+  br i1 %15, label %16, label %.preheader1
 
-17:                                               ; preds = %15
-  %18 = sext i32 %.02 to i64
-  %19 = getelementptr inbounds double, ptr %12, i64 %18
-  store double 1.000000e+00, ptr %19, align 8
-  %20 = add nsw i32 %.02, 1
-  br label %15, !llvm.loop !11
+16:                                               ; preds = %14
+  %17 = sext i32 %.02 to i64
+  %18 = getelementptr inbounds double, ptr %12, i64 %17
+  store double 1.000000e+00, ptr %18, align 8
+  %19 = add nsw i32 %.02, 1
+  br label %14, !llvm.loop !11
 
-.preheader1:                                      ; preds = %15, %22
-  %.1 = phi i32 [ %23, %22 ], [ 0, %15 ]
-  %21 = icmp slt i32 %.1, 10
-  br i1 %21, label %22, label %.preheader
+.preheader1:                                      ; preds = %14, %21
+  %.1 = phi i32 [ %22, %21 ], [ 0, %14 ]
+  %20 = icmp slt i32 %.1, 10
+  br i1 %20, label %21, label %.preheader
 
-22:                                               ; preds = %.preheader1
-  call void @eval_AtA_times_u(i32 noundef %9, ptr noundef %12, ptr noundef %14)
-  call void @eval_AtA_times_u(i32 noundef %9, ptr noundef %14, ptr noundef %12)
-  %23 = add nsw i32 %.1, 1
+21:                                               ; preds = %.preheader1
+  call void @eval_AtA_times_u(i32 noundef %9, ptr noundef %12, ptr noundef %13)
+  call void @eval_AtA_times_u(i32 noundef %9, ptr noundef %13, ptr noundef %12)
+  %22 = add nsw i32 %.1, 1
   br label %.preheader1, !llvm.loop !12
 
-.preheader:                                       ; preds = %.preheader1, %25
-  %.2 = phi i32 [ %40, %25 ], [ 0, %.preheader1 ]
-  %.01 = phi double [ %32, %25 ], [ 0.000000e+00, %.preheader1 ]
-  %.0 = phi double [ %39, %25 ], [ 0.000000e+00, %.preheader1 ]
-  %24 = icmp slt i32 %.2, %9
-  br i1 %24, label %25, label %41
+.preheader:                                       ; preds = %.preheader1, %24
+  %.2 = phi i32 [ %34, %24 ], [ 0, %.preheader1 ]
+  %.01 = phi double [ %30, %24 ], [ 0.000000e+00, %.preheader1 ]
+  %.0 = phi double [ %33, %24 ], [ 0.000000e+00, %.preheader1 ]
+  %23 = icmp slt i32 %.2, %9
+  br i1 %23, label %24, label %35
 
-25:                                               ; preds = %.preheader
-  %26 = sext i32 %.2 to i64
-  %27 = getelementptr inbounds double, ptr %12, i64 %26
-  %28 = load double, ptr %27, align 8
-  %29 = sext i32 %.2 to i64
-  %30 = getelementptr inbounds double, ptr %14, i64 %29
-  %31 = load double, ptr %30, align 8
-  %32 = call double @llvm.fmuladd.f64(double %28, double %31, double %.01)
-  %33 = sext i32 %.2 to i64
-  %34 = getelementptr inbounds double, ptr %14, i64 %33
-  %35 = load double, ptr %34, align 8
-  %36 = sext i32 %.2 to i64
-  %37 = getelementptr inbounds double, ptr %14, i64 %36
-  %38 = load double, ptr %37, align 8
-  %39 = call double @llvm.fmuladd.f64(double %35, double %38, double %.0)
-  %40 = add nsw i32 %.2, 1
+24:                                               ; preds = %.preheader
+  %25 = sext i32 %.2 to i64
+  %26 = getelementptr inbounds double, ptr %12, i64 %25
+  %27 = load double, ptr %26, align 8
+  %28 = getelementptr inbounds double, ptr %13, i64 %25
+  %29 = load double, ptr %28, align 8
+  %30 = call double @llvm.fmuladd.f64(double %27, double %29, double %.01)
+  %31 = load double, ptr %28, align 8
+  %32 = load double, ptr %28, align 8
+  %33 = call double @llvm.fmuladd.f64(double %31, double %32, double %.0)
+  %34 = add nsw i32 %.2, 1
   br label %.preheader, !llvm.loop !13
 
-41:                                               ; preds = %.preheader
-  %42 = fdiv double %.01, %.0
-  %43 = call double @sqrt(double noundef %42) #7
-  %44 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %43)
+35:                                               ; preds = %.preheader
+  %36 = fdiv double %.01, %.0
+  %37 = call double @sqrt(double noundef %36) #7
+  %38 = call i32 (ptr, ...) @printf(ptr noundef @.str, double noundef %37)
   call void @llvm.stackrestore(ptr %11)
   ret i32 0
 }
