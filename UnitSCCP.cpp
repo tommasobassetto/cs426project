@@ -45,28 +45,8 @@ UnitSCCPInfo::ValueType UnitSCCPInfo::meet(Value_ first, Value_ second) {
   return BOTTOM;
 }
 
-
 UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
-  // check https://llvm.org/doxygen/classllvm_1_1Interpreter.html
   // note: visit instruction is built in
-  // handle binary ops
-  outs() << "--- in eval latcell:\n";
-outs()<< latCell.size()<< "\n";
-    for (const auto &edge : latCell) {
-        Instruction *source = edge.first;
-        auto type = edge.second.type;
-        auto varname = edge.second.varname;
-        auto value = edge.second.value;
-
-
-        outs() << *source;
-        outs()  <<", type: " << type;
-         outs()  << ", name = " << varname;
-         if(value)
-         outs() << ", v = " << *value << "\n";
-         else outs() <<", v = null!\n";
-    }
-
   if (BinaryOperator *binaryOp = dyn_cast<BinaryOperator>(inst)){
     Value *op1 = binaryOp->getOperand(0);
     Value *op2 = binaryOp->getOperand(1);
@@ -74,7 +54,6 @@ outs()<< latCell.size()<< "\n";
     Value *const2 = nullptr;
 
     if (isa<Constant>(op1)){
-      // outs() << "op1 const!!\n";
       const1 = op1;
     }
     else {
@@ -83,40 +62,6 @@ outs()<< latCell.size()<< "\n";
       if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
         // in our map
         const1 = const_value_->second.value;
-      }
-      // if still not found, find in phi!!
-      if (!const1){
-        if(dyn_cast<PHINode>(op1)){
-          auto opInstr = dyn_cast<Instruction>(op1);
-          // outs() << "opInstr1: "<< *opInstr << "\n";
-          //     if(latCell.count(opInstr)){
-          //       if ((latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value)))
-          //       outs() << ".value = " << *latCell[opInstr].value <<"\n";
-          //   // const1 = latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value) ? latCell[opInstr].value : nullptr;
-          //   const1 = (latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value)) ? nullptr : nullptr;
-          //   if (const1) outs() << "const phi 1 found to be a const!!\n";
-          //   else {outs() << "NNNNNOOOOOOOOOOOOOOOO\n";}
-          // }
-        }
-      }
-      else{
-        outs() << "not in latcell, latcell:\n";
-        outs()<< latCell.size()<< "\n";
-        for (const auto &edge : latCell) {
-            Instruction *source = edge.first;
-            auto type = edge.second.type;
-            auto varname = edge.second.varname;
-            auto value = edge.second.value;
-
-          if (1){
-            outs() << *source;
-            outs()  <<", type: " << type;
-            outs()  << ", name = " << varname;
-            if(value)
-            outs() << ", v = " << *value << "\n";
-            else outs() <<", v = null!\n";
-          }
-          }
       }
     }
     if (isa<Constant>(op2)){
@@ -129,48 +74,13 @@ outs()<< latCell.size()<< "\n";
         // in our map
         const2 = const_value_->second.value;
       }
-      if (!const2){
-        if(dyn_cast<PHINode>(op2)){
-          auto opInstr = dyn_cast<Instruction>(op2);
-          outs() << "opInstr2: "<< *opInstr << "\n";
-              if(latCell.count(opInstr)){
-                    outs() << ".value = " << *latCell[opInstr].value <<"\n";
-        const2 = latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value) ? latCell[opInstr].value : nullptr;
-            if (const2) outs() << "const phi 2 found to be a const!!\n";
-            else {outs() << "NNNNNOOOOOOOOOOOOOOOO\n";}
-          }
-        }
-      }
-      else{
-        outs() << "not in latcell, latcell:\n";
-        outs()<< latCell.size()<< "\n";
-        for (const auto &edge : latCell) {
-            Instruction *source = edge.first;
-            auto type = edge.second.type;
-            auto varname = edge.second.varname;
-            auto value = edge.second.value;
-
-          if (1){
-            outs() << *source;
-            outs()  <<", type: " << type;
-            outs()  << ", name = " << varname;
-            if(value)
-            outs() << ", v = " << *value << "\n";
-            else outs() <<", v = null!\n";
-          }
-          }
-      }
-
     }
 
     if(const1 && const2) {
-      outs() << "binaryOp const!!\n";
       if(inst->getType()->isIntegerTy()){
         // both are constants, add the result to the map
         // perform real operation
         // binary comes from https://llvm.org/docs/LangRef.html#binary-operations
-        // outs() << "1::" << *const1<<"\n";
-        // outs() << "2::" << *const2<<"\n";
         int64_t ValueArg1 = dyn_cast<ConstantInt>(const1)->getSExtValue();
         int64_t ValueArg2 = dyn_cast<ConstantInt>(const2)->getSExtValue();
         // first, integer
@@ -178,9 +88,6 @@ outs()<< latCell.size()<< "\n";
           int64_t result = ValueArg1 + ValueArg2;
           Value * ret = ConstantInt::get(inst->getType(), result);
           Value_ ret_value_(CONSTANT, inst->getName().str(), ret);
-          // outs() << "inst " << *inst<<"\n";
-          // outs() << "RRRRRRRResult " << result<<"\n";
-          // outs() << "reeeeeeeer " << *ret<<"\n";
           constant_map.insert({inst,ret_value_});
           return ret_value_;
         }
@@ -420,16 +327,6 @@ outs()<< latCell.size()<< "\n";
       if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
         // in our map
         const1 = const_value_->second.value;
-                outs()<< "found const in map! " << *const1 << "\n";
-
-      }
-      if (!const1){
-        if(auto opInstr = dyn_cast<Instruction>(op1)){
-          if(latCell.count(opInstr)){
-            // const1 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            // outs() << "const1 found to be a const!!\n";
-          }
-        }
       }
     }
 
@@ -443,20 +340,9 @@ outs()<< latCell.size()<< "\n";
         // in our map
         const2 = const_value_->second.value;
       }
-      if (!const2){
-        if(auto opInstr = dyn_cast<Instruction>(op2)){
-          if(latCell.count(opInstr)){
-            // const2 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            // outs() << "const2 found to be a const!!\n";
-          }
-        }
-      }
     }
     
     if(const1 && const2){
-      outs() << "icmp const!!\n";
-
-      // numBBUnreachable++; // 1 branches can be determined as unreachable
       bool result;
       result = ICmpInst::compare(dyn_cast<ConstantInt>(const1)->getValue(), dyn_cast<ConstantInt>(const2)->getValue(), pred);
       Value * ret = ConstantInt::get(inst->getType(), result);
@@ -502,18 +388,9 @@ outs()<< latCell.size()<< "\n";
         // in our map
         const2 = const_value_->second.value;
       }
-      if (!const2){
-        if(auto opInstr = dyn_cast<Instruction>(op2)){
-          if(latCell.count(opInstr)){
-            // const2 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            // outs() << "const2 found to be a const!!\n";
-          }
-        }
-      }
     }
 
     if(const1 && const2){
-      // numBBUnreachable++; // 1 branches can be determined as unreachable
       bool result;
       result = FCmpInst::compare(dyn_cast<ConstantFP>(const1)->getValueAPF(), dyn_cast<ConstantFP>(const2)->getValueAPF(), pred);
       Value * ret = ConstantInt::get(inst->getType(), result);
@@ -551,14 +428,13 @@ outs()<< latCell.size()<< "\n";
     if (const_pred){
       numBBUnreachable ++;
       bool pred_value = dyn_cast<ConstantInt>(const_pred)->getSExtValue();
-      outs() << "branch const!! "<< pred_value << "\n";
-      // if (pred_value == true){
-      //   branchInst->setSuccessor(1, branchInst->getSuccessor(0));
-      // }
-      // else{
-      //   // false
-      //   branchInst->setSuccessor(0, branchInst->getSuccessor(1));
-      // }
+      if (pred_value == true){
+        branchInst->setSuccessor(1, branchInst->getSuccessor(0));
+      }
+      else{
+        // false
+        branchInst->setSuccessor(0, branchInst->getSuccessor(1));
+      }
     }
   }
   else if (SelectInst *selectInst = dyn_cast<SelectInst>(inst)){
