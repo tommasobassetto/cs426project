@@ -8,12 +8,13 @@ Note that you should use the `opt` of LLVM installation that `cmake` found.
 If you're not certain which LLVM that is, search for `LLVM_DIR` in `build/CMakeCache.txt`.
 You can run _just_ your passes like this:
 ```
-opt -load-pass-plugin=build/libUnitProject.so -passes="unit-licm,unit-sccp" <input> -o <output>
+opt-15 -load-pass-plugin=build/libUnitProject.so -passes="unit-cse,unit-sccp,unit-licm" <input> -o <output>
 ```
-which will probably not do much on their own; or use the full optimization sequence given in the PDF.
+Check `test-opt.sh` for more information.
+
 If you want to run on the testbench, you could simply run:
 ```
 python3 runtest.py
 ```
 Note that comments regarding the ground truth should be removed first, to get the ground truth.
-Unit test cases are in `test/`.
+Unit test cases are in `test/`. E.g., `./test-opt sccp` can test the unit sccp pass on `sccp.c`.
