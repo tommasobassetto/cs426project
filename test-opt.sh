@@ -16,8 +16,8 @@ export LLVM_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-15
 # this is for sccp -------
 clang-15 test/$1.c -c -O0 -S -Xclang -disable-O0-optnone -emit-llvm -o test/$1.ll
 opt-15 -passes="mem2reg,simplifycfg" test/$1.ll -S -o test/$1_c.ll &&
-opt-15 -load-pass-plugin=build/libUnitProject.so -passes="unit-sccp,adce,simplifycfg" test/$1_c.ll -S -o test/$1_parsed.ll &&
-# opt-15 -load-pass-plugin=build/libUnitProject.so -passes="sccp,adce,simplifycfg" test/$1_c.ll -S -o test/$1_parsed.ll &&
+opt-15 -load-pass-plugin=build/libUnitProject.so -passes="unit-sccp" test/$1_c.ll -S -o test/$1_parsed.ll &&
+# opt-15 -load-pass-plugin=build/libUnitProject.so -passes="sccp" test/$1_c.ll -S -o test/$1_parsed.ll &&
 # opt-15 -load-pass-plugin=build/libUnitProject.so -passes="unit-sccp,adce,simplifycfg" test/$1_c.ll -S -o test/$1_parsed.ll &&
 clang-15 test/$1_parsed.ll coolrt.o -lm -Wl,--unresolved-symbols=ignore-in-object-files -o test/a.out &&
 test/a.out

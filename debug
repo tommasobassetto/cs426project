@@ -1,445 +1,253 @@
+Consolidate compiler generated dependencies of target UnitProject
 [ 14%] Building CXX object CMakeFiles/UnitProject.dir/UnitSCCP.cpp.o
 [ 28%] Linking CXX shared library libUnitProject.so
 [100%] Built target UnitProject
-visiting inst:   %2 = call double @fmod(double noundef %0, double noundef 0x401921FB54442D18) #5
-NONONONO NONOMONO return bottom
-visiting inst:   %3 = call double @llvm.fabs.f64(double %2)
-NONONONO NONOMONO return bottom
-visiting inst:   %4 = fcmp oge double %3, 0x400921FB54442D18
-NONONONO NONOMONO return bottom
-visiting inst:   br i1 %4, label %5, label %10
+visiting inst:   br label %2
+--- in eval latcell:
+0
 NONONONO NONOMONO return bottom
 ffffffflowwl val.type: 1
-ffffffflowwl inst pushed:   br i1 %4, label %5, label %10
-ffffffflowwl succ pushed:   %6 = fcmp olt double %0, 0.000000e+00
-ffffffflowwl inst pushed:   br i1 %4, label %5, label %10
-ffffffflowwl succ pushed:   %.0 = phi double [ %9, %5 ], [ %2, %1 ]
-visit phi inst:   %.0 = phi double [ %9, %5 ], [ %2, %1 ]
-0,incoming:   %9 = fsub double %2, %8
-edge not in execflag!!
-1,incoming:   %2 = call double @fmod(double noundef %0, double noundef 0x401921FB54442D18) #5
-MMMMMMMMMMnewtype = 1
-no constant
-!!!!! changed, added here
-visiting inst:   ret double %.0
-NONONONO NONOMONO return bottom
-ffffffflowwl val.type: 1
-ffffffflowwl inst pushed:   ret double %.0
-ffffffflowwl succ pushed: null!
-visiting inst:   %6 = fcmp olt double %0, 0.000000e+00
-NONONONO NONOMONO return bottom
-visiting inst:   %7 = zext i1 %6 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %8 = select i1 %6, double 0xC01921FB54442D18, double 0x401921FB54442D18
-really const1 yes????
-NONONONO NONOMONO return bottom
-visiting inst:   %9 = fsub double %2, %8
-NONONONO NONOMONO return bottom
-visiting inst:   br label %10
-NONONONO NONOMONO return bottom
-ffffffflowwl val.type: 1
-ffffffflowwl inst pushed:   br label %10
-ffffffflowwl succ pushed:   %.0 = phi double [ %9, %5 ], [ %2, %1 ]
-visit phi inst:   %.0 = phi double [ %9, %5 ], [ %2, %1 ]
-0,incoming:   %9 = fsub double %2, %8
-MMMMMMMMMMnewtype = 1
-no constant
-1,incoming:   %2 = call double @fmod(double noundef %0, double noundef 0x401921FB54442D18) #5
-MMMMMMMMMMnewtype = 1
-no constant
-visit phi inst:   %.0 = phi double [ %9, %5 ], [ %2, %1 ]
-0,incoming:   %9 = fsub double %2, %8
-MMMMMMMMMMnewtype = 1
-no constant
-1,incoming:   %2 = call double @fmod(double noundef %0, double noundef 0x401921FB54442D18) #5
-MMMMMMMMMMnewtype = 1
-no constant
-visiting inst:   %9 = fsub double %2, %8
-NONONONO NONOMONO return bottom
-visiting inst:   %7 = zext i1 %6 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %8 = select i1 %6, double 0xC01921FB54442D18, double 0x401921FB54442D18
-really const1 yes????
-NONONONO NONOMONO return bottom
-visiting inst:   ret double %.0
-NONONONO NONOMONO return bottom
-visiting inst:   br i1 %4, label %5, label %10
-NONONONO NONOMONO return bottom
-visiting inst:   %4 = fcmp oge double %3, 0x400921FB54442D18
-NONONONO NONOMONO return bottom
-visiting inst:   %3 = call double @llvm.fabs.f64(double %2)
-NONONONO NONOMONO return bottom
-visiting inst:   %9 = fsub double %2, %8
-NONONONO NONOMONO return bottom
-visit phi inst:   %.0 = phi double [ %9, %5 ], [ %2, %1 ]
-0,incoming:   %9 = fsub double %2, %8
-MMMMMMMMMMnewtype = 1
-no constant
-1,incoming:   %2 = call double @fmod(double noundef %0, double noundef 0x401921FB54442D18) #5
-MMMMMMMMMMnewtype = 1
-no constant
-visiting inst:   %4 = getelementptr inbounds double, ptr %0, i64 0
-NONONONO NONOMONO return bottom
-visiting inst:   %5 = load double, ptr %4, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %6 = fsub double %5, 0x4142B42C80000000
-NONONONO NONOMONO return bottom
-visiting inst:   %7 = getelementptr inbounds double, ptr %0, i64 1
-NONONONO NONOMONO return bottom
-visiting inst:   %8 = load double, ptr %7, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %9 = fadd double %6, %8
-NONONONO NONOMONO return bottom
-visiting inst:   %10 = fdiv double %9, 3.652500e+05
-NONONONO NONOMONO return bottom
-visiting inst:   %11 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %12 = getelementptr inbounds [8 x [3 x double]], ptr @a, i64 0, i64 %11
-NONONONO NONOMONO return bottom
-visiting inst:   %13 = getelementptr inbounds [3 x double], ptr %12, i64 0, i64 0
-NONONONO NONOMONO return bottom
-visiting inst:   %14 = load double, ptr %13, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %15 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %16 = getelementptr inbounds [8 x [3 x double]], ptr @a, i64 0, i64 %15
-NONONONO NONOMONO return bottom
-visiting inst:   %17 = getelementptr inbounds [3 x double], ptr %16, i64 0, i64 1
-NONONONO NONOMONO return bottom
-visiting inst:   %18 = load double, ptr %17, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %19 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %20 = getelementptr inbounds [8 x [3 x double]], ptr @a, i64 0, i64 %19
-NONONONO NONOMONO return bottom
-visiting inst:   %21 = getelementptr inbounds [3 x double], ptr %20, i64 0, i64 2
-NONONONO NONOMONO return bottom
-visiting inst:   %22 = load double, ptr %21, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %23 = call double @llvm.fmuladd.f64(double %22, double %10, double %18)
-NONONONO NONOMONO return bottom
-visiting inst:   %24 = call double @llvm.fmuladd.f64(double %23, double %10, double %14)
-NONONONO NONOMONO return bottom
-visiting inst:   %25 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %26 = getelementptr inbounds [8 x [3 x double]], ptr @dlm, i64 0, i64 %25
-NONONONO NONOMONO return bottom
-visiting inst:   %27 = getelementptr inbounds [3 x double], ptr %26, i64 0, i64 0
-NONONONO NONOMONO return bottom
-visiting inst:   %28 = load double, ptr %27, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %29 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %30 = getelementptr inbounds [8 x [3 x double]], ptr @dlm, i64 0, i64 %29
-NONONONO NONOMONO return bottom
-visiting inst:   %31 = getelementptr inbounds [3 x double], ptr %30, i64 0, i64 1
-NONONONO NONOMONO return bottom
-visiting inst:   %32 = load double, ptr %31, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %33 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %34 = getelementptr inbounds [8 x [3 x double]], ptr @dlm, i64 0, i64 %33
-NONONONO NONOMONO return bottom
-visiting inst:   %35 = getelementptr inbounds [3 x double], ptr %34, i64 0, i64 2
-NONONONO NONOMONO return bottom
-visiting inst:   %36 = load double, ptr %35, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %37 = call double @llvm.fmuladd.f64(double %36, double %10, double %32)
-NONONONO NONOMONO return bottom
-visiting inst:   %38 = fmul double %37, %10
-NONONONO NONOMONO return bottom
-visiting inst:   %39 = call double @llvm.fmuladd.f64(double 3.600000e+03, double %28, double %38)
-NONONONO NONOMONO return bottom
-visiting inst:   %40 = fmul double %39, 0x3ED455A5B2FF8F9D
-NONONONO NONOMONO return bottom
-visiting inst:   %41 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %42 = getelementptr inbounds [8 x [3 x double]], ptr @e, i64 0, i64 %41
-NONONONO NONOMONO return bottom
-visiting inst:   %43 = getelementptr inbounds [3 x double], ptr %42, i64 0, i64 0
-NONONONO NONOMONO return bottom
-visiting inst:   %44 = load double, ptr %43, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %45 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %46 = getelementptr inbounds [8 x [3 x double]], ptr @e, i64 0, i64 %45
-NONONONO NONOMONO return bottom
-visiting inst:   %47 = getelementptr inbounds [3 x double], ptr %46, i64 0, i64 1
-NONONONO NONOMONO return bottom
-visiting inst:   %48 = load double, ptr %47, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %49 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %50 = getelementptr inbounds [8 x [3 x double]], ptr @e, i64 0, i64 %49
-NONONONO NONOMONO return bottom
-visiting inst:   %51 = getelementptr inbounds [3 x double], ptr %50, i64 0, i64 2
-NONONONO NONOMONO return bottom
-visiting inst:   %52 = load double, ptr %51, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %53 = call double @llvm.fmuladd.f64(double %52, double %10, double %48)
-NONONONO NONOMONO return bottom
-visiting inst:   %54 = call double @llvm.fmuladd.f64(double %53, double %10, double %44)
-NONONONO NONOMONO return bottom
-visiting inst:   %55 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %56 = getelementptr inbounds [8 x [3 x double]], ptr @pi, i64 0, i64 %55
-NONONONO NONOMONO return bottom
-visiting inst:   %57 = getelementptr inbounds [3 x double], ptr %56, i64 0, i64 0
-NONONONO NONOMONO return bottom
-visiting inst:   %58 = load double, ptr %57, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %59 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %60 = getelementptr inbounds [8 x [3 x double]], ptr @pi, i64 0, i64 %59
-NONONONO NONOMONO return bottom
-visiting inst:   %61 = getelementptr inbounds [3 x double], ptr %60, i64 0, i64 1
-NONONONO NONOMONO return bottom
-visiting inst:   %62 = load double, ptr %61, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %63 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %64 = getelementptr inbounds [8 x [3 x double]], ptr @pi, i64 0, i64 %63
-NONONONO NONOMONO return bottom
-visiting inst:   %65 = getelementptr inbounds [3 x double], ptr %64, i64 0, i64 2
-NONONONO NONOMONO return bottom
-visiting inst:   %66 = load double, ptr %65, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %67 = call double @llvm.fmuladd.f64(double %66, double %10, double %62)
-NONONONO NONOMONO return bottom
-visiting inst:   %68 = fmul double %67, %10
-NONONONO NONOMONO return bottom
-visiting inst:   %69 = call double @llvm.fmuladd.f64(double 3.600000e+03, double %58, double %68)
-NONONONO NONOMONO return bottom
-visiting inst:   %70 = fmul double %69, 0x3ED455A5B2FF8F9D
-NONONONO NONOMONO return bottom
-visiting inst:   %71 = call double @anpm(double noundef %70)
-NONONONO NONOMONO return bottom
-visiting inst:   %72 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %73 = getelementptr inbounds [8 x [3 x double]], ptr @dinc, i64 0, i64 %72
-NONONONO NONOMONO return bottom
-visiting inst:   %74 = getelementptr inbounds [3 x double], ptr %73, i64 0, i64 0
-NONONONO NONOMONO return bottom
-visiting inst:   %75 = load double, ptr %74, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %76 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %77 = getelementptr inbounds [8 x [3 x double]], ptr @dinc, i64 0, i64 %76
-NONONONO NONOMONO return bottom
-visiting inst:   %78 = getelementptr inbounds [3 x double], ptr %77, i64 0, i64 1
-NONONONO NONOMONO return bottom
-visiting inst:   %79 = load double, ptr %78, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %80 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %81 = getelementptr inbounds [8 x [3 x double]], ptr @dinc, i64 0, i64 %80
-NONONONO NONOMONO return bottom
-visiting inst:   %82 = getelementptr inbounds [3 x double], ptr %81, i64 0, i64 2
-NONONONO NONOMONO return bottom
-visiting inst:   %83 = load double, ptr %82, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %84 = call double @llvm.fmuladd.f64(double %83, double %10, double %79)
-NONONONO NONOMONO return bottom
-visiting inst:   %85 = fmul double %84, %10
-NONONONO NONOMONO return bottom
-visiting inst:   %86 = call double @llvm.fmuladd.f64(double 3.600000e+03, double %75, double %85)
-NONONONO NONOMONO return bottom
-visiting inst:   %87 = fmul double %86, 0x3ED455A5B2FF8F9D
-NONONONO NONOMONO return bottom
-visiting inst:   %88 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %89 = getelementptr inbounds [8 x [3 x double]], ptr @omega, i64 0, i64 %88
-NONONONO NONOMONO return bottom
-visiting inst:   %90 = getelementptr inbounds [3 x double], ptr %89, i64 0, i64 0
-NONONONO NONOMONO return bottom
-visiting inst:   %91 = load double, ptr %90, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %92 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %93 = getelementptr inbounds [8 x [3 x double]], ptr @omega, i64 0, i64 %92
-NONONONO NONOMONO return bottom
-visiting inst:   %94 = getelementptr inbounds [3 x double], ptr %93, i64 0, i64 1
-NONONONO NONOMONO return bottom
-visiting inst:   %95 = load double, ptr %94, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %96 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %97 = getelementptr inbounds [8 x [3 x double]], ptr @omega, i64 0, i64 %96
-NONONONO NONOMONO return bottom
-visiting inst:   %98 = getelementptr inbounds [3 x double], ptr %97, i64 0, i64 2
-NONONONO NONOMONO return bottom
-visiting inst:   %99 = load double, ptr %98, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %100 = call double @llvm.fmuladd.f64(double %99, double %10, double %95)
-NONONONO NONOMONO return bottom
-visiting inst:   %101 = fmul double %100, %10
-NONONONO NONOMONO return bottom
-visiting inst:   %102 = call double @llvm.fmuladd.f64(double 3.600000e+03, double %91, double %101)
-NONONONO NONOMONO return bottom
-visiting inst:   %103 = fmul double %102, 0x3ED455A5B2FF8F9D
-NONONONO NONOMONO return bottom
-visiting inst:   %104 = call double @anpm(double noundef %103)
-NONONONO NONOMONO return bottom
-visiting inst:   %105 = fmul double 0x3FD702A41F2E9970, %10
-NONONONO NONOMONO return bottom
-visiting inst:   br label %106
-NONONONO NONOMONO return bottom
-ffffffflowwl val.type: 1
-ffffffflowwl inst pushed:   br label %106
-ffffffflowwl succ pushed:   %.03 = phi i32 [ 0, %3 ], [ %151, %108 ]
-visit phi inst:   %.03 = phi i32 [ 0, %3 ], [ %151, %108 ]
+ffffffflowwl inst pushed:   br label %2
+ffffffflowwl succ pushed:   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+visit phi inst:   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+--- now latcell:
+1
+  br label %2, type: 1, name = , v =   br label %2
 0,incoming: i32 0
 MMMMMMMMMMnewtype = 2
 incoming constant
 !!!!! changed, added here
-1,incoming:   %151 = add nsw i32 %.03, 1
+1,incoming:   %3 = add nsw i32 %.0, 1
 edge not in execflag!!
-visit phi inst:   %.02 = phi double [ %24, %3 ], [ %135, %108 ]
-0,incoming:   %24 = call double @llvm.fmuladd.f64(double %23, double %10, double %14)
-MMMMMMMMMMnewtype = 1
-no constant
-!!!!! changed, added here
-1,incoming:   %135 = call double @llvm.fmuladd.f64(double %134, double 0x3E7AD7F29ABCAF48, double %.02)
-edge not in execflag!!
-visit phi inst:   %.01 = phi double [ %40, %3 ], [ %150, %108 ]
-0,incoming:   %40 = fmul double %39, 0x3ED455A5B2FF8F9D
-MMMMMMMMMMnewtype = 1
-no constant
-!!!!! changed, added here
-1,incoming:   %150 = call double @llvm.fmuladd.f64(double %149, double 0x3E7AD7F29ABCAF48, double %.01)
-edge not in execflag!!
-visiting inst:   %107 = icmp slt i32 %.03, 8
-NONONONO NONOMONO return bottom
-visiting inst:   br i1 %107, label %108, label %152
-NONONONO NONOMONO return bottom
-ffffffflowwl val.type: 1
-ffffffflowwl inst pushed:   br i1 %107, label %108, label %152
-ffffffflowwl succ pushed:   %109 = sext i32 %1 to i64
-ffffffflowwl inst pushed:   br i1 %107, label %108, label %152
-ffffffflowwl succ pushed:   %153 = sext i32 %1 to i64
-visiting inst:   %153 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %154 = getelementptr inbounds [8 x [9 x double]], ptr @kp, i64 0, i64 %153
-NONONONO NONOMONO return bottom
-visiting inst:   %155 = getelementptr inbounds [9 x double], ptr %154, i64 0, i64 8
-NONONONO NONOMONO return bottom
-visiting inst:   %156 = load double, ptr %155, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %157 = fmul double %156, %105
-NONONONO NONOMONO return bottom
-visiting inst:   %158 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %159 = getelementptr inbounds [8 x [9 x double]], ptr @ca, i64 0, i64 %158
-NONONONO NONOMONO return bottom
-visiting inst:   %160 = getelementptr inbounds [9 x double], ptr %159, i64 0, i64 8
-NONONONO NONOMONO return bottom
-visiting inst:   %161 = load double, ptr %160, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %162 = call double @cos(double noundef %157) #5
-NONONONO NONOMONO return bottom
-visiting inst:   %163 = sext i32 %1 to i64
-NONONONO NONOMONO return bottom
-visiting inst:   %164 = getelementptr inbounds [8 x [9 x double]], ptr @sa, i64 0, i64 %163
-NONONONO NONOMONO return bottom
-visiting inst:   %165 = getelementptr inbounds [9 x double], ptr %164, i64 0, i64 8
-NONONONO NONOMONO return bottom
-visiting inst:   %166 = load double, ptr %165, align 8
-NONONONO NONOMONO return bottom
-visiting inst:   %167 = call double @sin(double noundef %157) #5
-NONONONO NONOMONO return bottom
-visiting inst:   %168 = fmul double %166, %167
-NONONONO NONOMONO return bottom
-visiting inst:   %169 = call double @llvm.fmuladd.f64(double %161, double %162, double %168)
-NONONONO NONOMONO return bottom
-visiting inst:   %170 = fmul double %10, %169
-NONONONO NONOMONO return bottom
-visiting inst:   %171 = call double @llvm.fmuladd.f64(double %170, double 0x3E7AD7F29ABCAF48, double %.02)
-NONONONO NONOMONO return bottom
-visiting inst:   br label %172
-NONONONO NONOMONO return bottom
-ffffffflowwl val.type: 1
-ffffffflowwl inst pushed:   br label %172
-ffffffflowwl succ pushed:   %.14 = phi i32 [ 8, %152 ], [ %197, %174 ]
-visit phi inst:   %.14 = phi i32 [ 8, %152 ], [ %197, %174 ]
-0,incoming: i32 8
-MMMMMMMMMMnewtype = 2
-incoming constant
-!!!!! changed, added here
-1,incoming:   %197 = add nsw i32 %.14, 1
-edge not in execflag!!
-visit phi inst:   %.1 = phi double [ %.01, %152 ], [ %196, %174 ]
-0,incoming:   %.01 = phi double [ %40, %3 ], [ %150, %108 ]
-MMMMMMMMMMnewtype = 1
-no constant
-!!!!! changed, added here
-1,incoming:   %196 = call double @llvm.fmuladd.f64(double %195, double 0x3E7AD7F29ABCAF48, double %.1)
-edge not in execflag!!
-visiting inst:   %173 = icmp sle i32 %.14, 9
-NONONONO NONOMONO return bottom
-visiting inst:   br i1 %173, label %174, label %198
-NONONONO NONOMONO return bottom
-ffffffflowwl val.type: 1
-ffffffflowwl inst pushed:   br i1 %173, label %174, label %198
-ffffffflowwl succ pushed:   %175 = sext i32 %1 to i64
-ffffffflowwl inst pushed:   br i1 %173, label %174, label %198
-ffffffflowwl succ pushed:   %199 = call double @fmod(double noundef %.1, double noundef 0x401921FB54442D18) #5
-visiting inst:   %199 = call double @fmod(double noundef %.1, double noundef 0x401921FB54442D18) #5
-NONONONO NONOMONO return bottom
-visiting inst:   %200 = fsub double %199, %71
-NONONONO NONOMONO return bottom
-visiting inst:   %201 = call double @sin(double noundef %200) #5
-NONONONO NONOMONO return bottom
-visiting inst:   %202 = call double @llvm.fmuladd.f64(double %54, double %201, double %200)
-NONONONO NONOMONO return bottom
-visiting inst:   br label %203
-NONONONO NONOMONO return bottom
-ffffffflowwl val.type: 1
-ffffffflowwl inst pushed:   br label %203
-ffffffflowwl succ pushed:   %.2 = phi i32 [ 0, %198 ], [ %212, %203 ]
-visit phi inst:   %.2 = phi i32 [ 0, %198 ], [ %212, %203 ]
-0,incoming: i32 0
-MMMMMMMMMMnewtype = 2
-incoming constant
-!!!!! changed, added here
-1,incoming:   %212 = add nsw i32 %.2, 1
-edge not in execflag!!
-visit phi inst:   %.0 = phi double [ %202, %198 ], [ %211, %203 ]
-0,incoming:   %202 = call double @llvm.fmuladd.f64(double %54, double %201, double %200)
-MMMMMMMMMMnewtype = 1
-no constant
-!!!!! changed, added here
-1,incoming:   %211 = fadd double %.0, %210
-edge not in execflag!!
-visiting inst:   %204 = fsub double %200, %.0
-opInstr2:   %.0 = phi double [ %202, %198 ], [ %211, %203 ]
-NNNNNOOOOOOOOOOOOOOOO
-NONONONO NONOMONO return bottom
-visiting inst:   %205 = call double @sin(double noundef %.0) #5
-NONONONO NONOMONO return bottom
-visiting inst:   %206 = call double @llvm.fmuladd.f64(double %54, double %205, double %204)
-NONONONO NONOMONO return bottom
-visiting inst:   %207 = call double @cos(double noundef %.0) #5
-NONONONO NONOMONO return bottom
-visiting inst:   %208 = fneg double %54
-NONONONO NONOMONO return bottom
-visiting inst:   %209 = call double @llvm.fmuladd.f64(double %208, double %207, double 1.000000e+00)
-NONONONO NONOMONO return bottom
-visiting inst:   %210 = fdiv double %206, %209
-NONONONO NONOMONO return bottom
-visiting inst:   %211 = fadd double %.0, %210
-opInstr1:   %.0 = phi double [ %202, %198 ], [ %211, %203 ]
-NNNNNOOOOOOOOOOOOOOOO
-NONONONO NONOMONO return bottom
-visiting inst:   %212 = add nsw i32 %.2, 1
-opInstr1:   %.2 = phi i32 [ 0, %198 ], [ %212, %203 ]
+visiting inst:   %3 = add nsw i32 %.0, 1
+--- in eval latcell:
+2
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 2, name = .0, v = i32 0
+opInstr1:   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
 const phi 1 found to be a const!!
 binaryOp const!!
-visiting inst:   %213 = icmp sge i32 %212, 10
+visiting inst:   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+--- in eval latcell:
+3
+  %3 = add nsw i32 %.0, 1, type: 2, name = , v = i32 1
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 2, name = .0, v = i32 0
+NONONONO NONOMONO return bottom
+visiting inst:   %5 = icmp sge i32 %3, 3
+--- in eval latcell:
+4
+  %3 = add nsw i32 %.0, 1, type: 2, name = , v = i32 1
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 2, name = .0, v = i32 0
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+found const in map! i32 1
 icmp const!!
-visiting inst:   %214 = call double @llvm.fabs.f64(double %210)
+visiting inst:   br i1 %5, label %6, label %2
+--- in eval latcell:
+5
+  %3 = add nsw i32 %.0, 1, type: 2, name = , v = i32 1
+  %5 = icmp sge i32 %3, 3, type: 2, name = , v = i1 false
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 2, name = .0, v = i32 0
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+branch const!! 0
 NONONONO NONOMONO return bottom
-visiting inst:   %215 = fcmp olt double %214, 0x3D719799812DEA11
+ffffffflowwl val.type: 1
+ffffffflowwl inst pushed:   br i1 %5, label %2, label %2
+ffffffflowwl succ pushed:   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+visit phi inst:   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+--- now latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 2, name = , v = i32 1
+  %5 = icmp sge i32 %3, 3, type: 2, name = , v = i1 false
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 2, name = .0, v = i32 0
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+0,incoming: i32 0
+MMMMMMMMMMnewtype = 2
+prev constant
+1,incoming:   %3 = add nsw i32 %.0, 1
+MMMMMMMMMMnewtype = 1
+prev constant
+!!!!! changed, added here
+visiting inst:   %3 = add nsw i32 %.0, 1
+--- in eval latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 2, name = , v = i32 1
+  %5 = icmp sge i32 %3, 3, type: 2, name = , v = i1 false
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v = i32 0
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+opInstr1:   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+NNNNNOOOOOOOOOOOOOOOO
 NONONONO NONOMONO return bottom
-visiting inst:   %or.cond = select i1 %213, i1 true, i1 %215
-really const1 yes????
-visiting inst:   br i1 %or.cond, label %216, label %203
+remove from map!!
+visit phi inst:   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+--- now latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 1, name = , v =   %3 = add nsw i32 %.0, 1
+  %5 = icmp sge i32 %3, 3, type: 2, name = , v = i1 false
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v = i32 0
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+0,incoming: i32 0
+MMMMMMMMMMnewtype = 1
+incoming constant
+1,incoming:   %3 = add nsw i32 %.0, 1
+MMMMMMMMMMnewtype = 1
+no constant
+!!!!! changed, added here
+visiting inst:   %3 = add nsw i32 %.0, 1
+--- in eval latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 1, name = , v =   %3 = add nsw i32 %.0, 1
+  %5 = icmp sge i32 %3, 3, type: 2, name = , v = i1 false
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v =   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+opInstr1:   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+NNNNNOOOOOOOOOOOOOOOO
+NONONONO NONOMONO return bottom
+visiting inst:   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+--- in eval latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 1, name = , v =   %3 = add nsw i32 %.0, 1
+  %5 = icmp sge i32 %3, 3, type: 2, name = , v = i1 false
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v =   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+NONONONO NONOMONO return bottom
+visiting inst:   %5 = icmp sge i32 %3, 3
+--- in eval latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 1, name = , v =   %3 = add nsw i32 %.0, 1
+  %5 = icmp sge i32 %3, 3, type: 2, name = , v = i1 false
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v =   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+NONONONO NONOMONO return bottom
+remove from map!!
+visiting inst:   br i1 %5, label %2, label %2
+--- in eval latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 1, name = , v =   %3 = add nsw i32 %.0, 1
+  %5 = icmp sge i32 %3, 3, type: 1, name = , v =   %5 = icmp sge i32 %3, 3
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v =   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+NONONONO NONOMONO return bottom
+visiting inst:   br i1 %5, label %2, label %2
+--- in eval latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 1, name = , v =   %3 = add nsw i32 %.0, 1
+  %5 = icmp sge i32 %3, 3, type: 1, name = , v =   %5 = icmp sge i32 %3, 3
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v =   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+NONONONO NONOMONO return bottom
+visit phi inst:   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+--- now latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 1, name = , v =   %3 = add nsw i32 %.0, 1
+  %5 = icmp sge i32 %3, 3, type: 1, name = , v =   %5 = icmp sge i32 %3, 3
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v =   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+0,incoming: i32 0
+MMMMMMMMMMnewtype = 1
+incoming constant
+!!!!! changed, added here
+1,incoming:   %3 = add nsw i32 %.0, 1
+MMMMMMMMMMnewtype = 1
+no constant
+!!!!! changed, added here
+visiting inst:   %3 = add nsw i32 %.0, 1
+--- in eval latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 1, name = , v =   %3 = add nsw i32 %.0, 1
+  %5 = icmp sge i32 %3, 3, type: 1, name = , v =   %5 = icmp sge i32 %3, 3
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v =   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+opInstr1:   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+NNNNNOOOOOOOOOOOOOOOO
+NONONONO NONOMONO return bottom
+visiting inst:   %3 = add nsw i32 %.0, 1
+--- in eval latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 1, name = , v =   %3 = add nsw i32 %.0, 1
+  %5 = icmp sge i32 %3, 3, type: 1, name = , v =   %5 = icmp sge i32 %3, 3
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v =   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+opInstr1:   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+NNNNNOOOOOOOOOOOOOOOO
+NONONONO NONOMONO return bottom
+visiting inst:   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+--- in eval latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 1, name = , v =   %3 = add nsw i32 %.0, 1
+  %5 = icmp sge i32 %3, 3, type: 1, name = , v =   %5 = icmp sge i32 %3, 3
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v =   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+NONONONO NONOMONO return bottom
+visiting inst:   %5 = icmp sge i32 %3, 3
+--- in eval latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 1, name = , v =   %3 = add nsw i32 %.0, 1
+  %5 = icmp sge i32 %3, 3, type: 1, name = , v =   %5 = icmp sge i32 %3, 3
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v =   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+NONONONO NONOMONO return bottom
+visiting inst:   %3 = add nsw i32 %.0, 1
+--- in eval latcell:
+6
+  %3 = add nsw i32 %.0, 1, type: 1, name = , v =   %3 = add nsw i32 %.0, 1
+  %5 = icmp sge i32 %3, 3, type: 1, name = , v =   %5 = icmp sge i32 %3, 3
+  br label %2, type: 1, name = , v =   br label %2
+  %.0 = phi i32 [ 0, %1 ], [ %3, %2 ], type: 1, name = .0, v =   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+  %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3), type: 1, name = , v =   %4 = call i32 (ptr, ...) @printf(ptr noundef @.str, i32 noundef %3)
+  br i1 %5, label %2, label %2, type: 1, name = , v =   br i1 %5, label %2, label %2
+opInstr1:   %.0 = phi i32 [ 0, %1 ], [ %3, %2 ]
+NNNNNOOOOOOOOOOOOOOOO
+NONONONO NONOMONO return bottom
+visiting inst:   call void @whileloop(i32 noundef 8)
+--- in eval latcell:
+0
+NONONONO NONOMONO return bottom
+ffffffflowwl val.type: 1
+ffffffflowwl inst pushed:   call void @whileloop(i32 noundef 8)
+ffffffflowwl succ pushed:   ret i32 0
+visiting inst:   ret i32 0
+--- in eval latcell:
+1
+  call void @whileloop(i32 noundef 8), type: 1, name = , v =   call void @whileloop(i32 noundef 8)
+NONONONO NONOMONO return bottom
+ffffffflowwl val.type: 1
+ffffffflowwl inst pushed:   ret i32 0
+ffffffflowwl succ pushed: null!
+i=1
+i=2
+i=3
+i=4
+i=5
+i=6
+i=7
+i=8
+i=9

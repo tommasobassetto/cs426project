@@ -50,22 +50,22 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
   // check https://llvm.org/doxygen/classllvm_1_1Interpreter.html
   // note: visit instruction is built in
   // handle binary ops
-  // outs() << "--- in eval latcell:\n";
-// outs()<< latCell.size()<< "\n";
-//     for (const auto &edge : latCell) {
-//         Instruction *source = edge.first;
-//         auto type = edge.second.type;
-//         auto varname = edge.second.varname;
-//         auto value = edge.second.value;
+  outs() << "--- in eval latcell:\n";
+outs()<< latCell.size()<< "\n";
+    for (const auto &edge : latCell) {
+        Instruction *source = edge.first;
+        auto type = edge.second.type;
+        auto varname = edge.second.varname;
+        auto value = edge.second.value;
 
 
-//         outs() << *source;
-//         outs()  <<", type: " << type;
-//          outs()  << ", name = " << varname;
-//          if(value)
-//          outs() << ", v = " << *value << "\n";
-//          else outs() <<", v = null!\n";
-//     }
+        outs() << *source;
+        outs()  <<", type: " << type;
+         outs()  << ", name = " << varname;
+         if(value)
+         outs() << ", v = " << *value << "\n";
+         else outs() <<", v = null!\n";
+    }
 
   if (BinaryOperator *binaryOp = dyn_cast<BinaryOperator>(inst)){
     Value *op1 = binaryOp->getOperand(0);
@@ -416,6 +416,8 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
       if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
         // in our map
         const1 = const_value_->second.value;
+                outs()<< "found const in map! " << *const1 << "\n";
+
       }
       if (!const1){
         if(auto opInstr = dyn_cast<Instruction>(op1)){
@@ -546,13 +548,13 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
       numBBUnreachable ++;
       bool pred_value = dyn_cast<ConstantInt>(const_pred)->getSExtValue();
       outs() << "branch const!! "<< pred_value << "\n";
-      if (pred_value == true){
-        branchInst->setSuccessor(1, branchInst->getSuccessor(0));
-      }
-      else{
-        // false
-        branchInst->setSuccessor(0, branchInst->getSuccessor(1));
-      }
+      // if (pred_value == true){
+      //   branchInst->setSuccessor(1, branchInst->getSuccessor(0));
+      // }
+      // else{
+      //   // false
+      //   branchInst->setSuccessor(0, branchInst->getSuccessor(1));
+      // }
     }
   }
   else if (SelectInst *selectInst = dyn_cast<SelectInst>(inst)){
@@ -659,6 +661,11 @@ UnitSCCPInfo::Value_ UnitSCCPInfo::evaluate(Instruction *inst) {
     outs() << "NONONONO NONOMONO return bottom\n";
     value = UnitSCCPInfo::Value_(UnitSCCPInfo::BOTTOM, inst->getName().str(), inst);
   }
+  if(constant_map.count(inst)){
+    outs() << "remove from map!!\n";
+    
+    constant_map.erase(inst);
+  }
   // value.type = UnitSCCPInfo::BOTTOM;
   return value;
 }
@@ -733,23 +740,23 @@ void UnitSCCPInfo::visitPhi(Instruction *inst) {
   PHINode *phi = dyn_cast<PHINode>(inst);
   unsigned numOperands = phi->getNumIncomingValues();
   outs() << "visit phi inst: " << *inst << "\n";
-//   outs() << "--- now latcell:\n";
-// outs()<< latCell.size()<< "\n";
-//     for (const auto &edge : latCell) {
-//         Instruction *source = edge.first;
-//         auto type = edge.second.type;
-//         auto varname = edge.second.varname;
-//         auto value = edge.second.value;
+  outs() << "--- now latcell:\n";
+outs()<< latCell.size()<< "\n";
+    for (const auto &edge : latCell) {
+        Instruction *source = edge.first;
+        auto type = edge.second.type;
+        auto varname = edge.second.varname;
+        auto value = edge.second.value;
 
-//       if (type == CONSTANT){
-//         outs() << *source;
-//         outs()  <<", type: " << type;
-//          outs()  << ", name = " << varname;
-//          if(value)
-//          outs() << ", v = " << *value << "\n";
-//          else outs() <<", v = null!\n";
-//       }
-//     }
+      if (1){
+        outs() << *source;
+        outs()  <<", type: " << type;
+         outs()  << ", name = " << varname;
+         if(value)
+         outs() << ", v = " << *value << "\n";
+         else outs() <<", v = null!\n";
+      }
+    }
 
   // outs() << "---now execflags: "  << "\n";
   //   for (const auto &edge : execFlags) {
@@ -849,6 +856,8 @@ void UnitSCCPInfo::visitPhi(Instruction *inst) {
         else{ // no constant
           newVal = Value_(newType, inst->getName().str(), inst);
           outs() << "no constant\n";
+          // remove from const map
+          // constant_map.erase()
         }
         
         latCell[inst] = newVal;
