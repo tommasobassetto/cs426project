@@ -1,49 +1,49 @@
-void whileloop (int n){
-  // float a=444;
-  int i=0;
-  while(1){
-    i=i+1;
-    printf("i=%d\n",i);
-    // a=a-8;
-    if(i>=3) break;
-  }
-}
-int main(){
-  whileloop(8);
-}
-
-// #include <stdlib.h>
-// #include <stdio.h>
-// int foo(int n) {
-//   int i = 1;
-//   int j;
-//   do {
-//     j = i + 1;
-//     // i = rand() % 4 - (1 + j) + n;
-//     i = j+n;
-//     if (j > 0) i = j;
-//   } while (j < 2);
-//   return i;
+// void whileloop (int n){
+//   float a=444;
+//   int i=0;
+//   while(1){
+//     i=i+1;
+//     printf("i=%d\n",i);
+//     a=a-8;
+//     if(i>=3||a>555) break;
+//   }
+// }
+// int main(){
+//   whileloop(8);
 // }
 
-// int main() {
-//     // float ret;
-//     // float a=3+1;
-//     // float b=1+1;
-//     // if(a<b){
-//     //     ret=1;
-//     // }
-//     // else{
-//     //     ret=2;
-//     // }
-//     // ret = ret+9;
-//     // ret = bitcast(-3);
-//     // ret = icmp(3);
-//     // printf("in c, ret = %f\n", ret);
-//     printf("in c, ret = %d\n", foo(2));
-//     return 0;
-//     // printf("sum of all array elements plus 2 was %d", sum);
-// }
+#include <stdlib.h>
+#include <stdio.h>
+int foo(int n) {
+  int i = 1;
+  int j;
+  do {
+    j = i + 1;
+    // i = rand() % 4 - (1 + j) + n;
+    i = j+n;
+    if (j > 0) i = j;
+  } while (j < 2);
+  return i;
+}
+
+int main() {
+    // float ret;
+    // float a=3+1;
+    // float b=1+1;
+    // if(a<b){
+    //     ret=1;
+    // }
+    // else{
+    //     ret=2;
+    // }
+    // ret = ret+9;
+    // ret = bitcast(-3);
+    // ret = icmp(3);
+    // printf("in c, ret = %f\n", ret);
+    printf("in c, ret = %d\n", foo(2));
+    return 0;
+    // printf("sum of all array elements plus 2 was %d", sum);
+}
 
 // #include <stdio.h>
 // int calc (int n){

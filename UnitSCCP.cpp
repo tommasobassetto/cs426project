@@ -88,12 +88,15 @@ outs()<< latCell.size()<< "\n";
       if (!const1){
         if(dyn_cast<PHINode>(op1)){
           auto opInstr = dyn_cast<Instruction>(op1);
-          outs() << "opInstr1: "<< *opInstr << "\n";
-              if(latCell.count(opInstr)){
-            const1 = latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value) ? latCell[opInstr].value : nullptr;
-            if (const1) outs() << "const phi 1 found to be a const!!\n";
-            else {outs() << "NNNNNOOOOOOOOOOOOOOOO\n";}
-          }
+          // outs() << "opInstr1: "<< *opInstr << "\n";
+          //     if(latCell.count(opInstr)){
+          //       if ((latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value)))
+          //       outs() << ".value = " << *latCell[opInstr].value <<"\n";
+          //   // const1 = latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value) ? latCell[opInstr].value : nullptr;
+          //   const1 = (latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value)) ? nullptr : nullptr;
+          //   if (const1) outs() << "const phi 1 found to be a const!!\n";
+          //   else {outs() << "NNNNNOOOOOOOOOOOOOOOO\n";}
+          // }
         }
       }
       else{
@@ -131,7 +134,8 @@ outs()<< latCell.size()<< "\n";
           auto opInstr = dyn_cast<Instruction>(op2);
           outs() << "opInstr2: "<< *opInstr << "\n";
               if(latCell.count(opInstr)){
-            const2 = latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value) ? latCell[opInstr].value : nullptr;
+                    outs() << ".value = " << *latCell[opInstr].value <<"\n";
+        const2 = latCell[opInstr].type == CONSTANT && isa<Constant>(latCell[opInstr].value) ? latCell[opInstr].value : nullptr;
             if (const2) outs() << "const phi 2 found to be a const!!\n";
             else {outs() << "NNNNNOOOOOOOOOOOOOOOO\n";}
           }
@@ -572,14 +576,6 @@ outs()<< latCell.size()<< "\n";
         // in our map
         const1 = const_value_->second.value;
       }
-      if (!const1){
-        if(auto opInstr = dyn_cast<Instruction>(op1)){
-          if(latCell.count(opInstr)){
-            // const1 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            // outs() << "const1 found to be a const!!\n";
-          }
-        }
-      }
     }
     if (isa<Constant>(op2)){
       const2 = op2;
@@ -591,24 +587,8 @@ outs()<< latCell.size()<< "\n";
         // in our map
         const2 = const_value_->second.value;
       }
-      if (!const2){
-        if(auto opInstr = dyn_cast<Instruction>(op2)){
-          if(latCell.count(opInstr)){
-            // const2 = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            // outs() << "const2 found to be a const!!\n";
-          }
-        }
-      }
     }
     // until now const1 and const2 can still be variable
-    if(const1){
-      outs() << "really const1 yes????\n";
-      // selectInst->setTrueValue(const1);
-    }
-    if(const2){
-      // selectInst->setFalseValue(const2);
-    }
-
     Value *const_pred = nullptr;
     Value *pred = selectInst->getCondition();    
     if (isa<Constant>(pred)){
@@ -620,14 +600,6 @@ outs()<< latCell.size()<< "\n";
       if (const_value_ != constant_map.end() && const_value_->second.type == CONSTANT){
         // in our map
         const_pred = const_value_->second.value;
-      }
-      if (!const_pred){
-        if(auto opInstr = dyn_cast<Instruction>(pred)){
-          if(latCell.count(opInstr)){
-            // const_pred = latCell[opInstr].type == CONSTANT ? latCell[opInstr].value : nullptr;
-            // outs() << "const_pred found to be a const!!\n";
-          }
-        }
       }
     }
 
@@ -650,23 +622,11 @@ outs()<< latCell.size()<< "\n";
   }
 
   // default return value, NECESSARY!!
-  Value_ value;
-  // todo: return value!!!!
-  if(0){
-  // if(latCell.count(inst)){
-    outs() << "NONOO return same\n";
-    value = latCell[inst];
-  }
-  else{
-    outs() << "NONONONO NONOMONO return bottom\n";
-    value = UnitSCCPInfo::Value_(UnitSCCPInfo::BOTTOM, inst->getName().str(), inst);
-  }
+  Value_ value(UnitSCCPInfo::BOTTOM, inst->getName().str(), inst);
   if(constant_map.count(inst)){
-    outs() << "remove from map!!\n";
-    
+    // Not a constant anymore -> remove from map
     constant_map.erase(inst);
   }
-  // value.type = UnitSCCPInfo::BOTTOM;
   return value;
 }
 
@@ -699,7 +659,6 @@ bool UnitSCCPInfo::inEdges(Instruction *inst){
 }
 
 void UnitSCCPInfo::visitInst(Instruction *inst) {
-  outs() << "visiting inst: " << *inst <<"\n";
   Value_ val = evaluate(inst);
   Value_ valPrev;
 
@@ -723,12 +682,8 @@ void UnitSCCPInfo::visitInst(Instruction *inst) {
     } else { // S is a branch instruction
       if (val.type == CONSTANT) {
       } else {
-    outs() << "ffffffflowwl val.type: " << val.type <<"\n";
         for (Instruction *successor: successors_(inst)) {
-    outs() << "ffffffflowwl inst pushed: " << *inst <<"\n";
          if(successor)
-         outs() << "ffffffflowwl succ pushed: " << *successor << "\n";
-         else outs() <<"ffffffflowwl succ pushed: null!\n";
           flowWL.push_back(Edge(inst, successor));
         }
       }
@@ -739,133 +694,61 @@ void UnitSCCPInfo::visitInst(Instruction *inst) {
 void UnitSCCPInfo::visitPhi(Instruction *inst) {
   PHINode *phi = dyn_cast<PHINode>(inst);
   unsigned numOperands = phi->getNumIncomingValues();
-  outs() << "visit phi inst: " << *inst << "\n";
-  outs() << "--- now latcell:\n";
-outs()<< latCell.size()<< "\n";
-    for (const auto &edge : latCell) {
-        Instruction *source = edge.first;
-        auto type = edge.second.type;
-        auto varname = edge.second.varname;
-        auto value = edge.second.value;
-
-      if (1){
-        outs() << *source;
-        outs()  <<", type: " << type;
-         outs()  << ", name = " << varname;
-         if(value)
-         outs() << ", v = " << *value << "\n";
-         else outs() <<", v = null!\n";
-      }
-    }
-
-  // outs() << "---now execflags: "  << "\n";
-  //   for (const auto &edge : execFlags) {
-  //       Instruction *source = edge.first.first;
-  //       Instruction *sink = edge.first.second;
-  //       bool value = edge.second;
-
-  //       outs() << *source << " -> " << *sink << ": " << (value ? "true" : "false") << "\n";
-    // }
-  
   for (unsigned i = 0; i < numOperands; ++i) {
     Value *incomingValue = phi->getIncomingValue(i);
-    outs() << i << ",incoming: " << *incomingValue <<"\n";
-    // outs() << i << ",incoming: " << *(dyn_cast<Instruction>(incomingValue)) <<"\n";
-    Instruction *sourceInstr = nullptr;
-    // if (sourceInstr = dyn_cast<Instruction>(incomingValue)){
-    // }
-    // else{
-      // assume to be constant
-      auto incomingBB = phi->getIncomingBlock(i);
-      sourceInstr = incomingBB->getTerminator();
-      // Instruction &sinkInstr = (inst->getParent())->front();
-      auto thisBB = inst->getParent();
-      Instruction &sinkInstr = thisBB->front();
-      UnitSCCPInfo::Edge edge;
-      if(thisBB!=incomingBB){
-        // from 2 branchs
-        edge = UnitSCCPInfo::Edge(incomingBB->getTerminator(),&(thisBB->front()));
-        // edge = UnitSCCPInfo::Edge(incomingBB->getTerminator(),&(thisBB->front()));
-      }
-      else{
-        edge = UnitSCCPInfo::Edge(thisBB->getTerminator(),&(thisBB->front()));
-      }
-    // }
-    assert(sourceInstr);
+    auto incomingBB = phi->getIncomingBlock(i);
+    auto thisBB = inst->getParent();
+    UnitSCCPInfo::Edge edge;
+    if(thisBB!=incomingBB){
+      // from 2 branchs
+      edge = UnitSCCPInfo::Edge(incomingBB->getTerminator(),&(thisBB->front()));
+    }
+    else{
+      edge = UnitSCCPInfo::Edge(thisBB->getTerminator(),&(thisBB->front()));
+    }
     if (execFlags.count(edge)){
-      // outs() << "edge src = " << *sourceInstr << "\n";
       if (execFlags[edge] == true){
         Value_ valPrev;
         try {
           valPrev = latCell.at(inst);
         } catch (const std::out_of_range& e) {
-          // outs() << "inst not found!!\n";
           valPrev = Value_();
           valPrev.type = TOP;
         };
-        // outs() << "value_  = " << (valPrev.value == nullptr) << "\n";
         
         Value_ incomingValue_;
-        // Value* sourceValue = nullptr;
         if (dyn_cast<Instruction>(incomingValue)){
-          // outs() << "source cast!\n";
           // get LatCell(Uk)
-          // try {
-            // incomingValue_ = latCell.at(dyn_cast<Instruction>(incomingValue));
-            // outs() << "found!??==" << (incomingValue_.value == nullptr) << "\n";
-            if (latCell.count(dyn_cast<Instruction>(incomingValue))){
-              incomingValue_ = latCell[dyn_cast<Instruction>(incomingValue)];
-              // outs() << "?found!!!\n";
-              assert(incomingValue_.value);
-            }
-            else{
-              // outs() << "NNNNNNNNNNNNNNot found!==\n" ;
-              incomingValue_ = Value_();
-              incomingValue_.type = TOP;
-            }
-            // }
-          // } catch (const std::out_of_range& e) {
-          //   outs() << "~~~~~~~~~~~~~~out of range!\n";
-          //   incomingValue_ = Value_();
-          //   incomingValue_.type = TOP;
-          // };
+        if (latCell.count(dyn_cast<Instruction>(incomingValue))){
+          incomingValue_ = latCell[dyn_cast<Instruction>(incomingValue)];
+          assert(incomingValue_.value);
+        }
+        else{
+          incomingValue_ = Value_();
+          incomingValue_.type = TOP;
+        }
         }
         else if (isa<Constant>(incomingValue)){
-
-          // sourceValue = incomingValue;
           incomingValue_ = Value_(ValueType::CONSTANT, "", incomingValue);
-          // if (latCell.count(sourceInstr))
-
-          // outs() << "found const!  = " << *(incomingValue_.value) << "\n";
         }
         else{
           incomingValue_ = Value_(ValueType::TOP, "", incomingValue);
-          
         }
         auto newType = meet(valPrev, incomingValue_);
-        outs() << "MMMMMMMMMMnewtype = " << newType << "\n";
         Value_ newVal;
         if (valPrev.type == ValueType::CONSTANT){
           newVal = Value_(newType, inst->getName().str(), valPrev.value);
-          outs() << "prev constant\n";
         }
         else if (incomingValue_.type == ValueType::CONSTANT){
           newVal = Value_(newType, inst->getName().str(), incomingValue);
-          outs() << "incoming constant\n";
         }
         else{ // no constant
           newVal = Value_(newType, inst->getName().str(), inst);
-          outs() << "no constant\n";
-          // remove from const map
-          // constant_map.erase()
         }
-        
         latCell[inst] = newVal;
         if (latCell[inst] != valPrev){
           // add SSAOutEdges(S) to SSAWL
-          outs() <<"!!!!! changed, added here\n";
           for (User *user: inst->users()) {
-            // outs() <<"user:" << *dyn_cast<Instruction>(user) <<"\n";
             ssaWL.push_back(
               Edge(inst, dyn_cast<Instruction>(user))
             );
@@ -877,7 +760,7 @@ outs()<< latCell.size()<< "\n";
       }
     }
     else{
-      outs() << "edge not in execflag!!\n";
+      // outs() << "edge not in execflag!!\n";
     }
   }
 }
@@ -950,7 +833,6 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
       Sccp.ssaWL.pop_back();
 
       if (isa<PHINode>(edge.second)) {
-        // outs() << "call phi from 2\n";
         Sccp.visitPhi(edge.second);
       } else if (Sccp.inEdges(edge.second)) { // if (E->sink has 1 or more executable in-edges)
         Sccp.visitInst(edge.second);
@@ -964,12 +846,11 @@ PreservedAnalyses UnitSCCP::run(Function& F, FunctionAnalysisManager& FAM) {
       // generate the LLVM value, and replace all uses of the instruction
       numInstrReplaced += i.first->getNumUses();
       numInstrRemoved++;
-      outs() << "in replacing, inst " << *i.first << " is const and replaced\n";
       i.first->replaceAllUsesWith(i.second.value);
     }
   }
 
-  dbgs() << "Cumulative statistics: " 
+  outs() << "Cumulative statistics: " 
     << numInstrRemoved << " instructions removed, "
     << numBBUnreachable << " basic blocks rendered unreachable, "
     << numInstrReplaced << " instructions replaced.\n";
